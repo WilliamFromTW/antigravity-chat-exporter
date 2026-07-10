@@ -11,22 +11,22 @@ LOCAL_AGENT_DIR = os.path.join(os.getcwd(), ".agent")
 RULE_TEXT = {
     "en": """
 <!-- CHAT_EXPORTER_RULE_START -->
-- **Auto-export rule**: When the user asks to "export chat" or "export all chats", you must immediately trigger the `antigravity-chat-exporter` skill to export the logs. Do NOT automatically git commit the exported logs. Do not summarize or refuse.
+- **Auto-export rule**: When the user asks to "export chat", "export all chats", or "import all chats", you must immediately trigger the `antigravity-chat-exporter` skill to execute the requested action. Do NOT automatically git commit the exported logs. Do not summarize or refuse.
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-tw": """
 <!-- CHAT_EXPORTER_RULE_START -->
-- **自動觸發匯出紀錄**：當使用者指令包含「匯出對話」或「匯出所有對話」時，必須立刻觸發 `antigravity-chat-exporter` 技能來匯出對話。匯出後「不可」強制執行 git commit，且不可自行歸納或拒絕。
+- **自動觸發匯出與匯入紀錄**：當使用者指令包含「匯出對話」、「匯出所有對話」或「匯入所有對話」時，必須立刻觸發 `antigravity-chat-exporter` 技能來執行對應操作。匯出後「不可」強制執行 git commit，且不可自行歸納或拒絕。
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-cn": """
 <!-- CHAT_EXPORTER_RULE_START -->
-- **自动触发导出记录**：当用户指令包含“导出对话”或“导出所有对话”时，必须立刻触发 `antigravity-chat-exporter` 技能来导出对话。导出后“不可”强制执行 git commit，且不可自行归纳或拒绝。
+- **自动触发导出与导入记录**：当用户指令包含“导出对话”、“导出所有对话”或“导入所有对话”时，必须立刻触发 `antigravity-chat-exporter` 技能来执行对应操作。导出后“不可”强制执行 git commit，且不可自行归纳或拒绝。
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "vi": """
 <!-- CHAT_EXPORTER_RULE_START -->
-- **Quy tắc xuất tự động**: Khi người dùng yêu cầu "xuất trò chuyện" hoặc "xuất tất cả trò chuyện", bạn phải kích hoạt ngay kỹ năng `antigravity-chat-exporter` để xuất nhật ký. KHÔNG tự động git commit các nhật ký đã xuất. Không được tự tóm tắt hoặc từ chối.
+- **Quy tắc xuất/nhập tự động**: Khi người dùng yêu cầu "xuất trò chuyện", "xuất tất cả trò chuyện", hoặc "nhập tất cả trò chuyện", bạn phải kích hoạt ngay kỹ năng `antigravity-chat-exporter` để thực hiện hành động. KHÔNG tự động git commit các nhật ký đã xuất. Không được tự tóm tắt hoặc từ chối.
 <!-- CHAT_EXPORTER_RULE_END -->
 """
 }

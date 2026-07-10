@@ -11,7 +11,8 @@
 
 ### Features
 - **Export Current Chat**: Exports the ongoing chat session to a daily markdown file.
-- **Export All Chats**: Scans the entire brain directory and exports all historical chats related to the current workspace.
+- **Export All Chats & Brain State**: Scans the brain directory to export all historical chats. Furthermore, it completely backs up the raw AI memory (`brain/` & `.db`) into `.antigravity_sync/brains/` for perfect offline resumption!
+- **Import All Chats**: Restores the previously backed up AI memory (`brain/` & `.db`) from `.antigravity_sync/brains/` back into the system's core memory.
 - **Smart Formatting**: Automatically converts underlying UTC timestamps to your local time.
 - **Auto-Rule Injection**: Installs a rule that automatically triggers the export when you say "export chat".
 - **Genesis Chat Viewer**: Auto-deploys `generate_viewer.bat` to your project to turn exported markdown logs into a stunning HTML UI. It supports multi-language UI selection and automatically remembers your custom log directory for future use!
@@ -58,7 +59,8 @@ Select option `3` to uninstall from the local project, or option `4` to uninstal
 
 ### 核心功能
 - **匯出當前對話**：將目前的聊天紀錄獨立匯出為單日 Markdown 檔案。
-- **匯出專案所有對話**：全域掃描系統，自動挑出所有跟當前專案有關的歷史紀錄並分日打包。
+- **匯出專案所有對話與大腦記憶**：掃描系統找出所有專案對話並打包成 MD。此外，會同步將底層的大腦狀態與資料庫 (`brain/` 與 `.db`) 完整備份至 `.antigravity_sync/brains/`，完美支援無縫 Resume！
+- **匯入所有對話**：可將備份於 `.antigravity_sync/brains/` 中的大腦狀態與資料庫，一鍵還原至本機系統核心，完美支援跨機器復原！
 - **智慧去重機制**：自動將底層的 UTC 時間轉換為本地時間，且多次匯出不會產生重複贅字。
 - **專案鐵律注入**：安裝時會自動寫入專案鐵律，讓 AI 聽懂您的匯出指令。
 - **Genesis 美型閱讀器**：安裝時會自動部署 `generate_viewer.bat`，一鍵將 Markdown 轉換成絕美的 HTML 閱讀介面。內建四國語言 UI，且若自訂日誌目錄會自動記憶，下次免重複輸入！
@@ -105,7 +107,8 @@ python install.py
 
 ### 核心功能
 - **导出当前对话**：将目前的聊天记录独立导出为单日 Markdown 文件。
-- **导出项目所有对话**：全局扫描系统，自动挑出所有跟当前项目有关的历史记录并按日打包。
+- **导出项目所有对话与大脑记忆**：扫描系统找出所有项目对话并打包成 MD。此外，会同步将底层的大脑状态与数据库 (`brain/` 与 `.db`) 完整备份至 `.antigravity_sync/brains/`，完美支持无缝 Resume！
+- **导入所有对话**：可将备份于 `.antigravity_sync/brains/` 中的大脑状态与数据库，一键还原至本机系统核心，完美支持跨机器复原！
 - **智能去重机制**：自动将底层的 UTC 时间转换为本地时间，且多次导出不会产生重复内容。
 - **项目铁律自动注入**：安装时会自动写入项目铁律，让 AI 听懂您的指令。
 - **Genesis 美型阅读器**：安装时会自动部署 `generate_viewer.bat`，一键将 Markdown 转换成绝美的 HTML 阅读界面。内置四国语言 UI，且若自定义日志目录会自动记忆，下次免重复输入！
@@ -152,7 +155,8 @@ python install.py
 
 ### Các tính năng
 - **Xuất trò chuyện hiện tại**: Xuất phiên trò chuyện đang diễn ra thành tệp markdown theo ngày.
-- **Xuất tất cả trò chuyện**: Quét toàn bộ thư mục não (brain) và xuất tất cả các cuộc trò chuyện lịch sử liên quan đến không gian làm việc hiện tại.
+- **Xuất tất cả trò chuyện & Bộ nhớ Não bộ**: Quét thư mục não và xuất tất cả các cuộc trò chuyện lịch sử liên quan. Hơn nữa, nó sao lưu hoàn toàn bộ nhớ AI thô (`brain/` & `.db`) vào `.antigravity_sync/brains/` để phục hồi ngoại tuyến hoàn hảo!
+- **Nhập tất cả trò chuyện**: Khôi phục bộ nhớ AI đã sao lưu trước đó từ `.antigravity_sync/brains/` trở lại bộ nhớ lõi của hệ thống để hỗ trợ phục hồi xuyên máy!
 - **Định dạng thông minh**: Tự động chuyển đổi múi giờ UTC sang giờ địa phương và ngăn chặn nhật ký bị lặp lại một cách thông minh.
 - **Tự động thêm quy tắc**: Cài đặt một quy tắc (rule) tự động kích hoạt quá trình xuất khi bạn nói "xuất trò chuyện".
 - **Genesis Chat Viewer**: Tự động triển khai `generate_viewer.bat` vào dự án của bạn để biến nhật ký markdown thành giao diện HTML tuyệt đẹp. Hỗ trợ 4 ngôn ngữ giao diện và tự động ghi nhớ thư mục nhật ký tùy chỉnh của bạn cho những lần sử dụng sau!
