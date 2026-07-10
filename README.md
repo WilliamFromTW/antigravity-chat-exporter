@@ -14,7 +14,7 @@
 - **Export All Chats**: Scans the entire brain directory and exports all historical chats related to the current workspace.
 - **Smart Formatting**: Automatically converts underlying UTC timestamps to your local time.
 - **Auto-Rule Injection**: Installs a rule that automatically triggers the export when you say "export chat".
-- **Genesis Chat Viewer**: Auto-deploys `generate_viewer.bat` to your project to turn exported markdown logs into a stunning, responsive HTML UI.
+- **Genesis Chat Viewer**: Auto-deploys `generate_viewer.bat` to your project to turn exported markdown logs into a stunning HTML UI. It supports multi-language UI selection and automatically remembers your custom log directory for future use!
 
 ### Requirements
 - OpenSpec 1.5.0
@@ -61,7 +61,7 @@ Select option `3` to uninstall from the local project, or option `4` to uninstal
 - **匯出專案所有對話**：全域掃描系統，自動挑出所有跟當前專案有關的歷史紀錄並分日打包。
 - **智慧去重機制**：自動將底層的 UTC 時間轉換為本地時間，且多次匯出不會產生重複贅字。
 - **專案鐵律注入**：安裝時會自動寫入專案鐵律，讓 AI 聽懂您的匯出指令。
-- **Genesis 美型閱讀器**：安裝時會自動部署 `generate_viewer.bat`，一鍵將死板的 Markdown 轉換成絕美的響應式 HTML 閱讀介面。
+- **Genesis 美型閱讀器**：安裝時會自動部署 `generate_viewer.bat`，一鍵將 Markdown 轉換成絕美的 HTML 閱讀介面。內建四國語言 UI，且若自訂日誌目錄會自動記憶，下次免重複輸入！
 
 ### 系統需求
 - OpenSpec 1.5.0
@@ -108,7 +108,7 @@ python install.py
 - **导出项目所有对话**：全局扫描系统，自动挑出所有跟当前项目有关的历史记录并按日打包。
 - **智能去重机制**：自动将底层的 UTC 时间转换为本地时间，且多次导出不会产生重复内容。
 - **项目铁律自动注入**：安装时会自动写入项目铁律，让 AI 听懂您的指令。
-- **Genesis 美型阅读器**：安装时会自动部署 `generate_viewer.bat`，一键将枯燥的 Markdown 转换成绝美的响应式 HTML 阅读界面。
+- **Genesis 美型阅读器**：安装时会自动部署 `generate_viewer.bat`，一键将 Markdown 转换成绝美的 HTML 阅读界面。内置四国语言 UI，且若自定义日志目录会自动记忆，下次免重复输入！
 
 ### 系统要求
 - OpenSpec 1.5.0
@@ -155,7 +155,7 @@ python install.py
 - **Xuất tất cả trò chuyện**: Quét toàn bộ thư mục não (brain) và xuất tất cả các cuộc trò chuyện lịch sử liên quan đến không gian làm việc hiện tại.
 - **Định dạng thông minh**: Tự động chuyển đổi múi giờ UTC sang giờ địa phương và ngăn chặn nhật ký bị lặp lại một cách thông minh.
 - **Tự động thêm quy tắc**: Cài đặt một quy tắc (rule) tự động kích hoạt quá trình xuất khi bạn nói "xuất trò chuyện".
-- **Genesis Chat Viewer**: Tự động triển khai `generate_viewer.bat` vào dự án của bạn để biến nhật ký markdown thành giao diện HTML tuyệt đẹp.
+- **Genesis Chat Viewer**: Tự động triển khai `generate_viewer.bat` vào dự án của bạn để biến nhật ký markdown thành giao diện HTML tuyệt đẹp. Hỗ trợ 4 ngôn ngữ giao diện và tự động ghi nhớ thư mục nhật ký tùy chỉnh của bạn cho những lần sử dụng sau!
 
 ### Yêu cầu hệ thống
 - OpenSpec 1.5.0

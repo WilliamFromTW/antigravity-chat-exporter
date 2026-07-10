@@ -8,27 +8,45 @@ I18N = {
         "title": "Exploration Logs",
         "subtitle": "Antigravity Chat Exporter",
         "no_logs": "No logs found.",
-        "html_title": "Genesis Chat Log Viewer"
+        "html_title": "Genesis Chat Log Viewer",
+        "prompt_log_dir": "Default directory not found.\nPlease enter the path to the chat logs directory: ",
+        "invalid_log_dir": "Error: Directory does not exist or no markdown files found.",
+        "success_msg": "Viewer generated at: ",
+        "saved_msg": ">> Directory saved for future use: "
     },
     "zh-tw": {
         "title": "對話探索日誌",
         "subtitle": "Antigravity 對話匯出器",
         "no_logs": "找不到任何日誌檔案。",
-        "html_title": "Genesis 對話閱讀器"
+        "html_title": "Genesis 對話閱讀器",
+        "prompt_log_dir": "找不到預設目錄。\n請輸入對話日誌的目錄路徑: ",
+        "invalid_log_dir": "錯誤：目錄不存在，或找不到任何 Markdown 檔案。",
+        "success_msg": "閱讀器已生成於: ",
+        "saved_msg": ">> 已記住此目錄，下次將自動讀取: "
     },
     "zh-cn": {
         "title": "对话探索日志",
         "subtitle": "Antigravity 对话导出器",
         "no_logs": "找不到任何日志文件。",
-        "html_title": "Genesis 对话阅读器"
+        "html_title": "Genesis 对话阅读器",
+        "prompt_log_dir": "找不到默认目录。\n请输入对话日志的目录路径: ",
+        "invalid_log_dir": "错误：目录不存在，或找不到任何 Markdown 文件。",
+        "success_msg": "阅读器已生成于: ",
+        "saved_msg": ">> 已记住此目录，下次将自动读取: "
     },
     "vi": {
         "title": "Nhật ký Khám phá",
         "subtitle": "Trình xuất trò chuyện Antigravity",
         "no_logs": "Không tìm thấy nhật ký.",
-        "html_title": "Trình xem nhật ký Genesis"
+        "html_title": "Trình xem nhật ký Genesis",
+        "prompt_log_dir": "Không tìm thấy thư mục mặc định.\nVui lòng nhập đường dẫn đến thư mục nhật ký trò chuyện: ",
+        "invalid_log_dir": "Lỗi: Thư mục không tồn tại hoặc không tìm thấy tệp markdown nào.",
+        "success_msg": "Trình xem được tạo tại: ",
+        "saved_msg": ">> Thư mục đã được lưu cho lần sử dụng sau: "
     }
 }
+
+CONFIG_FILE = ".viewer_config.json"
 
 def choose_language():
     print("="*40)
@@ -47,20 +65,60 @@ def choose_language():
     elif choice == '4': return "vi"
     else: return "en"
 
+def get_log_dir(t):
+    default_dir = "openspec/explorations"
+    saved_dir = None
+    
+    # Try to load saved directory
+    if os.path.exists(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+                saved_dir = config.get("saved_log_dir")
+        except:
+            pass
+
+    # Priority 1: Use saved directory if it exists
+    if saved_dir and os.path.exists(saved_dir):
+        return saved_dir
+        
+    # Priority 2: Use default directory if it exists
+    if os.path.exists(default_dir):
+        return default_dir
+        
+    # Priority 3: Ask the user
+    user_dir = input(t["prompt_log_dir"]).strip()
+    if not user_dir or not os.path.exists(user_dir):
+        print(t["invalid_log_dir"])
+        return None
+        
+    # Save the new valid directory
+    try:
+        with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
+            json.dump({"saved_log_dir": user_dir}, f)
+        print(t["saved_msg"] + user_dir)
+    except:
+        pass
+        
+    return user_dir
+
 def generate_viewer():
     lang = choose_language()
     t = I18N[lang]
     
-    log_dir = "openspec/explorations"
     output_file = "chat_history_viewer.html"
+    log_dir = get_log_dir(t)
     
-    if not os.path.exists(log_dir):
-        print(f"Error: Directory '{log_dir}' not found.")
+    if not log_dir:
         return
 
     md_files = glob.glob(os.path.join(log_dir, "explore_log_*.md"))
+    # Also support general markdown files if no explore_log_ prefix is found
     if not md_files:
-        print(f"No markdown logs found in {log_dir}")
+        md_files = glob.glob(os.path.join(log_dir, "*.md"))
+        
+    if not md_files:
+        print(t["invalid_log_dir"])
         return
 
     logs = {}
@@ -394,7 +452,7 @@ def generate_viewer():
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(html_content)
     
-    print(f"Viewer generated at: {os.path.abspath(output_file)}")
+    print(f"{t['success_msg']}{os.path.abspath(output_file)}")
     webbrowser.open('file://' + os.path.abspath(output_file))
 
 if __name__ == "__main__":
