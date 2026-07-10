@@ -243,37 +243,63 @@ def main():
         project_path = os.path.abspath(args.all_for_project)
         # Use lower() for comparison but keep original path for copying
         project_path_lower = project_path.lower()
-        brain_dir = os.path.join(args.app_data_dir, "brain")
+        project_uri_win = "file:///" + project_path.replace("\\", "/")
+        project_uri_win_lower = project_uri_win.lower()
+        
         print(f"Scanning all conversations for project: {project_path}")
         
-        exported_count = 0
-        for conv_id in os.listdir(brain_dir):
-            conv_dir = os.path.join(brain_dir, conv_id)
-            if not os.path.isdir(conv_dir): continue
-            
-            transcript_path = os.path.join(conv_dir, ".system_generated", "logs", "transcript.jsonl")
-            if not os.path.exists(transcript_path): continue
-            
-            # Read first few lines to see if project path is in <user_information>
-            is_related = False
+        related_uuids = set()
+        
+        # Method 1: Query conversation_summaries.db (Fast and reliable, even if jsonl is empty)
+        summary_db = os.path.join(args.app_data_dir, "conversation_summaries.db")
+        if os.path.exists(summary_db):
             try:
-                with open(transcript_path, 'r', encoding='utf-8') as f:
-                    for _ in range(50):
-                        line = f.readline()
-                        if not line: break
-                        if project_path_lower in line.lower() or os.path.basename(project_path_lower).lower() in line.lower():
-                            is_related = True
-                            break
-            except Exception:
-                pass
+                conn = sqlite3.connect(summary_db)
+                c = conn.cursor()
+                c.execute("SELECT conversation_id, workspace_uris FROM conversation_summaries")
+                for row in c.fetchall():
+                    c_id, uris = row[0], row[1]
+                    if uris and (project_uri_win_lower in uris.lower() or project_path_lower in uris.lower()):
+                        related_uuids.add(c_id)
+                conn.close()
+            except Exception as e:
+                print(f"Error querying conversation_summaries.db: {e}")
                 
-            if is_related:
-                if export_conversation(args.app_data_dir, conv_id, args.output_dir):
-                    exported_count += 1
-                    # Also backup raw brain state for 'all' mode
-                    backup_brain_state(args.app_data_dir, conv_id, project_path)
+        # Method 2: Fallback to scanning brain directory if DB query missed any
+        brain_dir = os.path.join(args.app_data_dir, "brain")
+        if os.path.exists(brain_dir):
+            for conv_id in os.listdir(brain_dir):
+                if conv_id in related_uuids: continue
+                conv_dir = os.path.join(brain_dir, conv_id)
+                if not os.path.isdir(conv_dir): continue
+                
+                transcript_path = os.path.join(conv_dir, ".system_generated", "logs", "transcript.jsonl")
+                if not os.path.exists(transcript_path): continue
+                
+                try:
+                    with open(transcript_path, 'r', encoding='utf-8') as f:
+                        for _ in range(50):
+                            line = f.readline()
+                            if not line: break
+                            if project_path_lower in line.lower() or os.path.basename(project_path_lower).lower() in line.lower():
+                                related_uuids.add(conv_id)
+                                break
+                except Exception:
+                    pass
                     
-        print(f"Finished! Exported {exported_count} related conversations.")
+        exported_md_count = 0
+        backed_up_brain_count = 0
+        
+        for conv_id in related_uuids:
+            # 1. Attempt to export MD (might fail if jsonl is missing/empty, which is fine)
+            if export_conversation(args.app_data_dir, conv_id, args.output_dir):
+                exported_md_count += 1
+                
+            # 2. ALWAYS backup raw brain state for related UUIDs
+            backup_brain_state(args.app_data_dir, conv_id, project_path)
+            backed_up_brain_count += 1
+            
+        print(f"Finished! Exported {exported_md_count} MD logs, backed up {backed_up_brain_count} Brain DBs.")
     
     elif args.conversation_id and args.output_dir:
         export_conversation(args.app_data_dir, args.conversation_id, args.output_dir)

@@ -11,7 +11,7 @@
 
 ### Features
 - **Export Current Chat**: Exports the ongoing chat session to a daily markdown file.
-- **Export All Chats & Brain State**: Scans the brain directory to export all historical chats. Furthermore, it completely backs up the raw AI memory (`brain/` & `.db`) into `.antigravity_sync/brains/` for perfect offline resumption!
+- **Export All Chats & Brain State**: Scans the brain directory to export all historical chats. Furthermore, it completely backs up the raw AI memory (`brain/` & `.db`) into `.antigravity_sync/brains/` for perfect offline resumption! **(Features a Dual-Layer Scan: it queries the global DB for project relations first, guaranteeing that even if your text logs are missing or empty, your Brain DBs are strictly backed up!)**
 - **Import All Chats**: Restores the previously backed up AI memory (`brain/` & `.db`) from `.antigravity_sync/brains/` back into the system's core memory.
 - **Smart Formatting**: Automatically converts underlying UTC timestamps to your local time.
 - **Auto-Rule Injection**: Installs a rule that automatically triggers the export when you say "export chat".
@@ -59,7 +59,7 @@ Select option `3` to uninstall from the local project, or option `4` to uninstal
 
 ### 核心功能
 - **匯出當前對話**：將目前的聊天紀錄獨立匯出為單日 Markdown 檔案。
-- **匯出專案所有對話與大腦記憶**：掃描系統找出所有專案對話並打包成 MD。此外，會同步將底層的大腦狀態與資料庫 (`brain/` 與 `.db`) 完整備份至 `.antigravity_sync/brains/`，完美支援無縫 Resume！
+- **匯出專案所有對話與大腦記憶**：掃描系統找出所有專案對話並打包成 MD。此外，會同步將底層的大腦狀態與資料庫 (`brain/` 與 `.db`) 完整備份至 `.antigravity_sync/brains/`，完美支援無縫 Resume！ **(內建雙重掃描機制：優先查詢全域 DB 鎖定專案關聯，即使您的純文字日誌檔損毀或為空，也能強制且精準地備份大腦記憶庫！)**
 - **匯入所有對話**：可將備份於 `.antigravity_sync/brains/` 中的大腦狀態與資料庫，一鍵還原至本機系統核心，完美支援跨機器復原！
 - **智慧去重機制**：自動將底層的 UTC 時間轉換為本地時間，且多次匯出不會產生重複贅字。
 - **專案鐵律注入**：安裝時會自動寫入專案鐵律，讓 AI 聽懂您的匯出指令。
@@ -107,7 +107,7 @@ python install.py
 
 ### 核心功能
 - **导出当前对话**：将目前的聊天记录独立导出为单日 Markdown 文件。
-- **导出项目所有对话与大脑记忆**：扫描系统找出所有项目对话并打包成 MD。此外，会同步将底层的大脑状态与数据库 (`brain/` 与 `.db`) 完整备份至 `.antigravity_sync/brains/`，完美支持无缝 Resume！
+- **导出项目所有对话与大脑记忆**：扫描系统找出所有项目对话并打包成 MD。此外，会同步将底层的大脑状态与数据库 (`brain/` 与 `.db`) 完整备份至 `.antigravity_sync/brains/`，完美支持无缝 Resume！ **(内置双重扫描机制：优先查询全局 DB 锁定项目关联，即使您的纯文本日志文件损坏或为空，也能强制且精准地备份大脑记忆库！)**
 - **导入所有对话**：可将备份于 `.antigravity_sync/brains/` 中的大脑状态与数据库，一键还原至本机系统核心，完美支持跨机器复原！
 - **智能去重机制**：自动将底层的 UTC 时间转换为本地时间，且多次导出不会产生重复内容。
 - **项目铁律自动注入**：安装时会自动写入项目铁律，让 AI 听懂您的指令。
@@ -155,7 +155,7 @@ python install.py
 
 ### Các tính năng
 - **Xuất trò chuyện hiện tại**: Xuất phiên trò chuyện đang diễn ra thành tệp markdown theo ngày.
-- **Xuất tất cả trò chuyện & Bộ nhớ Não bộ**: Quét thư mục não và xuất tất cả các cuộc trò chuyện lịch sử liên quan. Hơn nữa, nó sao lưu hoàn toàn bộ nhớ AI thô (`brain/` & `.db`) vào `.antigravity_sync/brains/` để phục hồi ngoại tuyến hoàn hảo!
+- **Xuất tất cả trò chuyện & Bộ nhớ Não bộ**: Quét thư mục não và xuất tất cả các cuộc trò chuyện lịch sử liên quan. Hơn nữa, nó sao lưu hoàn toàn bộ nhớ AI thô (`brain/` & `.db`) vào `.antigravity_sync/brains/` để phục hồi ngoại tuyến hoàn hảo! **(Tính năng quét kép: truy vấn cơ sở dữ liệu toàn cục để tìm liên kết dự án trước, đảm bảo rằng ngay cả khi nhật ký văn bản của bạn bị thiếu hoặc trống, cơ sở dữ liệu Não của bạn vẫn được sao lưu một cách chính xác!)**
 - **Nhập tất cả trò chuyện**: Khôi phục bộ nhớ AI đã sao lưu trước đó từ `.antigravity_sync/brains/` trở lại bộ nhớ lõi của hệ thống để hỗ trợ phục hồi xuyên máy!
 - **Định dạng thông minh**: Tự động chuyển đổi múi giờ UTC sang giờ địa phương và ngăn chặn nhật ký bị lặp lại một cách thông minh.
 - **Tự động thêm quy tắc**: Cài đặt một quy tắc (rule) tự động kích hoạt quá trình xuất khi bạn nói "xuất trò chuyện".
