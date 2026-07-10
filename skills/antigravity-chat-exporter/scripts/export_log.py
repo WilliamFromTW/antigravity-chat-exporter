@@ -5,8 +5,13 @@ import datetime
 import re
 
 def export_conversation(app_data_dir, conversation_id, output_dir):
-    transcript_path = os.path.join(app_data_dir, "brain", conversation_id, ".system_generated", "logs", "transcript_full.jsonl")
+    logs_dir = os.path.join(app_data_dir, "brain", conversation_id, ".system_generated", "logs")
+    transcript_path = os.path.join(logs_dir, "transcript_full.jsonl")
     
+    if not os.path.exists(transcript_path):
+        # Fallback to truncated transcript if full one is not available
+        transcript_path = os.path.join(logs_dir, "transcript.jsonl")
+        
     if not os.path.exists(transcript_path):
         return False
 
