@@ -29,4 +29,4 @@ If the user asks to export **all** conversations related to the current project,
 python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --app-data-dir "C:\Users\username\.gemini\antigravity-cli" --all-for-project "C:\Users\username\syncmyantigravityproject" --output-dir "openspec/explorations"
 ```
 
-3. After running the command, inform the user where the file(s) were saved, and automatically `git add` and `git commit` the new log file to follow strict version control rules if applicable.
+3. After running the command, inform the user where the file(s) were saved. Do NOT automatically git commit the logs unless explicitly asked.
