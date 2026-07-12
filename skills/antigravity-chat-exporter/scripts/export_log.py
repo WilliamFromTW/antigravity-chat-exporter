@@ -204,6 +204,15 @@ def import_brains(app_data_dir, project_path):
             try:
                 with open(src_summary, 'r', encoding='utf-8') as f:
                     summary_data = json.load(f)
+                
+                # Update workspace_uris to include the new machine's project path
+                project_uri = Path(project_path).as_uri()
+                existing_uris = summary_data.get('workspace_uris', '')
+                if not existing_uris:
+                    summary_data['workspace_uris'] = project_uri
+                elif project_uri.lower() not in existing_uris.lower():
+                    summary_data['workspace_uris'] = f"{existing_uris},{project_uri}"
+
                 summary_db = agy_root / "conversation_summaries.db"
                 if summary_db.exists():
                     conn = sqlite3.connect(str(summary_db))
@@ -243,8 +252,8 @@ def main():
         project_path = os.path.abspath(args.all_for_project)
         # Use lower() for comparison but keep original path for copying
         project_path_lower = project_path.lower()
-        project_uri_win = "file:///" + project_path.replace("\\", "/")
-        project_uri_win_lower = project_uri_win.lower()
+        project_uri = Path(project_path).as_uri()
+        project_uri_lower = project_uri.lower()
         
         print(f"Scanning all conversations for project: {project_path}")
         
@@ -259,7 +268,7 @@ def main():
                 c.execute("SELECT conversation_id, workspace_uris FROM conversation_summaries")
                 for row in c.fetchall():
                     c_id, uris = row[0], row[1]
-                    if uris and (project_uri_win_lower in uris.lower() or project_path_lower in uris.lower()):
+                    if uris and (project_uri_lower in uris.lower() or project_path_lower in uris.lower()):
                         related_uuids.add(c_id)
                 conn.close()
             except Exception as e:
@@ -281,7 +290,7 @@ def main():
                         for _ in range(50):
                             line = f.readline()
                             if not line: break
-                            if project_path_lower in line.lower() or os.path.basename(project_path_lower).lower() in line.lower():
+                            if project_path_lower in line.lower() or project_uri_lower in line.lower():
                                 related_uuids.add(conv_id)
                                 break
                 except Exception:
