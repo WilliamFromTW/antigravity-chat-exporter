@@ -50,6 +50,9 @@ python install.py
 ```
 Select option `3` to uninstall from the local project, or option `4` to uninstall globally.
 
+### Known Issues
+- **`/resume` UI Project Identification**: The Antigravity CLI's `/resume` menu currently cannot dynamically display custom project names for CLI-created sessions. You can only identify which project a conversation belongs to by checking its `conversation_id` inside the backed-up `.antigravity_sync/brains/` directory.
+
 ---
 
 ## 繁體中文 (zh-TW)
@@ -97,6 +100,9 @@ AI 就會自動觸發技能，將日誌儲存在 `openspec/explorations/explore_
 python install.py
 ```
 並在選單中選擇 `3`（移除單一專案安裝）或 `4`（移除全域系統安裝）即可。
+
+### 已知問題
+- **`/resume` 介面無法顯示專案名稱**：Antigravity CLI 的 `/resume` 選單目前無法得知是對應哪個專案，您只能從備份的 `.antigravity_sync/brains/` 目錄中的 `conversation_id` 來得知該對話屬於哪個專案了。
 
 ---
 
@@ -146,6 +152,9 @@ python install.py
 ```
 并在菜单中选择 `3`（卸载单项目安装）或 `4`（卸载全局系统安装）即可。
 
+### 已知问题
+- **`/resume` 界面无法显示项目名称**：Antigravity CLI 的 `/resume` 菜单目前无法得知是对应哪个项目，您只能从备份的 `.antigravity_sync/brains/` 目录中的 `conversation_id` 来得知该对话属于哪个项目了。
+
 ---
 
 ## Tiếng Việt (VI)
@@ -193,3 +202,6 @@ AI sẽ tự động kích hoạt kỹ năng và lưu nhật ký vào `openspec/
 python install.py
 ```
 Chọn tùy chọn `3` để gỡ cài đặt khỏi dự án cục bộ, hoặc tùy chọn `4` để gỡ cài đặt trên toàn hệ thống.
+
+### Vấn đề đã biết
+- **Giao diện `/resume` không hiển thị tên dự án**: Menu `/resume` của Antigravity CLI hiện không thể hiển thị tên dự án cho các phiên trò chuyện được tạo qua CLI. Bạn chỉ có thể xác định cuộc trò chuyện thuộc về dự án nào bằng cách kiểm tra `conversation_id` của nó trong thư mục sao lưu `.antigravity_sync/brains/`.
