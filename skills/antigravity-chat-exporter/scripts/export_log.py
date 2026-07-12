@@ -276,9 +276,7 @@ def list_backups(project_path):
         print(f"No backups found. Sync directory does not exist: {sync_dir}")
         return
         
-    print(f"\nBacked up conversations for {project_path}:")
-    print("-" * 70)
-    count = 0
+    backups = []
     for uuid_dir in sync_dir.iterdir():
         if not uuid_dir.is_dir(): continue
         
@@ -288,6 +286,7 @@ def list_backups(project_path):
         title = ""
         preview = ""
         last_modified = ""
+        raw_ts = ""
         
         if summary_path.exists():
             try:
@@ -295,15 +294,14 @@ def list_backups(project_path):
                     summary_data = json.load(f)
                     title = summary_data.get('title', '')
                     preview = summary_data.get('preview', '')
-                    # try to get readable time
                     ts = summary_data.get('last_modified_time', '')
                     if ts:
+                        raw_ts = ts
                         try:
-                            # Usually 2026-07-09T08:07:29Z
                             import datetime
                             dt = datetime.datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ")
                             dt_local = dt + datetime.timedelta(hours=8)
-                            last_modified = dt_local.strftime('%Y-%m-%d %H:%M')
+                            last_modified = dt_local.strftime('%Y-%m-%d %H:%M:%S')
                         except:
                             last_modified = ts
             except:
@@ -313,14 +311,73 @@ def list_backups(project_path):
         if not display_name:
             display_name = "Untitled Conversation"
             
-        print(f"ID: {conversation_id}")
-        print(f"Name/Preview: {display_name}")
-        if last_modified:
-            print(f"Last Modified: {last_modified}")
-        print("-" * 70)
-        count += 1
+        # Extract last user and AI messages
+        user_msg = ""
+        ai_msg = ""
+        paths_to_check = [
+            uuid_dir / ".system_generated" / "logs" / "transcript_full.jsonl",
+            uuid_dir / "brain" / ".system_generated" / "logs" / "transcript_full.jsonl",
+            uuid_dir / ".system_generated" / "logs" / "transcript.jsonl",
+            uuid_dir / "brain" / ".system_generated" / "logs" / "transcript.jsonl"
+        ]
         
-    print(f"Total {count} backups found.\n")
+        transcript_path = None
+        for p in paths_to_check:
+            if p.exists() and p.stat().st_size > 0:
+                transcript_path = p
+                break
+                
+        if transcript_path:
+            try:
+                with open(transcript_path, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        if not line.strip(): continue
+                        try:
+                            step = json.loads(line)
+                            step_type = step.get('type', '')
+                            if step_type == 'USER_INPUT':
+                                user_msg = step.get('content', '')
+                            elif step_type in ('PLANNER_RESPONSE', 'MODEL_RESPONSE'):
+                                content = step.get('content', '')
+                                if content: ai_msg = content
+                        except:
+                            pass
+            except:
+                pass
+                
+        if user_msg:
+            user_msg = user_msg.replace('\\n', ' ').strip()
+            if len(user_msg) > 50: user_msg = user_msg[:47] + "..."
+        if ai_msg:
+            ai_msg = ai_msg.replace('\\n', ' ').strip()
+            if len(ai_msg) > 50: ai_msg = ai_msg[:47] + "..."
+            
+        backups.append({
+            'id': conversation_id,
+            'name': display_name,
+            'local_time': last_modified,
+            'raw_ts': raw_ts,
+            'user': user_msg,
+            'ai': ai_msg
+        })
+        
+    # Sort backups descending by raw timestamp
+    backups.sort(key=lambda x: x['raw_ts'], reverse=True)
+    
+    print(f"\\nBacked up conversations for {project_path}:")
+    print("=" * 80)
+    for b in backups:
+        print(f"ID: {b['id']}")
+        print(f"Name/Preview: {b['name']}")
+        if b['local_time']:
+            print(f"Last Modified: {b['local_time']}")
+        if b['user']:
+            print(f"User: {b['user']}")
+        if b['ai']:
+            print(f"AI:   {b['ai']}")
+        print("-" * 80)
+        
+    print(f"Total {len(backups)} backups found.\\n")
 
 def main():
     parser = argparse.ArgumentParser(description="Export raw conversation log.")
