@@ -41,4 +41,10 @@ If the user asks to "import all chats" or restore the brain state, use the `--im
 python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --app-data-dir "<App Data Directory>" --import-for-project "<Target Project Path>"
 ```
 
+### Example Execution (List Backed Up Conversation IDs)
+If the user asks to "list backed up conversation IDs" or similar, use the `--list-backups` flag to print them to your terminal, and then display the results to the user:
+```shell
+python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --list-backups "<Target Project Path>"
+```
+
 3. After running the command, inform the user where the file(s) were saved or if the import was successful. Do NOT automatically git commit the logs unless explicitly asked.

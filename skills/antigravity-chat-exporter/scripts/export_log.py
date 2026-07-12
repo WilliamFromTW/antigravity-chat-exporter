@@ -270,15 +270,77 @@ def import_brains(app_data_dir, project_path):
         
     print(f"Finished! Imported {imported_count} conversations from project sync dir.")
 
+def list_backups(project_path):
+    sync_dir = Path(project_path) / ".antigravity_sync" / "brains"
+    if not sync_dir.exists():
+        print(f"No backups found. Sync directory does not exist: {sync_dir}")
+        return
+        
+    print(f"\nBacked up conversations for {project_path}:")
+    print("-" * 70)
+    count = 0
+    for uuid_dir in sync_dir.iterdir():
+        if not uuid_dir.is_dir(): continue
+        
+        conversation_id = uuid_dir.name
+        summary_path = uuid_dir / "summary.json"
+        
+        title = ""
+        preview = ""
+        last_modified = ""
+        
+        if summary_path.exists():
+            try:
+                with open(summary_path, 'r', encoding='utf-8') as f:
+                    summary_data = json.load(f)
+                    title = summary_data.get('title', '')
+                    preview = summary_data.get('preview', '')
+                    # try to get readable time
+                    ts = summary_data.get('last_modified_time', '')
+                    if ts:
+                        try:
+                            # Usually 2026-07-09T08:07:29Z
+                            import datetime
+                            dt = datetime.datetime.strptime(ts, "%Y-%m-%dT%H:%M:%SZ")
+                            dt_local = dt + datetime.timedelta(hours=8)
+                            last_modified = dt_local.strftime('%Y-%m-%d %H:%M')
+                        except:
+                            last_modified = ts
+            except:
+                pass
+                
+        display_name = title if title else preview
+        if not display_name:
+            display_name = "Untitled Conversation"
+            
+        print(f"ID: {conversation_id}")
+        print(f"Name/Preview: {display_name}")
+        if last_modified:
+            print(f"Last Modified: {last_modified}")
+        print("-" * 70)
+        count += 1
+        
+    print(f"Total {count} backups found.\n")
+
 def main():
     parser = argparse.ArgumentParser(description="Export raw conversation log.")
-    parser.add_argument('--app-data-dir', required=True, help="Path to Antigravity app data dir")
+    parser.add_argument('--app-data-dir', required=False, help="Path to Antigravity app data dir")
     parser.add_argument('--conversation-id', required=False, help="Current conversation ID")
     parser.add_argument('--output-dir', required=False, help="Directory to save the exported log")
     parser.add_argument('--set-title', required=False, help="Set a custom title for the conversation")
     parser.add_argument('--all-for-project', required=False, help="Path to project to export all related conversations")
     parser.add_argument('--import-for-project', required=False, help="Path to project to import all synced conversations")
+    parser.add_argument('--list-backups', required=False, help="Path to project to list all backed up conversations")
     args = parser.parse_args()
+
+    if args.list_backups:
+        project_path = os.path.abspath(args.list_backups)
+        list_backups(project_path)
+        return
+
+    if not args.app_data_dir:
+        print("Error: --app-data-dir is required for export/import actions.")
+        return
 
     if args.import_for_project:
         project_path = os.path.abspath(args.import_for_project)
