@@ -18,9 +18,9 @@
 - **Genesis Chat Viewer**: Auto-deploys `generate_viewer.bat` to your project to turn exported markdown logs into a stunning HTML UI. It supports multi-language UI selection and automatically remembers your custom log directory for future use!
 
 ### Requirements
-- OpenSpec 1.5.0
-- Antigravity CLI 1.1.0
-- Python 3.6+
+- OpenSpec 1.6.0
+- Antigravity CLI 1.1.1
+- Python 3.12+
 - **No external dependencies** (uses only standard libraries like `os`, `json`, `shutil`, `datetime`, `argparse`).
 
 ### Installation
@@ -35,9 +35,16 @@ python install.py
 4. **Global Uninstall**: Removes the system-wide Plugin.
 
 ### Usage
-After installation, simply tell the Antigravity AI:
+After installation, the installer writes **Iron Rules** (`.agent/rules/chat_exporter.md`) into your project. These rules instruct the AI to:
+1. Immediately trigger the `antigravity-chat-exporter` skill when you ask to export, import, or list backups.
+2. Ensure it always passes its own `conversation_id`.
+3. Never modify your source code when performing these operations.
+
+Simply tell the Antigravity AI:
 - *"Export conversation"* (To export the current chat)
 - *"Export all conversations"* (To export all project-related chats)
+- *"List backed up conversation IDs"* (To list all available backups)
+- *"Import all chats"* (To restore backups to your current workspace)
 
 The AI will automatically trigger the skill and save the logs into `openspec/explorations/explore_log_YYYY-MM-DD.md`.
 
@@ -69,9 +76,9 @@ Select option `3` to uninstall from the local project, or option `4` to uninstal
 - **Genesis 美型閱讀器**：安裝時會自動部署 `generate_viewer.bat`，一鍵將 Markdown 轉換成絕美的 HTML 閱讀介面。內建四國語言 UI，且若自訂日誌目錄會自動記憶，下次免重複輸入！
 
 ### 系統需求
-- OpenSpec 1.5.0
-- Antigravity CLI 1.1.0
-- Python 3.6+
+- OpenSpec 1.6.0
+- Antigravity CLI 1.1.1
+- Python 3.12+
 - **完全不需要安裝外部套件**（純原生 Python，僅使用 `os`, `json`, `shutil` 等內建模組）。
 
 ### 安裝與移除
@@ -86,9 +93,16 @@ python install.py
 4. **全域系統移除**：移除全系統通用的 Plugin 安裝。
 
 ### 使用方式
-安裝完成後，您只需要像平常一樣對 Antigravity AI 說出：
+安裝完成後，安裝精靈會將 **專案鐵律 (Iron Rules)** (`.agent/rules/chat_exporter.md`) 寫入您的專案中。這些鐵律會嚴格限制並指示 AI：
+1. 當您要求匯出、匯入或列出備份時，必須立刻觸發 `antigravity-chat-exporter` 技能。
+2. 必須永遠主動傳遞它自己的 `conversation_id` 給腳本。
+3. 在執行這些操作時，絕對不可修改您的任何專案程式碼。
+
+您只需要像平常一樣對 Antigravity AI 說出：
 - *「匯出對話」*（僅匯出當前視窗）
 - *「匯出所有對話」*（匯出專案所有的歷史紀錄）
+- *「列出備份的對話 ID」*（列出 `.antigravity_sync/brains/` 下的所有備份紀錄）
+- *「匯入所有對話」*（將備份還原至當下環境）
 
 AI 就會自動觸發技能，將日誌儲存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`。
 
@@ -120,9 +134,9 @@ python install.py
 - **Genesis 美型阅读器**：安装时会自动部署 `generate_viewer.bat`，一键将 Markdown 转换成绝美的 HTML 阅读界面。内置四国语言 UI，且若自定义日志目录会自动记忆，下次免重复输入！
 
 ### 系统要求
-- OpenSpec 1.5.0
-- Antigravity CLI 1.1.0
-- Python 3.6+
+- OpenSpec 1.6.0
+- Antigravity CLI 1.1.1
+- Python 3.12+
 - **完全不需要安装外部依赖**（纯原生 Python，仅使用 `os`, `json`, `shutil` 等内置模块）。
 
 ### 安装与卸载
@@ -137,9 +151,16 @@ python install.py
 4. **全局系统卸载**：移除全系统通用的 Plugin 安装。
 
 ### 使用方式
-安装完成后，您只需要像平常一样对 Antigravity AI 说出：
+安装完成后，安装向导会将 **项目铁律 (Iron Rules)** (`.agent/rules/chat_exporter.md`) 写入您的项目中。这些铁律会严格限制并指示 AI：
+1. 当您要求导出、导入或列出备份时，必须立刻触发 `antigravity-chat-exporter` 技能。
+2. 必须永远主动传递它自己的 `conversation_id` 给脚本。
+3. 在执行这些操作时，绝对不可修改您的任何项目代码。
+
+您只需要像平常一样对 Antigravity AI 说出：
 - *“导出对话”*（仅导出当前窗口）
 - *“导出所有对话”*（导出项目所有的历史记录）
+- *“列出备份的对话 ID”*（列出 `.antigravity_sync/brains/` 下的所有备份记录）
+- *“导入所有对话”*（将备份还原至当下环境）
 
 AI 就会自动触发技能，将日志储存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`。
 
@@ -171,9 +192,9 @@ python install.py
 - **Genesis Chat Viewer**: Tự động triển khai `generate_viewer.bat` vào dự án của bạn để biến nhật ký markdown thành giao diện HTML tuyệt đẹp. Hỗ trợ 4 ngôn ngữ giao diện và tự động ghi nhớ thư mục nhật ký tùy chỉnh của bạn cho những lần sử dụng sau!
 
 ### Yêu cầu hệ thống
-- OpenSpec 1.5.0
-- Antigravity CLI 1.1.0
-- Python 3.6+
+- OpenSpec 1.6.0
+- Antigravity CLI 1.1.1
+- Python 3.12+
 - **Không cần cài đặt thư viện bên ngoài** (chỉ sử dụng các thư viện tiêu chuẩn của Python như `os`, `json`, `shutil`, `datetime`, `argparse`).
 
 ### Cài đặt
@@ -188,9 +209,16 @@ python install.py
 4. **Gỡ cài đặt toàn cục**: Xóa Plugin toàn hệ thống.
 
 ### Cách sử dụng
-Sau khi cài đặt, chỉ cần nói với Antigravity AI:
+Sau khi cài đặt, trình cài đặt sẽ ghi các **Quy tắc sắt (Iron Rules)** (`.agent/rules/chat_exporter.md`) vào dự án của bạn. Các quy tắc này hướng dẫn AI:
+1. Kích hoạt ngay kỹ năng `antigravity-chat-exporter` khi bạn yêu cầu xuất, nhập hoặc liệt kê các bản sao lưu.
+2. Đảm bảo nó luôn truyền `conversation_id` của chính nó.
+3. Không bao giờ sửa đổi mã nguồn của bạn khi thực hiện các thao tác này.
+
+Chỉ cần nói với Antigravity AI:
 - *"Xuất trò chuyện"* (Để xuất cuộc trò chuyện hiện tại)
 - *"Xuất tất cả trò chuyện"* (Để xuất tất cả cuộc trò chuyện liên quan đến dự án)
+- *"Liệt kê ID trò chuyện đã sao lưu"* (Để xem danh sách sao lưu)
+- *"Nhập tất cả trò chuyện"* (Để khôi phục sao lưu)
 
 AI sẽ tự động kích hoạt kỹ năng và lưu nhật ký vào `openspec/explorations/explore_log_YYYY-MM-DD.md`.
 
