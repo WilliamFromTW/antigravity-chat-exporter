@@ -29,6 +29,12 @@ If the user asks to export **all** conversations related to the current project,
 python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --app-data-dir "<App Data Directory>" --all-for-project "<Target Project Path>" --output-dir "openspec/explorations"
 ```
 
+### Example Execution (Set Custom Title)
+If the user provides a custom name for the conversation (e.g., "匯出對話並命名為 專案主對話"), you MUST pass the `--set-title` flag and also include the `--conversation-id`. This works alongside any other flags.
+```shell
+python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --app-data-dir "<App Data Directory>" --conversation-id "1234-5678-abcd" --all-for-project "<Target Project Path>" --output-dir "openspec/explorations" --set-title "專案主對話"
+```
+
 ### Example Execution (Import ALL Conversations for Project)
 If the user asks to "import all chats" or restore the brain state, use the `--import-for-project` flag:
 ```shell

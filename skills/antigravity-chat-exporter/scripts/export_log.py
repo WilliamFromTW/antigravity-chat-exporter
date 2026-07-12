@@ -113,6 +113,33 @@ import sqlite3
 import json
 from pathlib import Path
 
+def set_conversation_title(app_data_dir, conversation_id, title):
+    try:
+        summary_db = os.path.join(app_data_dir, "conversation_summaries.db")
+        if os.path.exists(summary_db):
+            conn = sqlite3.connect(summary_db)
+            c = conn.cursor()
+            
+            c.execute("SELECT preview FROM conversation_summaries WHERE conversation_id=?", (conversation_id,))
+            row = c.fetchone()
+            
+            if row and row[0]:
+                preview = row[0]
+                suffix = f"({title})"
+                if suffix not in preview:
+                    new_preview = f"{preview} {suffix}"
+                    c.execute("UPDATE conversation_summaries SET title=?, preview=? WHERE conversation_id=?", (title, new_preview, conversation_id))
+                else:
+                    c.execute("UPDATE conversation_summaries SET title=? WHERE conversation_id=?", (title, conversation_id))
+            else:
+                c.execute("UPDATE conversation_summaries SET title=? WHERE conversation_id=?", (title, conversation_id))
+                
+            conn.commit()
+            conn.close()
+            print(f"Set title and updated preview for {conversation_id} with '{title}'")
+    except Exception as e:
+        print(f"Error setting title for {conversation_id}: {e}")
+
 def backup_brain_state(app_data_dir, conversation_id, project_path):
     agy_root = Path(app_data_dir)
     sync_dir = Path(project_path) / ".antigravity_sync" / "brains"
@@ -208,10 +235,22 @@ def import_brains(app_data_dir, project_path):
                 # Update workspace_uris to include the new machine's project path
                 project_uri = Path(project_path).as_uri()
                 existing_uris = summary_data.get('workspace_uris', '')
-                if not existing_uris:
-                    summary_data['workspace_uris'] = project_uri
-                elif project_uri.lower() not in existing_uris.lower():
-                    summary_data['workspace_uris'] = f"{existing_uris},{project_uri}"
+                
+                uris_list = []
+                if existing_uris:
+                    try:
+                        parsed = json.loads(existing_uris)
+                        if isinstance(parsed, list):
+                            uris_list = parsed
+                        else:
+                            uris_list = [str(parsed)]
+                    except json.JSONDecodeError:
+                        uris_list = [existing_uris]
+                        
+                if not any(project_uri.lower() == u.lower() for u in uris_list):
+                    uris_list.insert(0, project_uri)
+                    
+                summary_data['workspace_uris'] = json.dumps(uris_list)
 
                 summary_db = agy_root / "conversation_summaries.db"
                 if summary_db.exists():
@@ -236,6 +275,7 @@ def main():
     parser.add_argument('--app-data-dir', required=True, help="Path to Antigravity app data dir")
     parser.add_argument('--conversation-id', required=False, help="Current conversation ID")
     parser.add_argument('--output-dir', required=False, help="Directory to save the exported log")
+    parser.add_argument('--set-title', required=False, help="Set a custom title for the conversation")
     parser.add_argument('--all-for-project', required=False, help="Path to project to export all related conversations")
     parser.add_argument('--import-for-project', required=False, help="Path to project to import all synced conversations")
     args = parser.parse_args()
@@ -244,6 +284,24 @@ def main():
         project_path = os.path.abspath(args.import_for_project)
         import_brains(args.app_data_dir, project_path)
         return
+
+    target_conv_id = args.conversation_id
+    if args.set_title and not target_conv_id:
+        summary_db = os.path.join(args.app_data_dir, "conversation_summaries.db")
+        if os.path.exists(summary_db):
+            try:
+                conn = sqlite3.connect(summary_db)
+                c = conn.cursor()
+                c.execute("SELECT conversation_id FROM conversation_summaries ORDER BY last_modified_time DESC LIMIT 1")
+                row = c.fetchone()
+                if row:
+                    target_conv_id = row[0]
+                conn.close()
+            except Exception as e:
+                print(f"Failed to auto-detect conversation ID for title setting: {e}")
+
+    if args.set_title and target_conv_id:
+        set_conversation_title(args.app_data_dir, target_conv_id, args.set_title)
 
     if args.output_dir:
         os.makedirs(args.output_dir, exist_ok=True)
@@ -300,6 +358,9 @@ def main():
         backed_up_brain_count = 0
         
         for conv_id in related_uuids:
+            if args.set_title:
+                set_conversation_title(args.app_data_dir, conv_id, args.set_title)
+
             # 1. Attempt to export MD (might fail if jsonl is missing/empty, which is fine)
             if export_conversation(args.app_data_dir, conv_id, args.output_dir):
                 exported_md_count += 1

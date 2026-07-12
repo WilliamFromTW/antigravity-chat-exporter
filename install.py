@@ -11,22 +11,22 @@ LOCAL_AGENT_DIR = os.path.join(os.getcwd(), ".agent")
 RULE_TEXT = {
     "en": """
 <!-- CHAT_EXPORTER_RULE_START -->
-- **Auto-export rule**: When the user asks to "export chat", "export all chats", or "import all chats", you must immediately trigger the `antigravity-chat-exporter` skill to execute the requested action. Do NOT automatically git commit the exported logs. Do not summarize or refuse.
+- **Auto-export rule**: When the user asks to "export chat", "export all chats", or "import all chats" (even with a naming request), immediately trigger the `antigravity-chat-exporter` skill. Do NOT modify any source code. The custom name is strictly for the `--set-title` argument. **CRITICAL**: You MUST ALWAYS pass your own Conversation ID via the `--conversation-id` argument, even when using `--all-for-project`.
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-tw": """
 <!-- CHAT_EXPORTER_RULE_START -->
-- **自動觸發匯出與匯入紀錄**：當使用者指令包含「匯出對話」、「匯出所有對話」或「匯入所有對話」時，必須立刻觸發 `antigravity-chat-exporter` 技能來執行對應操作。匯出後「不可」強制執行 git commit，且不可自行歸納或拒絕。
+- **自動觸發匯出與匯入紀錄**：當使用者指令包含「匯出對話」、「匯入所有對話」等（即使包含「命名為某某名稱」）時，必須立刻觸發 `antigravity-chat-exporter` 技能。「絕對不可」修改任何程式碼，該名稱僅用於腳本的 `--set-title` 參數。**極度重要**：不管您使用什麼參數，您「必須永遠」把您自己的 Conversation ID 透過 `--conversation-id` 參數傳遞給腳本！
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-cn": """
 <!-- CHAT_EXPORTER_RULE_START -->
-- **自动触发导出与导入记录**：当用户指令包含“导出对话”、“导出所有对话”或“导入所有对话”时，必须立刻触发 `antigravity-chat-exporter` 技能来执行对应操作。导出后“不可”强制执行 git commit，且不可自行归纳或拒绝。
+- **自动触发导出与导入记录**：当用户指令包含“导出对话”、“导入所有对话”等（即使包含“命名为某某名称”）时，必须立刻触发 `antigravity-chat-exporter` 技能。“绝对不可”修改任何代码，该名称仅用于脚本的 `--set-title` 参数。**极度重要**：不管您使用什么参数，您“必须永远”把您自己的 Conversation ID 通过 `--conversation-id` 参数传递给脚本！
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "vi": """
 <!-- CHAT_EXPORTER_RULE_START -->
-- **Quy tắc xuất/nhập tự động**: Khi người dùng yêu cầu "xuất trò chuyện", "xuất tất cả trò chuyện", hoặc "nhập tất cả trò chuyện", bạn phải kích hoạt ngay kỹ năng `antigravity-chat-exporter` để thực hiện hành động. KHÔNG tự động git commit các nhật ký đã xuất. Không được tự tóm tắt hoặc từ chối.
+- **Quy tắc xuất/nhập tự động**: Khi người dùng yêu cầu "xuất trò chuyện", "nhập tất cả trò chuyện" (ngay cả khi yêu cầu đặt tên), kích hoạt ngay kỹ năng `antigravity-chat-exporter`. TUYỆT ĐỐI KHÔNG sửa đổi mã nguồn. Tên chỉ dùng cho `--set-title`. **QUAN TRỌNG**: Bạn PHẢI LUÔN LUÔN truyền Conversation ID của chính bạn qua tham số `--conversation-id`, bất kể dùng tham số nào khác!
 <!-- CHAT_EXPORTER_RULE_END -->
 """
 }
@@ -264,6 +264,13 @@ def uninstall_global(t):
         print(t['glob_not_found'])
 
 def main():
+    import sys
+    if sys.stdout.encoding.lower() != 'utf-8':
+        try:
+            sys.stdout.reconfigure(encoding='utf-8')
+        except AttributeError:
+            pass
+
     print("="*40)
     print(" Please select language / 請選擇語言")
     print("="*40)
