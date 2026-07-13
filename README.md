@@ -48,6 +48,10 @@ Simply tell the Antigravity AI:
 
 The AI will automatically trigger the skill and save the logs into `openspec/explorations/explore_log_YYYY-MM-DD.md`.
 
+> 💡 **About Export Naming & Content Scope**
+> - **Naming Rule**: Files are named based on the date of the "last message" in the conversation (e.g., `explore_log_2024-05-20.md`).
+> - **Content Scope**: The system exports the complete history based on the Conversation ID. Therefore, if a single conversation spans multiple days, the file will include the previous days' chat history as well, without splitting them by date.
+
 To view the logs beautifully, double click `generate_viewer.bat` (Windows) or run `sh generate_viewer.sh` (Mac/Linux) in your project root!
 
 ### Uninstallation
@@ -105,6 +109,10 @@ python install.py
 - *「匯入所有對話」*（將備份還原至當下環境）
 
 AI 就會自動觸發技能，將日誌儲存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`。
+
+> 💡 **關於對話匯出的命名與內容範圍**
+> - **檔名規則**：以該對話紀錄中「最後一則訊息」的日期進行命名（如：`explore_log_2024-05-20.md`）。
+> - **內容範圍**：系統是以對話 ID (Conversation ID) 為單位進行完整匯出，因此若同一個對話延續了數天，該檔案內將會一併包含前幾天的歷史對話內容，不會依照日期拆檔。
 
 若想以最美的介面回顧對話，只要在專案根目錄點兩下 `generate_viewer.bat` (Windows) 或執行 `sh generate_viewer.sh` (Mac/Linux) 即可！
 
@@ -164,6 +172,10 @@ python install.py
 
 AI 就会自动触发技能，将日志储存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`。
 
+> 💡 **关于对话导出的命名与内容范围**
+> - **文件名规则**：以该对话记录中“最后一则消息”的日期进行命名（如：`explore_log_2024-05-20.md`）。
+> - **内容范围**：系统是以对话 ID (Conversation ID) 为单位进行完整导出，因此若同一个对话延续了数天，该文件内将会一并包含前几天的历史对话内容，不会依照日期拆分。
+
 若想以最美的界面回顾对话，只需在项目根目录双击 `generate_viewer.bat` (Windows) 或执行 `sh generate_viewer.sh` (Mac/Linux) 即可！
 
 ### 卸载说明
@@ -221,6 +233,10 @@ Chỉ cần nói với Antigravity AI:
 - *"Nhập tất cả trò chuyện"* (Để khôi phục sao lưu)
 
 AI sẽ tự động kích hoạt kỹ năng và lưu nhật ký vào `openspec/explorations/explore_log_YYYY-MM-DD.md`.
+
+> 💡 **Về Quy tắc Đặt tên & Phạm vi Nội dung Xuất**
+> - **Quy tắc đặt tên**: Tệp được đặt tên dựa trên ngày của "tin nhắn cuối cùng" trong cuộc trò chuyện (ví dụ: `explore_log_2024-05-20.md`).
+> - **Phạm vi nội dung**: Hệ thống xuất toàn bộ lịch sử dựa trên ID cuộc trò chuyện (Conversation ID). Do đó, nếu một cuộc trò chuyện kéo dài nhiều ngày, tệp sẽ bao gồm cả lịch sử trò chuyện của những ngày trước đó mà không chia tách theo ngày.
 
 Để xem chúng với giao diện đẹp nhất, hãy nhấp đúp vào `generate_viewer.bat` (Windows) hoặc chạy `sh generate_viewer.sh` (Mac/Linux) trong thư mục dự án của bạn!
 
