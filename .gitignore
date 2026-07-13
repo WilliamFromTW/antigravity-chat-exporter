@@ -11,3 +11,4 @@ records/
 *.csv
 openspec/
 .antigravity_sync/
+.agent/
