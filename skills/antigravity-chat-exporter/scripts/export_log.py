@@ -15,54 +15,28 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
     if not os.path.exists(transcript_path):
         return False
 
-    # Find the date of the LAST message to determine which daily file to use
-    last_date_str = None
     try:
-        with open(transcript_path, 'r', encoding='utf-8') as f:
-            last_line = None
-            for line in f:
-                if line.strip():
-                    last_line = line
-            
-            if last_line:
-                step = json.loads(last_line)
-                created_at = step.get('created_at')
-                if created_at:
-                    dt = datetime.datetime.strptime(created_at, "%Y-%m-%dT%H:%M:%SZ")
-                    dt_local = dt + datetime.timedelta(hours=8) # Convert to TW time
-                    last_date_str = dt_local.strftime("%Y-%m-%d")
-    except:
-        pass
-        
-    if not last_date_str:
-        last_date_str = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    output_path = os.path.join(output_dir, f"explore_log_{last_date_str}.md")
-
-    # Generate the new conversation content
-    markdown_content = f"<!-- CONVERSATION_START: {conversation_id} -->\n"
-    markdown_content += f"## 對話與探索紀錄 (Conversation ID: `{conversation_id}`)\n"
-    markdown_content += f"更新時間: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-    markdown_content += "---\n\n"
-
-    try:
+        daily_logs = {}
         with open(transcript_path, 'r', encoding='utf-8') as f:
             for line in f:
                 if not line.strip(): continue
                 try:
                     step = json.loads(line)
-                    
                     created_at = step.get('created_at', '')
                     time_str = ""
+                    date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+                    
                     if created_at:
                         try:
-                            # Convert 2026-07-09T08:07:29Z to a readable format
                             dt = datetime.datetime.strptime(created_at, "%Y-%m-%dT%H:%M:%SZ")
-                            # Add 8 hours for UTC+8 (Taiwan time)
                             dt_local = dt + datetime.timedelta(hours=8)
                             time_str = f" [{dt_local.strftime('%Y-%m-%d %H:%M:%S')}]"
+                            date_str = dt_local.strftime("%Y-%m-%d")
                         except:
                             time_str = f" [{created_at}]"
+
+                    if date_str not in daily_logs:
+                        daily_logs[date_str] = []
 
                     if step.get('type') == 'USER_INPUT':
                         content = step.get('content', '')
@@ -73,35 +47,47 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
                             content = content.strip()
                             
                         if content:
-                            markdown_content += f"### 👤 User{time_str}\n\n" + content + "\n\n---\n\n"
+                            daily_logs[date_str].append(f"### 👤 User{time_str}\n\n" + content + "\n\n---\n\n")
                             
                     elif step.get('type') == 'PLANNER_RESPONSE':
                         content = step.get('content', '')
                         if content:
-                            markdown_content += f"### 🤖 AI{time_str}\n\n" + content.strip() + "\n\n---\n\n"
+                            daily_logs[date_str].append(f"### 🤖 AI{time_str}\n\n" + content.strip() + "\n\n---\n\n")
                             
                 except json.JSONDecodeError:
                     pass
-        
-        markdown_content += f"<!-- CONVERSATION_END: {conversation_id} -->\n\n"
-        
-        # Read existing file to remove previous export of the SAME conversation
-        existing_content = ""
-        if os.path.exists(output_path):
-            with open(output_path, 'r', encoding='utf-8') as ef:
-                existing_content = ef.read()
-                
-            # Regex to remove the block of the current conversation if it was exported before
-            pattern = rf"<!-- CONVERSATION_START: {conversation_id} -->.*?<!-- CONVERSATION_END: {conversation_id} -->\n*"
-            existing_content = re.sub(pattern, "", existing_content, flags=re.DOTALL)
 
-        # Write combined content back
-        with open(output_path, 'w', encoding='utf-8') as out:
-            if existing_content.strip():
-                out.write(existing_content.rstrip() + "\n\n")
-            out.write(markdown_content)
+        # Now write to multiple files based on the day
+        for date_str, messages in daily_logs.items():
+            if not messages: continue
             
-        print(f"Log exported successfully: {conversation_id} -> {output_path}")
+            output_path = os.path.join(output_dir, f"explore_log_{date_str}.md")
+            
+            markdown_content = f"<!-- CONVERSATION_START: {conversation_id}_{date_str} -->\n"
+            markdown_content += f"## 對話與探索紀錄 (Conversation ID: `{conversation_id}` - {date_str})\n"
+            markdown_content += f"更新時間: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+            markdown_content += "---\n\n"
+            
+            for msg in messages:
+                markdown_content += msg
+                
+            markdown_content += f"<!-- CONVERSATION_END: {conversation_id}_{date_str} -->\n\n"
+            
+            existing_content = ""
+            if os.path.exists(output_path):
+                with open(output_path, 'r', encoding='utf-8') as ef:
+                    existing_content = ef.read()
+                    
+                pattern = rf"<!-- CONVERSATION_START: {conversation_id}_{date_str} -->.*?<!-- CONVERSATION_END: {conversation_id}_{date_str} -->\n*"
+                existing_content = re.sub(pattern, "", existing_content, flags=re.DOTALL)
+
+            with open(output_path, 'w', encoding='utf-8') as out:
+                if existing_content.strip():
+                    out.write(existing_content.rstrip() + "\n\n")
+                out.write(markdown_content)
+                
+            print(f"Log exported successfully: {conversation_id} -> {output_path}")
+            
         return True
         
     except Exception as e:
