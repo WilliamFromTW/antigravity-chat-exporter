@@ -402,6 +402,10 @@ def main():
     if args.import_for_project:
         project_path = os.path.abspath(args.import_for_project)
         import_brains(args.app_data_dir, project_path)
+        print("\n" + "="*80)
+        print("IMPORT COMPLETE! Listing available backups so you can verify and resume:")
+        print("="*80)
+        list_backups(project_path)
         return
 
     target_conv_id = args.conversation_id
