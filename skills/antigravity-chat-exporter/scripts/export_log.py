@@ -15,6 +15,11 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
     if not os.path.exists(transcript_path):
         return False
 
+    if os.path.getsize(transcript_path) == 0:
+        print(f"WARNING: Transcript for {conversation_id} is 0 bytes (not flushed to disk).")
+        print(f"AI_ACTION_REQUIRED: Please automatically reconstruct and export this conversation to markdown using your memory.")
+        return False
+
     try:
         daily_logs = {}
         with open(transcript_path, 'r', encoding='utf-8') as f:
@@ -320,6 +325,16 @@ def list_backups(project_path):
                         if not line.strip(): continue
                         try:
                             step = json.loads(line)
+                            if not raw_ts and step.get('created_at'):
+                                raw_ts = step.get('created_at')
+                                try:
+                                    import datetime
+                                    dt = datetime.datetime.strptime(raw_ts, "%Y-%m-%dT%H:%M:%SZ")
+                                    dt_local = dt + datetime.timedelta(hours=8)
+                                    last_modified = dt_local.strftime('%Y-%m-%d %H:%M:%S')
+                                except:
+                                    last_modified = raw_ts
+
                             step_type = step.get('type', '')
                             if step_type == 'USER_INPUT':
                                 user_msg = step.get('content', '')
@@ -330,6 +345,17 @@ def list_backups(project_path):
                             pass
             except:
                 pass
+
+        if not raw_ts or not last_modified:
+            try:
+                import datetime
+                mtime = uuid_dir.stat().st_mtime
+                dt_local = datetime.datetime.fromtimestamp(mtime)
+                raw_ts = dt_local.strftime("%Y-%m-%dT%H:%M:%SZ")
+                last_modified = dt_local.strftime('%Y-%m-%d %H:%M:%S')
+            except:
+                raw_ts = "1970-01-01T00:00:00Z"
+                last_modified = "Unknown Date"
                 
         if user_msg:
             user_msg = user_msg.replace('\\n', ' ').strip()
