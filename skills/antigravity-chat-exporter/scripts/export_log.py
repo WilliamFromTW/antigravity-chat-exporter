@@ -92,12 +92,38 @@ def write_markdown_logs(conversation_id, output_dir, daily_logs):
             
         print(f"Log exported successfully: {conversation_id} -> {output_path}")
 
+def clean_system_text(text):
+    text = re.sub(r'<ADDITIONAL_METADATA>.*?</ADDITIONAL_METADATA>', '', text, flags=re.DOTALL)
+    text = re.sub(r'<EPHEMERAL_MESSAGE>.*?</EPHEMERAL_MESSAGE>', '', text, flags=re.DOTALL)
+    text = re.sub(r'<SKILL>.*?</SKILL>', '', text, flags=re.DOTALL)
+    text = re.sub(r'<SYSTEM_MESSAGE>.*?</SYSTEM_MESSAGE>', '', text, flags=re.DOTALL)
+    text = re.sub(r'The following is an <EPHEMERAL_MESSAGE>.*?act accordingly\.', '', text, flags=re.DOTALL)
+    
+    text = re.sub(r'\*\*[^*]+\*\*\n+(?:I\'m|I\'ve|I am|I will) .*?(?=\n\n|\Z)', '', text, flags=re.DOTALL)
+    text = re.sub(r'(?mi)^[ \t]*bot[^\n]*', '', text)
+    text = re.sub(r'(?m)^[ \t]*\*\*[^\n]*', '', text)
+    text = re.sub(r'(?m)^[ \t]*\$[^\n]*', '', text)
+    text = re.sub(r'[^\n]*(?:I\'m|I\'ve|I am|I will) [^\n]*', '', text)
+    text = re.sub(r'[^\n]*explicitly invoked[^\n]*', '', text)
+    text = re.sub(r'[^\n]*CRITICAL INSTRUCTION[^\n]*', '', text)
+    text = re.sub(r'[^\n]*file:///[^\n]*', '', text)
+    text = re.sub(r'The user is currently editing the file.*?(?=\n|\Z)', '', text)
+    
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
+
+def clean_user_text(text):
+    req_match = re.search(r'<USER_REQUEST>(.*?)</USER_REQUEST>', text, re.DOTALL)
+    if req_match:
+        return req_match.group(1).strip()
+    return clean_system_text(text)
+
 def extract_conversation_from_db(app_data_dir, conversation_id, output_dir):
-    db_path = os.path.join(app_data_dir, "conversations", f"{conversation_id}.db")
-    if not os.path.exists(db_path):
-        return False
-        
     try:
+        db_path = os.path.join(app_data_dir, "conversations", f"{conversation_id}.db")
+        if not os.path.exists(db_path):
+            return False
+            
         daily_logs = {}
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
@@ -133,11 +159,12 @@ def extract_conversation_from_db(app_data_dir, conversation_id, output_dir):
             text = longest_string.strip()
             
             if step_type == 14:
-                req_match = re.search(r'<USER_REQUEST>(.*?)</USER_REQUEST>', text, re.DOTALL)
-                if req_match:
-                    text = req_match.group(1).strip()
+                text = clean_user_text(text)
+                if not text: continue
                 daily_logs[date_str].append(f"### 👤 User [DB Fallback]\n\n{text}\n\n---\n\n")
             elif step_type == 15:
+                text = clean_system_text(text)
+                if not text: continue
                 daily_logs[date_str].append(f"### 🤖 AI [DB Fallback]\n\n{text}\n\n---\n\n")
                 
         if not daily_logs[date_str]:
@@ -186,19 +213,16 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
 
                     if step.get('type') == 'USER_INPUT':
                         content = step.get('content', '')
-                        req_match = re.search(r'<USER_REQUEST>(.*?)</USER_REQUEST>', content, re.DOTALL)
-                        if req_match:
-                            content = req_match.group(1).strip()
-                        else:
-                            content = content.strip()
+                        content = clean_user_text(content)
                             
                         if content:
                             daily_logs[date_str].append(f"### 👤 User{time_str}\n\n" + content + "\n\n---\n\n")
                             
                     elif step.get('type') == 'PLANNER_RESPONSE':
                         content = step.get('content', '')
+                        content = clean_system_text(content)
                         if content:
-                            daily_logs[date_str].append(f"### 🤖 AI{time_str}\n\n" + content.strip() + "\n\n---\n\n")
+                            daily_logs[date_str].append(f"### 🤖 AI{time_str}\n\n" + content + "\n\n---\n\n")
                             
                 except json.JSONDecodeError:
                     pass

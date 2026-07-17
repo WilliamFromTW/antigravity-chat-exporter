@@ -47,4 +47,18 @@ If the user asks to "list backed up conversation IDs" or similar, use the `--lis
 python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --list-backups "<Target Project Path>"
 ```
 
-3. After running the command, inform the user where the file(s) were saved or if the import was successful. Do NOT automatically git commit the logs unless explicitly asked.
+3. After running the command, read the output to determine where the file(s) were saved.
+4. **Auto-Summarization (Mandatory Step)**
+   After ANY export operation (whether "Export conversation", "Export all", or with custom titles), you MUST automatically execute the following summarization workflow for the newly generated or updated markdown file(s):
+   - Use the `read_file` or `view_file` tool to read the generated markdown file(s). (If multiple files were generated, process them sequentially).
+   - Based on the read context (or your existing memory of the session), generate a concise Executive Summary of the conversation.
+   - Use the `replace_file_content` or `multi_replace_file_content` tool to prepend your summary to the VERY TOP of the markdown file(s).
+   - Ensure you wrap your summary in a GitHub alert block formatted exactly like this:
+     ```markdown
+     > [!NOTE]
+     > **執行摘要 (Executive Summary)**
+     > (Your summary here)
+     
+     ```
+5. Inform the user where the file(s) were saved, and confirm that the Executive Summary was successfully added. Do NOT automatically git commit the logs unless explicitly asked.
+
