@@ -3,6 +3,151 @@ import json
 import os
 import datetime
 import re
+import sqlite3
+
+def decode_varint(data, offset):
+    result = 0
+    shift = 0
+    while offset < len(data):
+        b = data[offset]
+        result |= (b & 0x7F) << shift
+        offset += 1
+        if not (b & 0x80):
+            return result, offset
+        shift += 7
+    raise Exception("Unterminated varint")
+
+def parse_protobuf(data, strings_out):
+    offset = 0
+    while offset < len(data):
+        try:
+            key, offset = decode_varint(data, offset)
+            wire_type = key & 0x7
+            if wire_type == 0:
+                _, offset = decode_varint(data, offset)
+            elif wire_type == 1:
+                offset += 8
+            elif wire_type == 5:
+                offset += 4
+            elif wire_type == 2:
+                length, offset = decode_varint(data, offset)
+                if length > len(data) - offset:
+                    break
+                payload = data[offset:offset+length]
+                offset += length
+                try:
+                    s = payload.decode('utf-8')
+                    if len(s) > 10:
+                        printable_ratio = sum(1 for c in s if c.isprintable() or c in '\n\r\t') / len(s)
+                        if printable_ratio > 0.95:
+                            strings_out.append(s)
+                except UnicodeDecodeError:
+                    pass
+                if len(payload) > 0:
+                    try:
+                        parse_protobuf(payload, strings_out)
+                    except Exception:
+                        pass
+            else:
+                break
+        except Exception:
+            break
+
+def is_garbage(text):
+    if text.startswith('{"'): return True
+    if text.startswith('agy --'): return True
+    if len(text) < 10: return True
+    return False
+
+def write_markdown_logs(conversation_id, output_dir, daily_logs):
+    if output_dir is None:
+        output_dir = os.getcwd()
+    for date_str, messages in daily_logs.items():
+        if not messages: continue
+        
+        output_path = os.path.join(output_dir, f"explore_log_{date_str}.md")
+        
+        markdown_content = f"<!-- CONVERSATION_START: {conversation_id}_{date_str} -->\n"
+        markdown_content += f"## 對話與探索紀錄 (Conversation ID: `{conversation_id}` - {date_str})\n"
+        markdown_content += f"更新時間: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        markdown_content += "---\n\n"
+        
+        for msg in messages:
+            markdown_content += msg
+            
+        markdown_content += f"<!-- CONVERSATION_END: {conversation_id}_{date_str} -->\n\n"
+        
+        existing_content = ""
+        if os.path.exists(output_path):
+            with open(output_path, 'r', encoding='utf-8') as ef:
+                existing_content = ef.read()
+                
+            pattern = rf"<!-- CONVERSATION_START: {conversation_id}_{date_str} -->.*?<!-- CONVERSATION_END: {conversation_id}_{date_str} -->\n*"
+            existing_content = re.sub(pattern, "", existing_content, flags=re.DOTALL)
+
+        with open(output_path, 'w', encoding='utf-8') as out:
+            if existing_content.strip():
+                out.write(existing_content.rstrip() + "\n\n")
+            out.write(markdown_content)
+            
+        print(f"Log exported successfully: {conversation_id} -> {output_path}")
+
+def extract_conversation_from_db(app_data_dir, conversation_id, output_dir):
+    db_path = os.path.join(app_data_dir, "conversations", f"{conversation_id}.db")
+    if not os.path.exists(db_path):
+        return False
+        
+    try:
+        daily_logs = {}
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+        c.execute("SELECT idx, step_type, step_payload FROM steps WHERE step_type IN (14, 15) ORDER BY idx")
+        
+        date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+        summary_db = os.path.join(app_data_dir, "conversation_summaries.db")
+        if os.path.exists(summary_db):
+            try:
+                sc = sqlite3.connect(summary_db).cursor()
+                sc.execute("SELECT last_modified_time FROM conversation_summaries WHERE conversation_id=?", (conversation_id,))
+                row = sc.fetchone()
+                if row and row[0]:
+                    dt = datetime.datetime.strptime(row[0], "%Y-%m-%dT%H:%M:%SZ")
+                    dt_local = dt + datetime.timedelta(hours=8)
+                    date_str = dt_local.strftime("%Y-%m-%d")
+                sc.connection.close()
+            except:
+                pass
+                
+        daily_logs[date_str] = []
+        
+        for idx, step_type, payload in c.fetchall():
+            if not payload: continue
+            
+            strings = []
+            parse_protobuf(payload, strings)
+            valid_strings = [s for s in strings if not is_garbage(s)]
+            
+            if not valid_strings: continue
+            
+            longest_string = max(valid_strings, key=len)
+            text = longest_string.strip()
+            
+            if step_type == 14:
+                req_match = re.search(r'<USER_REQUEST>(.*?)</USER_REQUEST>', text, re.DOTALL)
+                if req_match:
+                    text = req_match.group(1).strip()
+                daily_logs[date_str].append(f"### 👤 User [DB Fallback]\n\n{text}\n\n---\n\n")
+            elif step_type == 15:
+                daily_logs[date_str].append(f"### 🤖 AI [DB Fallback]\n\n{text}\n\n---\n\n")
+                
+        if not daily_logs[date_str]:
+            return False
+            
+        write_markdown_logs(conversation_id, output_dir, daily_logs)
+        return True
+    except Exception as e:
+        print(f"Failed to export from DB {conversation_id}: {e}")
+        return False
 
 def export_conversation(app_data_dir, conversation_id, output_dir):
     logs_dir = os.path.join(app_data_dir, "brain", conversation_id, ".system_generated", "logs")
@@ -12,13 +157,9 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
         # Fallback to truncated transcript if full one is not available
         transcript_path = os.path.join(logs_dir, "transcript.jsonl")
         
-    if not os.path.exists(transcript_path):
-        return False
-
-    if os.path.getsize(transcript_path) == 0:
-        print(f"WARNING: Transcript for {conversation_id} is 0 bytes (not flushed to disk).")
-        print(f"AI_ACTION_REQUIRED: Please automatically reconstruct and export this conversation to markdown using your memory.")
-        return False
+    if not os.path.exists(transcript_path) or os.path.getsize(transcript_path) == 0:
+        print(f"WARNING: Transcript for {conversation_id} is missing or 0 bytes. Using SQLite DB fallback.")
+        return extract_conversation_from_db(app_data_dir, conversation_id, output_dir)
 
     try:
         daily_logs = {}
@@ -62,37 +203,7 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
                 except json.JSONDecodeError:
                     pass
 
-        # Now write to multiple files based on the day
-        for date_str, messages in daily_logs.items():
-            if not messages: continue
-            
-            output_path = os.path.join(output_dir, f"explore_log_{date_str}.md")
-            
-            markdown_content = f"<!-- CONVERSATION_START: {conversation_id}_{date_str} -->\n"
-            markdown_content += f"## 對話與探索紀錄 (Conversation ID: `{conversation_id}` - {date_str})\n"
-            markdown_content += f"更新時間: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-            markdown_content += "---\n\n"
-            
-            for msg in messages:
-                markdown_content += msg
-                
-            markdown_content += f"<!-- CONVERSATION_END: {conversation_id}_{date_str} -->\n\n"
-            
-            existing_content = ""
-            if os.path.exists(output_path):
-                with open(output_path, 'r', encoding='utf-8') as ef:
-                    existing_content = ef.read()
-                    
-                pattern = rf"<!-- CONVERSATION_START: {conversation_id}_{date_str} -->.*?<!-- CONVERSATION_END: {conversation_id}_{date_str} -->\n*"
-                existing_content = re.sub(pattern, "", existing_content, flags=re.DOTALL)
-
-            with open(output_path, 'w', encoding='utf-8') as out:
-                if existing_content.strip():
-                    out.write(existing_content.rstrip() + "\n\n")
-                out.write(markdown_content)
-                
-            print(f"Log exported successfully: {conversation_id} -> {output_path}")
-            
+        write_markdown_logs(conversation_id, output_dir, daily_logs)
         return True
         
     except Exception as e:
@@ -345,7 +456,7 @@ def list_backups(project_path):
                             pass
             except:
                 pass
-
+                
         if not raw_ts or not last_modified:
             try:
                 import datetime

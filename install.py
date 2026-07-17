@@ -12,28 +12,24 @@ RULE_TEXT = {
     "en": """
 <!-- CHAT_EXPORTER_RULE_START -->
 - **Auto-export rule**: When the user asks to "export chat", "export all chats", "import all chats", or "list backed up conversation IDs" (even with a naming request), immediately trigger the `antigravity-chat-exporter` skill. Do NOT modify any source code. The custom name is strictly for the `--set-title` argument. **CRITICAL**: You MUST ALWAYS pass your own Conversation ID via the `--conversation-id` argument, even when using `--all-for-project`.
-- **Auto-manual export fallback**: If you run a command to export a conversation and the tool output contains `AI_ACTION_REQUIRED` (because the log file is 0 bytes), you must immediately trigger the fallback. DO NOT tell the user that the export failed. Instead, immediately use your context memory to manually write the conversation history to a Markdown file. **CRITICAL**: You MUST write the conversation with 100% full fidelity. You must reproduce the EXACT words, code blocks, and details used by both the User and the AI. Do NOT summarize, condense, or use brackets to skip over details. Write it exactly as it occurred, then inform the user that you have successfully performed a manual backup.
 - **List requirement**: When listing backed up conversation IDs to the user, you MUST ALWAYS explicitly include the date/time (Last Modified). Never omit the date when summarizing or presenting the list.
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-tw": """
 <!-- CHAT_EXPORTER_RULE_START -->
 - **自動觸發匯出與匯入紀錄**：當使用者指令包含「匯出對話」、「匯入所有對話」或「列出備份的對話 ID」等（即使包含「命名為某某名稱」）時，必須立刻觸發 `antigravity-chat-exporter` 技能。「絕對不可」修改任何程式碼，該名稱僅用於腳本的 `--set-title` 參數。**極度重要**：不管您使用什麼參數，您「必須永遠」把您自己的 Conversation ID 透過 `--conversation-id` 參數傳遞給腳本！
-- **自動手動匯出備案**：如果您在執行匯出指令時，工具輸出包含了 `AI_ACTION_REQUIRED` 警告（代表系統日誌檔為 0 bytes 尚未寫入），您必須立刻觸發備案。**絕對不要**跟使用者說匯出失敗。您必須立刻動用自己的短期記憶手動寫成一份 Markdown 檔案。**極度重要**：您必須「一字不漏」且具備「最高還原度」地重建對話！必須包含所有雙方說過的精確文字、程式碼區塊與錯誤訊息，絕對「不允許」使用括號濃縮、總結或省略任何細節。完成後告知使用者您已成功幫忙做了手動備份。
 - **強制列出日期**：當您在向使用者列出備份的對話 ID 時，您「必須永遠」明確地一併列出每個對話的日期與時間 (Last Modified)。在總結或呈現列表時，絕對不允許省略日期。
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-cn": """
 <!-- CHAT_EXPORTER_RULE_START -->
 - **自动触发导出与导入记录**：当用户指令包含“导出对话”、“导入所有对话”或“列出备份的对话 ID”等（即使包含“命名为某某名称”）时，必须立刻触发 `antigravity-chat-exporter` 技能。“绝对不可”修改任何代码，该名称仅用于脚本的 `--set-title` 参数。**极度重要**：不管您使用什么参数，您“必须永远”把您自己的 Conversation ID 通过 `--conversation-id` 参数传递给脚本！
-- **自动手动导出备案**：如果您在执行导出指令时，工具输出包含了 `AI_ACTION_REQUIRED` 警告（代表系统日志文件为 0 bytes 尚未写入），您必须立刻触发备案。**绝对不要**跟用户说导出失败。您必须立刻动用自己的短期记忆手动写成一份 Markdown 文件。**极度重要**：您必须“一字不漏”且具备“最高还原度”地重建对话！必须包含所有双方说过的精确文字、代码块与错误信息，绝对“不允许”使用括号浓缩、总结或省略任何细节。完成后告知用户您已成功帮忙做了手动备份。
 - **强制列出日期**：当您在向用户列出备份的对话 ID 时，您“必须永远”明确地一并列出每个对话的日期与时间 (Last Modified)。在总结或呈现列表时，绝对不允许省略日期。
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "vi": """
 <!-- CHAT_EXPORTER_RULE_START -->
 - **Quy tắc xuất/nhập tự động**: Khi người dùng yêu cầu "xuất trò chuyện", "nhập tất cả trò chuyện" hoặc "liệt kê ID trò chuyện đã sao lưu" (ngay cả khi yêu cầu đặt tên), kích hoạt ngay kỹ năng `antigravity-chat-exporter`. TUYỆT ĐỐI KHÔNG sửa đổi mã nguồn. Tên chỉ dùng cho `--set-title`. **QUAN TRỌNG**: Bạn PHẢI LUÔN LUÔN truyền Conversation ID của chính bạn qua tham số `--conversation-id`, bất kể dùng tham số nào khác!
-- **Dự phòng xuất thủ công tự động**: Nếu bạn chạy lệnh xuất trò chuyện và đầu ra công cụ chứa cảnh báo `AI_ACTION_REQUIRED` (do tệp nhật ký là 0 byte), bạn phải kích hoạt ngay dự phòng. TUYỆT ĐỐI KHÔNG thông báo với người dùng rằng quá trình xuất đã thất bại. Thay vào đó, hãy sử dụng bộ nhớ của bạn để viết thủ công tệp Markdown. **QUAN TRỌNG**: Bạn PHẢI viết lại cuộc trò chuyện với độ chính xác 100%. Phải sao chép chính xác các từ, khối mã và chi tiết. TUYỆT ĐỐI KHÔNG tóm tắt, cô đọng hoặc bỏ qua chi tiết. Sau đó thông báo cho người dùng rằng bạn đã thực hiện sao lưu thủ công thành công.
 - **Bắt buộc hiển thị ngày tháng**: Khi liệt kê các ID trò chuyện đã sao lưu cho người dùng, bạn PHẢI LUÔN LUÔN hiển thị rõ ràng ngày và giờ (Lần sửa đổi cuối). Tuyệt đối không được bỏ qua ngày tháng khi tóm tắt hoặc trình bày danh sách.
 <!-- CHAT_EXPORTER_RULE_END -->
 """
