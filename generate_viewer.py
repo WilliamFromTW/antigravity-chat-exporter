@@ -2,6 +2,7 @@ import os
 import glob
 import json
 import webbrowser
+import urllib.request
 
 I18N = {
     "en": {
@@ -63,6 +64,27 @@ I18N = {
 }
 
 CONFIG_FILE = ".viewer_config.json"
+
+def get_marked_js_source():
+    cache_file = ".marked.min.js.cache"
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, "r", encoding="utf-8") as f:
+                return f.read()
+        except:
+            pass
+    
+    url = "https://cdn.jsdelivr.net/npm/marked/marked.min.js"
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        response = urllib.request.urlopen(req, timeout=10)
+        js_code = response.read().decode('utf-8')
+        with open(cache_file, "w", encoding="utf-8") as f:
+            f.write(js_code)
+        return js_code
+    except Exception as e:
+        print(f"Failed to fetch marked.js: {e}")
+        return "/* Failed to load marked.js */"
 
 def choose_language():
     print("="*40)
@@ -192,7 +214,7 @@ def generate_viewer():
     <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <!-- Marked.js for Markdown parsing -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>__MARKED_JS__</script>
     
     <style>
         :root {
@@ -277,16 +299,38 @@ def generate_viewer():
         .markdown-body pre { background: var(--bg); border: 1px solid var(--border); padding: 20px; border-radius: 8px; overflow-x: auto; margin: 24px 0; }
         .markdown-body pre code { background: transparent; padding: 0; border: none; }
         .markdown-body blockquote { border-left: 4px solid var(--primary); margin: 24px 0; padding: 12px 20px; background: var(--bg); border-radius: 0 6px 6px 0; color: var(--text-secondary); }
+        /* EARS Syntax Highlighting */
+        .ears-keyword { font-weight: 700; font-family: var(--font-code); padding: 1px 4px; border-radius: 3px; font-size: 13px; }
+        .ears-when, .ears-where, .ears-if { background: #E0F2FE; color: #0284C7; border: 1px solid #BAE6FD; }
+        .ears-while { background: #CCFBF1; color: #0D9488; border: 1px solid #99F6E4; }
+        .ears-then, .ears-shall { background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+        
+        /* Task List Completion Highlighting (Checkbox only) */
+        .markdown-body input[type="checkbox"] {
+            pointer-events: none; /* Prevent clicking since we will remove 'disabled' attribute */
+        }
+        .markdown-body input[type="checkbox"]:checked {
+            accent-color: #10B981; /* Emerald green */
+            transform: scale(1.15); /* Slightly enlarge to make it pop */
+            transition: all 0.2s;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <div class="brand-header">
-            <h1>__TITLE__</h1>
-            <p>__SUBTITLE__</p>
+            <h1 data-i18n="title">__TITLE__</h1>
+            <p data-i18n="subtitle">__SUBTITLE__</p>
         </div>
-        <input type="text" class="search-box" id="search-input" placeholder="__SEARCH_PLACEHOLDER__">
+        <input type="text" class="search-box" id="search-input" placeholder="__SEARCH_PLACEHOLDER__" data-i18n-placeholder="search_placeholder">
         <div id="navigation"></div>
+        <div style="flex-grow: 1;"></div>
+        <select id="lang-selector" onchange="applyTranslations(this.value)" style="margin-top: 24px; width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); font-family: var(--font-body); font-size: 13px; color: var(--text-secondary); cursor: pointer; outline: none;">
+            <option value="en">English</option>
+            <option value="zh-tw">繁體中文</option>
+            <option value="zh-cn">简体中文</option>
+            <option value="vi">Tiếng Việt</option>
+        </select>
     </div>
     
     <div class="main-content">
@@ -297,6 +341,7 @@ def generate_viewer():
 
     <script>
         const projectData = __PROJECT_DATA__;
+        const i18nDict = __I18N_DICT__;
         const noLogsMsg = "__NO_LOGS__";
         let currentSearch = "";
 
@@ -304,6 +349,44 @@ def generate_viewer():
         const searchEl = document.getElementById('search-input');
         const viewerEl = document.getElementById('markdown-viewer');
         const containerEl = document.getElementById('content-container');
+
+        let TEXT_CAT_LOGS = "__CAT_LOGS__";
+        let TEXT_CAT_ACTIVE = "__CAT_ACTIVE__";
+        let TEXT_CAT_ARCHIVED = "__CAT_ARCHIVED__";
+
+        window.applyTranslations = function(lang) {
+            const t = i18nDict[lang] || i18nDict['en'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.textContent = t[key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (t[key]) el.placeholder = t[key];
+            });
+            TEXT_CAT_LOGS = t['cat_logs'];
+            TEXT_CAT_ACTIVE = t['cat_active'];
+            TEXT_CAT_ARCHIVED = t['cat_archived'];
+            
+            if (navEl.innerHTML.trim() !== '') {
+                renderNav();
+            }
+            
+            const selector = document.getElementById('lang-selector');
+            if (selector && selector.value !== lang) {
+                selector.value = lang;
+            }
+        };
+
+        // Initialize translation
+        let detectedLang = navigator.language.toLowerCase();
+        if (!i18nDict[detectedLang]) {
+            if (detectedLang.startsWith('zh-cn') || detectedLang.startsWith('zh-hans')) detectedLang = 'zh-cn';
+            else if (detectedLang.startsWith('zh')) detectedLang = 'zh-tw';
+            else if (detectedLang.startsWith('vi')) detectedLang = 'vi';
+            else detectedLang = 'en';
+        }
+        applyTranslations(detectedLang);
 
         marked.setOptions({ breaks: true, gfm: true });
 
@@ -352,7 +435,7 @@ def generate_viewer():
                     logsHtml += `<button class="nav-item log-nav" onclick="selectLog('${date}')">📄 ${date}</button>`;
                 }
             });
-            if (logsHtml) navEl.innerHTML += `<div class="category-header" onclick="toggleCat(this)">__CAT_LOGS__</div><div class="category-content">${logsHtml}</div>`;
+            if (logsHtml) navEl.innerHTML += `<div class="category-header" onclick="toggleCat(this)">${TEXT_CAT_LOGS}</div><div class="category-content">${logsHtml}</div>`;
 
             // Active Changes
             const activeChanges = Object.keys(projectData.active_changes).sort();
@@ -370,7 +453,7 @@ def generate_viewer():
                     activeHtml += `<div class="nav-folder-title">${change}</div><div class="nav-folder">${filesHtml}</div>`;
                 }
             });
-            if (activeHtml) navEl.innerHTML += `<div class="category-header" onclick="toggleCat(this)">__CAT_ACTIVE__</div><div class="category-content">${activeHtml}</div>`;
+            if (activeHtml) navEl.innerHTML += `<div class="category-header" onclick="toggleCat(this)">${TEXT_CAT_ACTIVE}</div><div class="category-content">${activeHtml}</div>`;
 
             // Archived Changes
             const archivedChanges = Object.keys(projectData.archived_changes).sort().reverse();
@@ -388,7 +471,7 @@ def generate_viewer():
                     archivedHtml += `<div class="nav-folder-title">${change}</div><div class="nav-folder">${filesHtml}</div>`;
                 }
             });
-            if (archivedHtml) navEl.innerHTML += `<div class="category-header collapsed" onclick="toggleCat(this)">__CAT_ARCHIVED__</div><div class="category-content collapsed">${archivedHtml}</div>`;
+            if (archivedHtml) navEl.innerHTML += `<div class="category-header collapsed" onclick="toggleCat(this)">${TEXT_CAT_ARCHIVED}</div><div class="category-content collapsed">${archivedHtml}</div>`;
         }
 
         function triggerAnimation() {
@@ -399,6 +482,47 @@ def generate_viewer():
 
         function clearActiveNav() {
             document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag]));
+        }
+
+        function applyEarsHighlighting(element) {
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+            const nodesToReplace = [];
+            let node;
+            while (node = walker.nextNode()) {
+                let parent = node.parentNode;
+                let skip = false;
+                while (parent && parent !== element) {
+                    if (parent.tagName === 'PRE' || parent.tagName === 'CODE') {
+                        skip = true;
+                        break;
+                    }
+                    parent = parent.parentNode;
+                }
+                if (!skip) {
+                    nodesToReplace.push(node);
+                }
+            }
+
+            const regex = /\b(WHEN|WHILE|WHERE|IF|THEN|SHALL)\b/g;
+            nodesToReplace.forEach(n => {
+                if (regex.test(n.nodeValue)) {
+                    const span = document.createElement('span');
+                    span.innerHTML = escapeHTML(n.nodeValue).replace(regex, (match) => {
+                        return `<span class="ears-keyword ears-${match.toLowerCase()}">${match}</span>`;
+                    });
+                    n.parentNode.replaceChild(span, n);
+                }
+            });
         }
 
         window.selectLog = function(date) {
@@ -414,6 +538,7 @@ def generate_viewer():
             let html = marked.parse(logData.content);
             if (currentSearch) html = highlightText(html, currentSearch);
             viewerEl.innerHTML = headerHtml + html;
+            viewerEl.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.removeAttribute('disabled'));
         }
 
         window.selectArtifact = function(category, change, file) {
@@ -426,6 +551,8 @@ def generate_viewer():
             let html = marked.parse(rawMd);
             if (currentSearch) html = highlightText(html, currentSearch);
             viewerEl.innerHTML = html;
+            viewerEl.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.removeAttribute('disabled'));
+            applyEarsHighlighting(viewerEl);
         }
 
         window.jumpToChange = function(changeName) {
@@ -469,6 +596,8 @@ def generate_viewer():
 </html>"""
 
     html_content = html_template.replace("__HTML_TITLE__", t['html_title'])
+    html_content = html_content.replace("__MARKED_JS__", get_marked_js_source())
+    html_content = html_content.replace("__I18N_DICT__", json.dumps(I18N).replace("</", "<\\/"))
     html_content = html_content.replace("__TITLE__", t['title'])
     html_content = html_content.replace("__SUBTITLE__", t['subtitle'])
     html_content = html_content.replace("__NO_LOGS__", t['no_logs'])

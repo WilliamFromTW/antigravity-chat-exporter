@@ -12,3 +12,5 @@ records/
 openspec/
 .antigravity_sync/
 .agent/
+.marked.min.js.cache
+*.html
