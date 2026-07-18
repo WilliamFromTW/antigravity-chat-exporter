@@ -71,4 +71,5 @@ python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --list-back
      > </div>
      ```
 5. Inform the user where the file(s) were saved, and confirm that the Executive Summary was successfully added. Do NOT automatically git commit the logs unless explicitly asked.
-
+6. **Git Commit Rule (Multilingual Message)**
+   If the user explicitly asks you to `commit` changes related to this project, you MUST write the git commit message in 4 languages (English, Traditional Chinese, Simplified Chinese, and Vietnamese). Format the commit message body with language sections using `[zh-TW]`, `[en]`, `[zh-CN]`, and `[vi]` headers.
