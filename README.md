@@ -15,7 +15,7 @@
 - **Import All Chats**: Restores the previously backed up AI memory (`brain/` & `.db`) from `.antigravity_sync/brains/` back into the system's core memory.
 - **Smart Formatting**: Automatically converts underlying UTC timestamps to your local time.
 - **Auto-Rule Injection**: Installs a rule that automatically triggers the export when you say "export chat".
-- **Genesis Chat Viewer**: Auto-deploys `generate_viewer.bat` to your project to turn exported markdown logs into a stunning HTML UI. It supports multi-language UI selection and automatically remembers your custom log directory for future use!
+- **Genesis Chat Viewer**: Auto-deploys `generate_viewer.bat` to turn exported markdown logs into a stunning HTML UI. Features a brand new **3-Column Layout** integrating OpenSpec workflow! (Left: Chat Logs, Center: Active & Archived Changes, Right: Tabbed reading view for Proposals, Designs, Tasks, and concatenated Specs). Supports auto-translation of directories via `changes_i18n.json` and multi-language UI selection!
 
 ### Requirements
 - OpenSpec 1.6.0
@@ -77,7 +77,7 @@ Select option `3` to uninstall from the local project, or option `4` to uninstal
 - **匯入所有對話**：可將備份於 `.antigravity_sync/brains/` 中的大腦狀態與資料庫，一鍵還原至本機系統核心，完美支援跨機器復原！
 - **智慧去重機制**：自動將底層的 UTC 時間轉換為本地時間，且多次匯出不會產生重複贅字。
 - **專案鐵律注入**：安裝時會自動寫入專案鐵律，讓 AI 聽懂您的匯出指令。
-- **Genesis 美型閱讀器**：安裝時會自動部署 `generate_viewer.bat`，一鍵將 Markdown 轉換成絕美的 HTML 閱讀介面。內建四國語言 UI，且若自訂日誌目錄會自動記憶，下次免重複輸入！
+- **Genesis 美型閱讀器**：一鍵將 Markdown 轉換成絕美的 HTML 閱讀介面。全面升級 **三欄式版面** 完美整合 OpenSpec 工作流！（左欄：對話紀錄；中欄：活躍與封存的 Changes；右欄：Proposal、Design、Tasks、Specs 分頁檢視）。支援全自動化維護 `changes_i18n.json` 翻譯字典，並內建四國語言 UI 切換！
 
 ### 系統需求
 - OpenSpec 1.6.0
@@ -139,7 +139,7 @@ python install.py
 - **导入所有对话**：可将备份于 `.antigravity_sync/brains/` 中的大脑状态与数据库，一键还原至本机系统核心，完美支持跨机器复原！
 - **智能去重机制**：自动将底层的 UTC 时间转换为本地时间，且多次导出不会产生重复内容。
 - **项目铁律自动注入**：安装时会自动写入项目铁律，让 AI 听懂您的指令。
-- **Genesis 美型阅读器**：安装时会自动部署 `generate_viewer.bat`，一键将 Markdown 转换成绝美的 HTML 阅读界面。内置四国语言 UI，且若自定义日志目录会自动记忆，下次免重复输入！
+- **Genesis 美型阅读器**：一键将 Markdown 转换成绝美的 HTML 阅读界面。全面升级 **三栏式版面** 完美整合 OpenSpec 工作流！（左栏：对话记录；中栏：活跃与归档的 Changes；右栏：Proposal、Design、Tasks、Specs 分页检视）。支持全自动化维护 `changes_i18n.json` 翻译字典，并内置四国语言 UI 切换！
 
 ### 系统要求
 - OpenSpec 1.6.0
@@ -201,7 +201,7 @@ python install.py
 - **Nhập tất cả trò chuyện**: Khôi phục bộ nhớ AI đã sao lưu trước đó từ `.antigravity_sync/brains/` trở lại bộ nhớ lõi của hệ thống để hỗ trợ phục hồi xuyên máy!
 - **Định dạng thông minh**: Tự động chuyển đổi múi giờ UTC sang giờ địa phương và ngăn chặn nhật ký bị lặp lại một cách thông minh.
 - **Tự động thêm quy tắc**: Cài đặt một quy tắc (rule) tự động kích hoạt quá trình xuất khi bạn nói "xuất trò chuyện".
-- **Genesis Chat Viewer**: Tự động triển khai `generate_viewer.bat` vào dự án của bạn để biến nhật ký markdown thành giao diện HTML tuyệt đẹp. Hỗ trợ 4 ngôn ngữ giao diện và tự động ghi nhớ thư mục nhật ký tùy chỉnh của bạn cho những lần sử dụng sau!
+- **Genesis Chat Viewer**: Tự động triển khai `generate_viewer.bat` biến nhật ký markdown thành giao diện HTML tuyệt đẹp. Tích hợp **Bố cục 3 Cột** hoàn toàn mới với quy trình OpenSpec! (Trái: Nhật ký trò chuyện, Giữa: Các Changes Đang hoạt động & Đã lưu trữ, Phải: Chế độ xem theo tab cho Proposal, Design, Tasks, Specs). Hỗ trợ tự động dịch các thư mục thông qua `changes_i18n.json` và 4 ngôn ngữ giao diện!
 
 ### Yêu cầu hệ thống
 - OpenSpec 1.6.0
