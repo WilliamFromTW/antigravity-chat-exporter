@@ -203,11 +203,7 @@ def install_local(t, lang):
     
     add_local_rule(agent_dir, lang)
     
-    # Copy viewer scripts to the project root
-    for file_name in ["generate_viewer.py", "generate_viewer.bat", "generate_viewer.sh"]:
-        src_file = os.path.join(PKG_DIR, file_name)
-        if os.path.exists(src_file):
-            shutil.copy2(src_file, os.path.join(target_dir, file_name))
+    # Note: viewer scripts are no longer copied to the project root
             
     print(t['inst_local_done'].format(agent_dir=agent_dir))
 
