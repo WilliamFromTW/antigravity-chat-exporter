@@ -15,7 +15,7 @@
 - **Import All Chats**: Restores the previously backed up AI memory (`brain/` & `.db`) from `.antigravity_sync/brains/` back into the system's core memory.
 - **Smart Formatting**: Automatically converts underlying UTC timestamps to your local time.
 - **Auto-Rule Injection**: Installs a rule that automatically triggers the export when you say "export chat".
-- **Genesis Chat Viewer**: Auto-deploys `generate_viewer.bat` to turn exported markdown logs into a stunning HTML UI. Features a brand new **3-Column Layout** integrating OpenSpec workflow! (Left: Chat Logs, Center: Active & Archived Changes, Right: Tabbed reading view for Proposals, Designs, Tasks, and concatenated Specs). Supports auto-translation of directories via `changes_i18n.json` and multi-language UI selection!
+- **Genesis Chat Viewer**: Automatically generates a stunning HTML UI (`chat_history_viewer.html`) whenever you export logs. Features a brand new **3-Column Layout** integrating OpenSpec workflow! (Left: Chat Logs, Center: Active & Archived Changes, Right: Tabbed reading view for Proposals, Designs, Tasks, and concatenated Specs). Supports auto-translation of directories via `changes_i18n.json` and multi-language UI selection!
 
 ### Requirements
 - OpenSpec 1.6.0
@@ -52,7 +52,7 @@ The AI will automatically trigger the skill and save the logs into `openspec/exp
 > - **Naming Rule**: Files are named based on the date of the "last message" in the conversation (e.g., `explore_log_2024-05-20.md`).
 > - **Content Scope**: The system exports the complete history based on the Conversation ID. Therefore, if a single conversation spans multiple days, the file will include the previous days' chat history as well, without splitting them by date.
 
-To view the logs beautifully, double click `generate_viewer.bat` (Windows) or run `sh generate_viewer.sh` (Mac/Linux) in your project root!
+To view the logs beautifully, simply double click the generated `chat_history_viewer.html` in your project root!
 
 ### Uninstallation
 To cleanly remove the skill and its auto-trigger rules, simply run the installer again:
@@ -77,7 +77,7 @@ Select option `3` to uninstall from the local project, or option `4` to uninstal
 - **匯入所有對話**：可將備份於 `.antigravity_sync/brains/` 中的大腦狀態與資料庫，一鍵還原至本機系統核心，完美支援跨機器復原！
 - **智慧去重機制**：自動將底層的 UTC 時間轉換為本地時間，且多次匯出不會產生重複贅字。
 - **專案鐵律注入**：安裝時會自動寫入專案鐵律，讓 AI 聽懂您的匯出指令。
-- **Genesis 美型閱讀器**：一鍵將 Markdown 轉換成絕美的 HTML 閱讀介面。全面升級 **三欄式版面** 完美整合 OpenSpec 工作流！（左欄：對話紀錄；中欄：活躍與封存的 Changes；右欄：Proposal、Design、Tasks、Specs 分頁檢視）。支援全自動化維護 `changes_i18n.json` 翻譯字典，並內建四國語言 UI 切換！
+- **Genesis 美型閱讀器**：匯出時全自動生成 `chat_history_viewer.html` 絕美閱讀介面。全面升級 **三欄式版面** 完美整合 OpenSpec 工作流！（左欄：對話紀錄；中欄：活躍與封存的 Changes；右欄：Proposal、Design、Tasks、Specs 分頁檢視）。支援全自動化維護 `changes_i18n.json` 翻譯字典，並內建四國語言 UI 切換！
 
 ### 系統需求
 - OpenSpec 1.6.0
@@ -114,7 +114,7 @@ AI 就會自動觸發技能，將日誌儲存在 `openspec/explorations/explore_
 > - **檔名規則**：以該對話紀錄中「最後一則訊息」的日期進行命名（如：`explore_log_2024-05-20.md`）。
 > - **內容範圍**：系統是以對話 ID (Conversation ID) 為單位進行完整匯出，因此若同一個對話延續了數天，該檔案內將會一併包含前幾天的歷史對話內容，不會依照日期拆檔。
 
-若想以最美的介面回顧對話，只要在專案根目錄點兩下 `generate_viewer.bat` (Windows) 或執行 `sh generate_viewer.sh` (Mac/Linux) 即可！
+若想以最美的介面回顧對話，只要在專案根目錄點選自動生成的 `chat_history_viewer.html` 即可！
 
 ### 移除安裝
 若要乾淨移除這項技能與自動寫入的專案鐵律，請再次執行安裝精靈：
@@ -139,7 +139,7 @@ python install.py
 - **导入所有对话**：可将备份于 `.antigravity_sync/brains/` 中的大脑状态与数据库，一键还原至本机系统核心，完美支持跨机器复原！
 - **智能去重机制**：自动将底层的 UTC 时间转换为本地时间，且多次导出不会产生重复内容。
 - **项目铁律自动注入**：安装时会自动写入项目铁律，让 AI 听懂您的指令。
-- **Genesis 美型阅读器**：一键将 Markdown 转换成绝美的 HTML 阅读界面。全面升级 **三栏式版面** 完美整合 OpenSpec 工作流！（左栏：对话记录；中栏：活跃与归档的 Changes；右栏：Proposal、Design、Tasks、Specs 分页检视）。支持全自动化维护 `changes_i18n.json` 翻译字典，并内置四国语言 UI 切换！
+- **Genesis 美型阅读器**：导出时全自动生成 `chat_history_viewer.html` 绝美阅读界面。全面升级 **三栏式版面** 完美整合 OpenSpec 工作流！（左栏：对话记录；中栏：活跃与归档的 Changes；右栏：Proposal、Design、Tasks、Specs 分页检视）。支持全自动化维护 `changes_i18n.json` 翻译字典，并内置四国语言 UI 切换！
 
 ### 系统要求
 - OpenSpec 1.6.0
@@ -176,7 +176,7 @@ AI 就会自动触发技能，将日志储存在 `openspec/explorations/explore_
 > - **文件名规则**：以该对话记录中“最后一则消息”的日期进行命名（如：`explore_log_2024-05-20.md`）。
 > - **内容范围**：系统是以对话 ID (Conversation ID) 为单位进行完整导出，因此若同一个对话延续了数天，该文件内将会一并包含前几天的历史对话内容，不会依照日期拆分。
 
-若想以最美的界面回顾对话，只需在项目根目录双击 `generate_viewer.bat` (Windows) 或执行 `sh generate_viewer.sh` (Mac/Linux) 即可！
+若想以最美的界面回顾对话，只需在项目根目录双击自动生成的 `chat_history_viewer.html` 即可！
 
 ### 卸载说明
 若要干净卸载这项技能与自动写入的项目铁律，请再次运行安装向导：
@@ -201,7 +201,7 @@ python install.py
 - **Nhập tất cả trò chuyện**: Khôi phục bộ nhớ AI đã sao lưu trước đó từ `.antigravity_sync/brains/` trở lại bộ nhớ lõi của hệ thống để hỗ trợ phục hồi xuyên máy!
 - **Định dạng thông minh**: Tự động chuyển đổi múi giờ UTC sang giờ địa phương và ngăn chặn nhật ký bị lặp lại một cách thông minh.
 - **Tự động thêm quy tắc**: Cài đặt một quy tắc (rule) tự động kích hoạt quá trình xuất khi bạn nói "xuất trò chuyện".
-- **Genesis Chat Viewer**: Tự động triển khai `generate_viewer.bat` biến nhật ký markdown thành giao diện HTML tuyệt đẹp. Tích hợp **Bố cục 3 Cột** hoàn toàn mới với quy trình OpenSpec! (Trái: Nhật ký trò chuyện, Giữa: Các Changes Đang hoạt động & Đã lưu trữ, Phải: Chế độ xem theo tab cho Proposal, Design, Tasks, Specs). Hỗ trợ tự động dịch các thư mục thông qua `changes_i18n.json` và 4 ngôn ngữ giao diện!
+- **Genesis Chat Viewer**: Tự động tạo giao diện HTML tuyệt đẹp (`chat_history_viewer.html`) mỗi khi bạn xuất nhật ký. Tích hợp **Bố cục 3 Cột** hoàn toàn mới với quy trình OpenSpec! (Trái: Nhật ký trò chuyện, Giữa: Các Changes Đang hoạt động & Đã lưu trữ, Phải: Chế độ xem theo tab cho Proposal, Design, Tasks, Specs). Hỗ trợ tự động dịch các thư mục thông qua `changes_i18n.json` và 4 ngôn ngữ giao diện!
 
 ### Yêu cầu hệ thống
 - OpenSpec 1.6.0
@@ -238,7 +238,7 @@ AI sẽ tự động kích hoạt kỹ năng và lưu nhật ký vào `openspec/
 > - **Quy tắc đặt tên**: Tệp được đặt tên dựa trên ngày của "tin nhắn cuối cùng" trong cuộc trò chuyện (ví dụ: `explore_log_2024-05-20.md`).
 > - **Phạm vi nội dung**: Hệ thống xuất toàn bộ lịch sử dựa trên ID cuộc trò chuyện (Conversation ID). Do đó, nếu một cuộc trò chuyện kéo dài nhiều ngày, tệp sẽ bao gồm cả lịch sử trò chuyện của những ngày trước đó mà không chia tách theo ngày.
 
-Để xem chúng với giao diện đẹp nhất, hãy nhấp đúp vào `generate_viewer.bat` (Windows) hoặc chạy `sh generate_viewer.sh` (Mac/Linux) trong thư mục dự án của bạn!
+Để xem chúng với giao diện đẹp nhất, chỉ cần nhấp đúp vào tệp `chat_history_viewer.html` được tạo tự động trong thư mục dự án của bạn!
 
 ### Gỡ cài đặt (Uninstall)
 Để xóa sạch kỹ năng và các quy tắc tự động kích hoạt của nó, hãy chạy lại trình cài đặt:
