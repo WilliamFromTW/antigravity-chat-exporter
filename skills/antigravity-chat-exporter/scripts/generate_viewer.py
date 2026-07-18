@@ -28,6 +28,7 @@ I18N = {
         "cat_logs": "Logs",
         "cat_active": "Active Changes",
         "cat_archived": "Archived Changes",
+        "cat_specs": "Main Specs",
         "search_placeholder": "Search logs and artifacts..."
     },
     "zh-tw": {
@@ -39,6 +40,7 @@ I18N = {
         "cat_logs": "對話日誌",
         "cat_active": "活躍變更",
         "cat_archived": "封存變更",
+        "cat_specs": "主要 Spec",
         "search_placeholder": "搜尋日誌與專案文件..."
     },
     "zh-cn": {
@@ -50,6 +52,7 @@ I18N = {
         "cat_logs": "对话日志",
         "cat_active": "活跃变更",
         "cat_archived": "归档变更",
+        "cat_specs": "主要 Spec",
         "search_placeholder": "搜索日志与项目文件..."
     },
     "vi": {
@@ -61,6 +64,7 @@ I18N = {
         "cat_logs": "Nhật ký",
         "cat_active": "Thay đổi Đang hoạt động",
         "cat_archived": "Thay đổi Đã lưu trữ",
+        "cat_specs": "Thông số chính",
         "search_placeholder": "Tìm kiếm nhật ký và tài liệu..."
     }
 }
@@ -151,6 +155,7 @@ def generate_viewer():
         
     project_data = {
         "logs": {},
+        "main_specs": {},
         "active_changes": {},
         "archived_changes": {}
     }
@@ -170,6 +175,13 @@ def generate_viewer():
                     "summary": summary,
                     "related_changes": []
                 }
+
+    main_specs_dir = "openspec/specs"
+    if os.path.exists(main_specs_dir):
+        for entry in os.listdir(main_specs_dir):
+            entry_path = os.path.join(main_specs_dir, entry)
+            if os.path.isdir(entry_path):
+                project_data["main_specs"][entry] = parse_change_dir(entry_path)
 
     changes_dir = "openspec/changes"
     if os.path.exists(changes_dir):
@@ -237,6 +249,10 @@ def generate_viewer():
             width: 320px; background: var(--surface); border-right: 1px solid var(--border);
             display: flex; flex-direction: column; padding: 32px 24px; overflow-y: auto; z-index: 10;
         }
+        .changes-sidebar {
+            width: 320px; background: var(--surface); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 32px 24px; overflow-y: auto; z-index: 10;
+        }
         .brand-header { margin-bottom: 24px; }
         .brand-header h1 { font-size: 24px; margin: 0; }
         .brand-header p { color: var(--text-secondary); font-size: 13px; margin: 4px 0 0 0; }
@@ -265,14 +281,17 @@ def generate_viewer():
         }
         .nav-item:hover { background: var(--bg); color: var(--text-primary); }
         .nav-item.active { background: var(--primary); color: var(--surface); }
-        .nav-folder { margin-left: 12px; padding-left: 12px; border-left: 1px solid var(--border); margin-bottom: 8px; }
-        .nav-folder-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin: 8px 0 4px 0; display: flex; align-items: center; }
-        .nav-folder-title::before { content: "📂"; margin-right: 6px; font-size: 12px; }
         
-        .main-content { flex: 1; overflow-y: auto; padding: 64px; display: flex; justify-content: center; align-items: flex-start; }
+        .change-nav { padding: 10px 12px; flex-direction: column; align-items: flex-start; }
+        .change-nav .change-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text-primary); }
+        .change-nav .change-id { font-size: 12px; font-family: var(--font-code); color: var(--text-secondary); }
+        .change-nav:hover .change-title, .change-nav:hover .change-id { color: var(--text-primary); }
+        .change-nav.active .change-title, .change-nav.active .change-id { color: var(--surface); }
+        
+        .main-content { flex: 1; overflow-y: auto; padding: 24px; display: flex; justify-content: center; align-items: flex-start; }
         .log-container {
-            width: 100%; max-width: 900px; background: var(--surface); border: 1px solid var(--border);
-            border-radius: 12px; padding: 48px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            width: 100%; max-width: 100%; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             animation: fadeUp 0.4s forwards ease-out;
         }
         @keyframes fadeUp { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
@@ -294,21 +313,26 @@ def generate_viewer():
         .markdown-body pre { background: var(--bg); border: 1px solid var(--border); padding: 20px; border-radius: 8px; overflow-x: auto; margin: 24px 0; }
         .markdown-body pre code { background: transparent; padding: 0; border: none; }
         .markdown-body blockquote { border-left: 4px solid var(--primary); margin: 24px 0; padding: 12px 20px; background: var(--bg); border-radius: 0 6px 6px 0; color: var(--text-secondary); }
+        
+        .markdown-body h4.spec-separator {
+            font-size: 16px; color: var(--text-secondary); margin-top: 40px; margin-bottom: 16px;
+            font-family: var(--font-code); display: flex; align-items: center; white-space: nowrap;
+        }
+        .markdown-body h4.spec-separator::before,
+        .markdown-body h4.spec-separator::after {
+            content: ""; flex: 1; border-top: 1px dashed var(--border); margin: 0 16px;
+        }
+
         /* EARS Syntax Highlighting */
         .ears-keyword { font-weight: 700; font-family: var(--font-code); padding: 1px 4px; border-radius: 3px; font-size: 13px; }
         .ears-when, .ears-where, .ears-if { background: #E0F2FE; color: #0284C7; border: 1px solid #BAE6FD; }
         .ears-while { background: #CCFBF1; color: #0D9488; border: 1px solid #99F6E4; }
         .ears-then, .ears-shall { background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+        .ears-and, .ears-or { background: #F3E8FF; color: #7E22CE; border: 1px solid #E9D5FF; }
         
-        /* Task List Completion Highlighting (Checkbox only) */
-        .markdown-body input[type="checkbox"] {
-            pointer-events: none; /* Prevent clicking since we will remove 'disabled' attribute */
-        }
-        .markdown-body input[type="checkbox"]:checked {
-            accent-color: #10B981; /* Emerald green */
-            transform: scale(1.15); /* Slightly enlarge to make it pop */
-            transition: all 0.2s;
-        }
+        /* Task List Completion Highlighting */
+        .markdown-body input[type="checkbox"] { pointer-events: none; }
+        .markdown-body input[type="checkbox"]:checked { accent-color: #10B981; transform: scale(1.15); transition: all 0.2s; }
         
         /* Sidebar Summary Preview */
         .log-nav-wrapper { display: flex; flex-direction: column; }
@@ -316,17 +340,50 @@ def generate_viewer():
         .sidebar-summary.collapsed { max-height: 0; opacity: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; border: none; overflow: hidden; }
         .sidebar-summary p { margin: 4px 0; }
         
-        /* I18N Language Filtering */
-        body [lang="zh-tw"], body [lang="zh-cn"], body [lang="vi"], body [lang="en"] {
-            display: none !important;
+        /* Tabs */
+        .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 24px; gap: 16px; }
+        .tab-button {
+            background: none; border: none; padding: 12px 16px; font-family: var(--font-body);
+            font-size: 15px; font-weight: 600; color: var(--text-secondary); cursor: pointer;
+            border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s;
         }
+        .tab-button.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-button:hover:not(.active) { color: var(--text-primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .change-header { margin-bottom: 24px; }
+        .change-header h2 { margin: 0 0 8px 0; font-size: 28px; border-bottom: none; padding-bottom: 0; }
+        .change-header .change-id-badge { display: inline-block; background: var(--bg); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; font-family: var(--font-code); font-size: 13px; color: var(--text-secondary); }
+
+        /* I18N Language Filtering */
+        body [lang="zh-tw"], body [lang="zh-cn"], body [lang="vi"], body [lang="en"] { display: none !important; }
         body.lang-en [lang="en"] { display: block !important; }
         body.lang-zh-tw [lang="zh-tw"] { display: block !important; }
         body.lang-zh-cn [lang="zh-cn"] { display: block !important; }
         body.lang-vi [lang="vi"] { display: block !important; }
+        /* Responsive Layout */
+        .mobile-toggle { display: none; position: fixed; top: 16px; left: 16px; width: 44px; height: 44px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 20px; z-index: 1100; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); justify-content: center; align-items: center; }
+        .mobile-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 990; opacity: 0; transition: opacity 0.3s; }
+
+        @media (max-width: 1400px) {
+            .mobile-toggle { display: flex; }
+            .mobile-overlay.open { display: block; opacity: 1; }
+            
+            body { overflow-y: auto; }
+            
+            .sidebar { position: fixed; top: 0; bottom: 50%; left: -300px; width: 300px; min-width: 300px; z-index: 1000; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 16px rgba(0,0,0,0.2); }
+            .changes-sidebar { position: fixed; top: 50%; bottom: 0; left: -300px; width: 300px; min-width: 300px; z-index: 1000; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 16px rgba(0,0,0,0.2); border-left: none; border-top: 1px solid var(--border); }
+            
+            .sidebar.open, .changes-sidebar.open { left: 0; }
+            
+            .main-content { padding: 80px 16px 24px; overflow-y: visible; }
+            .log-container { padding: 24px; }
+        }
     </style>
 </head>
 <body>
+    <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="mobile-overlay" id="mobile-overlay" onclick="toggleSidebar()"></div>
     <div class="sidebar">
         <div class="brand-header">
             <h1 data-i18n="title">__TITLE__</h1>
@@ -339,13 +396,40 @@ def generate_viewer():
             </select>
         </div>
         <input type="text" class="search-box" id="search-input" placeholder="__SEARCH_PLACEHOLDER__" data-i18n-placeholder="search_placeholder">
-        <div id="navigation"></div>
-        <div style="flex-grow: 1;"></div>
+        <div class="category-content" id="logs-nav" style="margin-top: 16px;"></div>
+    </div>
+    
+    <div class="changes-sidebar">
+        <div class="category-header" onclick="toggleCat(this)"><span data-i18n="cat_specs"></span></div>
+        <div class="category-content" id="main-specs-nav"></div>
+        <div class="category-header" onclick="toggleCat(this)"><span data-i18n="cat_active"></span></div>
+        <div class="category-content" id="active-changes-nav"></div>
+        <div class="category-header collapsed" onclick="toggleCat(this)"><span data-i18n="cat_archived"></span></div>
+        <div class="category-content collapsed" id="archived-changes-nav"></div>
     </div>
     
     <div class="main-content">
         <div class="log-container" id="content-container">
+            <!-- Logs View -->
             <div class="markdown-body" id="markdown-viewer"></div>
+            
+            <!-- Changes Tabbed View -->
+            <div id="change-viewer" style="display: none;">
+                <div class="change-header">
+                    <h2 id="change-title-display"></h2>
+                    <div class="change-id-badge" id="change-id-display"></div>
+                </div>
+                <div class="tabs">
+                    <button class="tab-button active" onclick="switchTab('proposal')">Proposal</button>
+                    <button class="tab-button" onclick="switchTab('design')">Design</button>
+                    <button class="tab-button" onclick="switchTab('tasks')">Tasks</button>
+                    <button class="tab-button" onclick="switchTab('specs')">Specs</button>
+                </div>
+                <div class="tab-content active markdown-body" id="tab-proposal"></div>
+                <div class="tab-content markdown-body" id="tab-design"></div>
+                <div class="tab-content markdown-body" id="tab-tasks"></div>
+                <div class="tab-content markdown-body" id="tab-specs"></div>
+            </div>
         </div>
     </div>
 
@@ -355,14 +439,14 @@ def generate_viewer():
         const noLogsMsg = "__NO_LOGS__";
         let currentSearch = "";
 
-        const navEl = document.getElementById('navigation');
+        const logsNavEl = document.getElementById('logs-nav');
+        const activeChangesNavEl = document.getElementById('active-changes-nav');
+        const archivedChangesNavEl = document.getElementById('archived-changes-nav');
+        
         const searchEl = document.getElementById('search-input');
         const viewerEl = document.getElementById('markdown-viewer');
+        const changeViewerEl = document.getElementById('change-viewer');
         const containerEl = document.getElementById('content-container');
-
-        let TEXT_CAT_LOGS = "__CAT_LOGS__";
-        let TEXT_CAT_ACTIVE = "__CAT_ACTIVE__";
-        let TEXT_CAT_ARCHIVED = "__CAT_ARCHIVED__";
 
         window.applyTranslations = function(lang) {
             document.body.className = 'lang-' + lang;
@@ -375,13 +459,8 @@ def generate_viewer():
                 const key = el.getAttribute('data-i18n-placeholder');
                 if (t[key]) el.placeholder = t[key];
             });
-            TEXT_CAT_LOGS = t['cat_logs'];
-            TEXT_CAT_ACTIVE = t['cat_active'];
-            TEXT_CAT_ARCHIVED = t['cat_archived'];
             
-            if (navEl.innerHTML.trim() !== '') {
-                renderNav();
-            }
+            renderNav();
             
             const selector = document.getElementById('lang-selector');
             if (selector && selector.value !== lang) {
@@ -419,8 +498,7 @@ def generate_viewer():
             if (!query) return html;
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = html;
-            // Escape regex special characters
-            const escapedQuery = query.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+            const escapedQuery = query.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\^\$\|]/g, "\$&");
             const regex = new RegExp("(" + escapedQuery + ")", "gi");
             
             function highlightNodes(node) {
@@ -439,9 +517,15 @@ def generate_viewer():
             return tempDiv.innerHTML;
         }
 
+        function getChangeTitle(changeObj, changeName) {
+            let title = changeObj.title_en || changeName;
+            if (document.body.className.includes('lang-zh-tw')) title = changeObj.title_zh || title;
+            else if (document.body.className.includes('lang-zh-cn')) title = changeObj.title_zh_cn || title;
+            else if (document.body.className.includes('lang-vi')) title = changeObj.title_vi || title;
+            return title;
+        }
+
         function renderNav() {
-            navEl.innerHTML = "";
-            
             // Logs
             const logDates = Object.keys(projectData.logs).sort().reverse();
             let logsHtml = "";
@@ -458,81 +542,80 @@ def generate_viewer():
                         </div>`;
                 }
             });
-            if (logsHtml) navEl.innerHTML += `<div class="category-header" onclick="toggleCat(this)">${TEXT_CAT_LOGS}</div><div class="category-content">${logsHtml}</div>`;
+            logsNavEl.innerHTML = logsHtml || "<p style='padding:0 12px; font-size:13px; color:var(--text-secondary);'>No logs found</p>";
+
+                        // Main Specs
+            const mainSpecs = projectData.main_specs ? Object.keys(projectData.main_specs).sort() : [];
+            let specsHtml = "";
+            mainSpecs.forEach(spec => {
+                const specObj = projectData.main_specs[spec];
+                const specTitle = getChangeTitle(specObj, spec);
+                let folderMatches = spec.toLowerCase().includes(currentSearch) || specTitle.toLowerCase().includes(currentSearch);
+                let hasMatch = folderMatches;
+                if (!hasMatch) {
+                    for (const f of Object.values(specObj.files)) {
+                        if (matchesSearch(f, currentSearch)) { hasMatch = true; break; }
+                    }
+                }
+                if (hasMatch) {
+                    specsHtml += `<button class="nav-item change-nav" data-change="${spec}" onclick="selectSpec('${spec}')">
+                        <span class="change-title">${specTitle}</span>
+                        <span class="change-id">${spec}</span>
+                    </button>`;
+                }
+            });
+            const mainSpecsNavEl = document.getElementById('main-specs-nav');
+            if (mainSpecsNavEl) {
+                mainSpecsNavEl.innerHTML = specsHtml || "<p style='padding:0 12px; font-size:13px; color:var(--text-secondary);'>No specs</p>";
+            }
 
             // Active Changes
             const activeChanges = Object.keys(projectData.active_changes).sort();
             let activeHtml = "";
             activeChanges.forEach(change => {
-                let filesHtml = "";
                 const changeObj = projectData.active_changes[change];
-                let changeTitle = changeObj.title_en || change;
-                if (document.body.className.includes('lang-zh-tw')) {
-                    changeTitle = changeObj.title_zh || changeTitle;
-                } else if (document.body.className.includes('lang-zh-cn')) {
-                    changeTitle = changeObj.title_zh_cn || changeTitle;
-                } else if (document.body.className.includes('lang-vi')) {
-                    changeTitle = changeObj.title_vi || changeTitle;
+                const changeTitle = getChangeTitle(changeObj, change);
+                let folderMatches = change.toLowerCase().includes(currentSearch) || changeTitle.toLowerCase().includes(currentSearch);
+                
+                let hasMatch = folderMatches;
+                if (!hasMatch) {
+                    for (const f of Object.values(changeObj.files)) {
+                        if (matchesSearch(f, currentSearch)) { hasMatch = true; break; }
+                    }
                 }
                 
-                const customOrder = ['proposal.md', 'design.md', 'tasks.md', 'specs'];
-                const files = Object.keys(changeObj.files).sort((a, b) => {
-                    let idxA = customOrder.findIndex(o => a.startsWith(o));
-                    let idxB = customOrder.findIndex(o => b.startsWith(o));
-                    if (idxA === -1) idxA = 999;
-                    if (idxB === -1) idxB = 999;
-                    if (idxA !== idxB) return idxA - idxB;
-                    return a.localeCompare(b);
-                });
-                
-                let folderMatches = change.toLowerCase().includes(currentSearch) || changeTitle.toLowerCase().includes(currentSearch);
-                files.forEach(f => {
-                    if (folderMatches || matchesSearch(changeObj.files[f], currentSearch) || f.toLowerCase().includes(currentSearch)) {
-                        filesHtml += `<button class="nav-item file-nav" onclick="selectArtifact('active_changes', '${change}', '${f}')">📄 ${f}</button>`;
-                    }
-                });
-                if (filesHtml) {
-                    activeHtml += `<div class="nav-folder-title" title="${change}">${changeTitle}</div><div class="nav-folder">${filesHtml}</div>`;
+                if (hasMatch) {
+                    activeHtml += `<button class="nav-item change-nav" data-change="${change}" onclick="selectChange('active_changes', '${change}')">
+                        <span class="change-title">${changeTitle}</span>
+                        <span class="change-id">${change}</span>
+                    </button>`;
                 }
             });
-            if (activeHtml) navEl.innerHTML += `<div class="category-header" onclick="toggleCat(this)">${TEXT_CAT_ACTIVE}</div><div class="category-content">${activeHtml}</div>`;
+            activeChangesNavEl.innerHTML = activeHtml || "<p style='padding:0 12px; font-size:13px; color:var(--text-secondary);'>No active changes</p>";
 
             // Archived Changes
             const archivedChanges = Object.keys(projectData.archived_changes).sort().reverse();
             let archivedHtml = "";
             archivedChanges.forEach(change => {
-                let filesHtml = "";
                 const changeObj = projectData.archived_changes[change];
-                let changeTitle = changeObj.title_en || change;
-                if (document.body.className.includes('lang-zh-tw')) {
-                    changeTitle = changeObj.title_zh || changeTitle;
-                } else if (document.body.className.includes('lang-zh-cn')) {
-                    changeTitle = changeObj.title_zh_cn || changeTitle;
-                } else if (document.body.className.includes('lang-vi')) {
-                    changeTitle = changeObj.title_vi || changeTitle;
+                const changeTitle = getChangeTitle(changeObj, change);
+                let folderMatches = change.toLowerCase().includes(currentSearch) || changeTitle.toLowerCase().includes(currentSearch);
+                
+                let hasMatch = folderMatches;
+                if (!hasMatch) {
+                    for (const f of Object.values(changeObj.files)) {
+                        if (matchesSearch(f, currentSearch)) { hasMatch = true; break; }
+                    }
                 }
                 
-                const customOrder = ['proposal.md', 'design.md', 'tasks.md', 'specs'];
-                const files = Object.keys(changeObj.files).sort((a, b) => {
-                    let idxA = customOrder.findIndex(o => a.startsWith(o));
-                    let idxB = customOrder.findIndex(o => b.startsWith(o));
-                    if (idxA === -1) idxA = 999;
-                    if (idxB === -1) idxB = 999;
-                    if (idxA !== idxB) return idxA - idxB;
-                    return a.localeCompare(b);
-                });
-                
-                let folderMatches = change.toLowerCase().includes(currentSearch) || changeTitle.toLowerCase().includes(currentSearch);
-                files.forEach(f => {
-                    if (folderMatches || matchesSearch(changeObj.files[f], currentSearch) || f.toLowerCase().includes(currentSearch)) {
-                        filesHtml += `<button class="nav-item file-nav" onclick="selectArtifact('archived_changes', '${change}', '${f}')">📄 ${f}</button>`;
-                    }
-                });
-                if (filesHtml) {
-                    archivedHtml += `<div class="nav-folder-title" title="${change}">${changeTitle}</div><div class="nav-folder">${filesHtml}</div>`;
+                if (hasMatch) {
+                    archivedHtml += `<button class="nav-item change-nav" data-change="${change}" onclick="selectChange('archived_changes', '${change}')">
+                        <span class="change-title">${changeTitle}</span>
+                        <span class="change-id">${change}</span>
+                    </button>`;
                 }
             });
-            if (archivedHtml) navEl.innerHTML += `<div class="category-header collapsed" onclick="toggleCat(this)">${TEXT_CAT_ARCHIVED}</div><div class="category-content collapsed">${archivedHtml}</div>`;
+            archivedChangesNavEl.innerHTML = archivedHtml || "<p style='padding:0 12px; font-size:13px; color:var(--text-secondary);'>No archived changes</p>";
         }
 
         function triggerAnimation() {
@@ -547,11 +630,7 @@ def generate_viewer():
 
         function escapeHTML(str) {
             return str.replace(/[&<>'"]/g, tag => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                "'": '&#39;',
-                '"': '&quot;'
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
             }[tag]));
         }
 
@@ -564,21 +643,19 @@ def generate_viewer():
                 let skip = false;
                 while (parent && parent !== element) {
                     if (parent.tagName === 'PRE' || parent.tagName === 'CODE') {
-                        skip = true;
-                        break;
+                        skip = true; break;
                     }
                     parent = parent.parentNode;
                 }
-                if (!skip) {
-                    nodesToReplace.push(node);
-                }
+                if (!skip) { nodesToReplace.push(node); }
             }
 
-            const regex = /\b(WHEN|WHILE|WHERE|IF|THEN|SHALL)\b/g;
             nodesToReplace.forEach(n => {
-                if (regex.test(n.nodeValue)) {
+                const text = n.nodeValue;
+                const earsRegex = /\b(WHEN|WHILE|WHERE|IF|THEN|SHALL|AND|OR)\b/gi;
+                if (earsRegex.test(text)) {
                     const span = document.createElement('span');
-                    span.innerHTML = escapeHTML(n.nodeValue).replace(regex, (match) => {
+                    span.innerHTML = escapeHTML(text).replace(/\b(WHEN|WHILE|WHERE|IF|THEN|SHALL|AND|OR)\b/gi, (match) => {
                         return `<span class="ears-keyword ears-${match.toLowerCase()}">${match}</span>`;
                     });
                     n.parentNode.replaceChild(span, n);
@@ -586,10 +663,29 @@ def generate_viewer():
             });
         }
 
+        window.toggleSidebar = function() {
+            document.querySelector('.sidebar').classList.toggle('open');
+            document.querySelector('.changes-sidebar').classList.toggle('open');
+            document.getElementById('mobile-overlay').classList.toggle('open');
+        }
+        
+        window.closeSidebarMobile = function() {
+            if (window.innerWidth <= 1400) {
+                document.querySelector('.sidebar').classList.remove('open');
+                document.querySelector('.changes-sidebar').classList.remove('open');
+                document.getElementById('mobile-overlay').classList.remove('open');
+            }
+        }
+        
         window.selectLog = function(date) {
+            closeSidebarMobile();
             clearActiveNav();
             document.querySelectorAll('.log-nav').forEach(b => { if (b.textContent.includes(date)) b.classList.add('active'); });
             triggerAnimation();
+            
+            changeViewerEl.style.display = 'none';
+            viewerEl.style.display = 'block';
+            
             const logData = projectData.logs[date];
             let headerHtml = "";
             if (logData.related_changes && logData.related_changes.length > 0) {
@@ -602,18 +698,92 @@ def generate_viewer():
             viewerEl.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.removeAttribute('disabled'));
         }
 
-        window.selectArtifact = function(category, change, file) {
+                window.selectSpec = function(specName) {
+            closeSidebarMobile();
             clearActiveNav();
-            document.querySelectorAll('.file-nav').forEach(b => { 
-                if (b.textContent.includes(file) && b.parentElement.previousElementSibling.getAttribute('title') === change) b.classList.add('active'); 
-            });
+            document.querySelectorAll('.change-nav').forEach(b => { if (b.getAttribute('data-change') === specName) b.classList.add('active'); });
             triggerAnimation();
-            const rawMd = projectData[category][change].files[file];
-            let html = marked.parse(rawMd);
+            
+            viewerEl.style.display = 'none';
+            changeViewerEl.style.display = 'block';
+            
+            const specObj = projectData.main_specs[specName];
+            const specTitle = getChangeTitle(specObj, specName);
+            document.getElementById('change-title-display').textContent = specTitle;
+            document.getElementById('change-id-display').textContent = specName;
+            
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            
+            const contentEl = document.getElementById('tab-proposal');
+            contentEl.classList.add('active');
+            
+            let md = "";
+            Object.keys(specObj.files).sort().forEach(f => {
+                md += specObj.files[f] + "\n\n";
+            });
+            
+            let html = marked.parse(md);
             if (currentSearch) html = highlightText(html, currentSearch);
-            viewerEl.innerHTML = html;
-            viewerEl.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.removeAttribute('disabled'));
-            applyEarsHighlighting(viewerEl);
+            contentEl.innerHTML = html;
+            contentEl.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.removeAttribute('disabled'));
+            applyEarsHighlighting(contentEl);
+        }
+
+        window.selectChange = function(category, changeName) {
+            closeSidebarMobile();
+            clearActiveNav();
+            document.querySelectorAll('.change-nav').forEach(b => { if (b.getAttribute('data-change') === changeName) b.classList.add('active'); });
+            triggerAnimation();
+            
+            viewerEl.style.display = 'none';
+            changeViewerEl.style.display = 'block';
+            
+            const changeObj = projectData[category][changeName];
+            document.getElementById('change-title-display').textContent = getChangeTitle(changeObj, changeName);
+            document.getElementById('change-id-display').textContent = changeName;
+            document.querySelector('.tabs').style.display = 'flex';
+            
+            function fillTab(tabId, mdContent) {
+                const el = document.getElementById('tab-' + tabId);
+                if (!mdContent) {
+                    el.innerHTML = "<p style='color:var(--text-secondary); text-align:center; margin-top:40px;'><i>This document does not exist.</i></p>";
+                } else {
+                    let html = marked.parse(mdContent);
+                    if (currentSearch) html = highlightText(html, currentSearch);
+                    el.innerHTML = html;
+                    el.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.removeAttribute('disabled'));
+                    applyEarsHighlighting(el);
+                }
+            }
+            
+            fillTab('proposal', changeObj.files['proposal.md']);
+            fillTab('design', changeObj.files['design.md']);
+            fillTab('tasks', changeObj.files['tasks.md']);
+            
+            // Compile specs
+            let specsMd = "";
+            const specFiles = Object.keys(changeObj.files).filter(f => f.startsWith('specs/') && f.endsWith('.md')).sort();
+            if (specFiles.length === 0) {
+                fillTab('specs', null);
+            } else {
+                specFiles.forEach(f => {
+                    specsMd += `<h4 class="spec-separator">📄 ${f}</h4>\n\n`;
+                    specsMd += changeObj.files[f] + "\n\n";
+                });
+                // We use marked parse on the concatenated string
+                fillTab('specs', specsMd);
+            }
+            
+            switchTab('proposal');
+        }
+        
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            document.querySelector(`.tab-button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
         }
 
         window.jumpToChange = function(changeName) {
@@ -626,11 +796,9 @@ def generate_viewer():
             renderNav();
             
             if (projectData.active_changes[changeName]) {
-                const files = Object.keys(projectData.active_changes[changeName].files).sort();
-                if (files.length > 0) selectArtifact('active_changes', changeName, files.includes('proposal.md') ? 'proposal.md' : files[0]);
+                selectChange('active_changes', changeName);
             } else if (projectData.archived_changes[changeName]) {
-                const files = Object.keys(projectData.archived_changes[changeName].files).sort();
-                if (files.length > 0) selectArtifact('archived_changes', changeName, files.includes('proposal.md') ? 'proposal.md' : files[0]);
+                selectChange('archived_changes', changeName);
             }
         }
 
@@ -646,9 +814,10 @@ def generate_viewer():
         } else {
             const firstActive = Object.keys(projectData.active_changes).sort()[0];
             if (firstActive) {
-                const f = Object.keys(projectData.active_changes[firstActive].files).sort()[0];
-                selectArtifact('active_changes', firstActive, f);
+                selectChange('active_changes', firstActive);
             } else {
+                viewerEl.style.display = 'block';
+                changeViewerEl.style.display = 'none';
                 viewerEl.innerHTML = "<h2 style='text-align:center; color:var(--text-secondary); margin-top: 100px;'>" + noLogsMsg + "</h2>";
             }
         }

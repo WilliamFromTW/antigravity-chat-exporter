@@ -162,11 +162,11 @@ def extract_conversation_from_db(app_data_dir, conversation_id, output_dir):
             if step_type == 14:
                 text = clean_user_text(text)
                 if not text: continue
-                daily_logs[date_str].append(f"### 👤 User [DB Fallback]\n\n{text}\n\n---\n\n")
+                daily_logs[date_str].append(f"### 👤\n\n{text}\n\n---\n\n")
             elif step_type == 15:
                 text = clean_system_text(text)
                 if not text: continue
-                daily_logs[date_str].append(f"### 🤖 AI [DB Fallback]\n\n{text}\n\n---\n\n")
+                daily_logs[date_str].append(f"### 🤖\n\n{text}\n\n---\n\n")
                 
         if not daily_logs[date_str]:
             return False
@@ -217,13 +217,13 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
                         content = clean_user_text(content)
                             
                         if content:
-                            daily_logs[date_str].append(f"### 👤 User{time_str}\n\n" + content + "\n\n---\n\n")
+                            daily_logs[date_str].append(f"### 👤{time_str}\n\n" + content + "\n\n---\n\n")
                             
                     elif step.get('type') == 'PLANNER_RESPONSE':
                         content = step.get('content', '')
                         content = clean_system_text(content)
                         if content:
-                            daily_logs[date_str].append(f"### 🤖 AI{time_str}\n\n" + content + "\n\n---\n\n")
+                            daily_logs[date_str].append(f"### 🤖{time_str}\n\n" + content + "\n\n---\n\n")
                             
                 except json.JSONDecodeError:
                     pass
