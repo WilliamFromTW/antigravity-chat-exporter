@@ -3,6 +3,20 @@ import glob
 import json
 import webbrowser
 import urllib.request
+import re
+import sys
+from pathlib import Path
+
+# Ensure UTF-8 output on Windows
+if sys.stdout.encoding.lower() != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
+
+# Force the working directory to the project root
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+os.chdir(ROOT_DIR)
 
 I18N = {
     "en": {
@@ -10,10 +24,7 @@ I18N = {
         "subtitle": "Antigravity Chat Exporter",
         "no_logs": "No data found.",
         "html_title": "Genesis Explore Log Viewer",
-        "prompt_log_dir": "Default directory not found.\nPlease enter the path to the chat logs directory: ",
-        "invalid_log_dir": "Error: Directory does not exist or no files found.",
         "success_msg": "Viewer generated at: ",
-        "saved_msg": ">> Directory saved for future use: ",
         "cat_logs": "Logs",
         "cat_active": "Active Changes",
         "cat_archived": "Archived Changes",
@@ -24,10 +35,7 @@ I18N = {
         "subtitle": "Antigravity 對話匯出器",
         "no_logs": "找不到任何資料。",
         "html_title": "Genesis 對話探索日誌",
-        "prompt_log_dir": "找不到預設目錄。\n請輸入對話日誌的目錄路徑: ",
-        "invalid_log_dir": "錯誤：目錄不存在，或找不到任何檔案。",
         "success_msg": "閱讀器已生成於: ",
-        "saved_msg": ">> 已記住此目錄，下次將自動讀取: ",
         "cat_logs": "對話日誌",
         "cat_active": "活躍變更",
         "cat_archived": "封存變更",
@@ -38,10 +46,7 @@ I18N = {
         "subtitle": "Antigravity 对话导出器",
         "no_logs": "找不到任何资料。",
         "html_title": "Genesis 对话探索日志",
-        "prompt_log_dir": "找不到默认目录。\n请输入对话日志的目录路径: ",
-        "invalid_log_dir": "错误：目录不存在，或找不到任何文件。",
         "success_msg": "阅读器已生成于: ",
-        "saved_msg": ">> 已记住此目录，下次将自动读取: ",
         "cat_logs": "对话日志",
         "cat_active": "活跃变更",
         "cat_archived": "归档变更",
@@ -52,18 +57,13 @@ I18N = {
         "subtitle": "Trình xuất trò chuyện Antigravity",
         "no_logs": "Không tìm thấy dữ liệu.",
         "html_title": "Genesis Nhật ký Khám phá Trò chuyện",
-        "prompt_log_dir": "Không tìm thấy thư mục mặc định.\nVui lòng nhập đường dẫn đến thư mục nhật ký: ",
-        "invalid_log_dir": "Lỗi: Thư mục không tồn tại hoặc không tìm thấy tệp.",
         "success_msg": "Trình xem được tạo tại: ",
-        "saved_msg": ">> Thư mục đã được lưu cho lần sử dụng sau: ",
         "cat_logs": "Nhật ký",
         "cat_active": "Thay đổi Đang hoạt động",
         "cat_archived": "Thay đổi Đã lưu trữ",
         "search_placeholder": "Tìm kiếm nhật ký và tài liệu..."
     }
 }
-
-CONFIG_FILE = ".viewer_config.json"
 
 def get_marked_js_source():
     cache_file = ".marked.min.js.cache"
@@ -86,74 +86,63 @@ def get_marked_js_source():
         print(f"Failed to fetch marked.js: {e}")
         return "/* Failed to load marked.js */"
 
-def choose_language():
-    print("="*40)
-    print(" Please select UI language / 請選擇介面語言")
-    print("="*40)
-    print(" 1) English")
-    print(" 2) 繁體中文 (Traditional Chinese)")
-    print(" 3) 简体中文 (Simplified Chinese)")
-    print(" 4) Tiếng Việt (Vietnamese)")
-    print("="*40)
-    
-    choice = input("Select / 選擇 (1-4): ").strip()
-    if choice == '1': return "en"
-    elif choice == '2': return "zh-tw"
-    elif choice == '3': return "zh-cn"
-    elif choice == '4': return "vi"
-    else: return "en"
-
-def get_log_dir(t):
-    default_dir = "openspec/explorations"
-    saved_dir = None
-    
-    if os.path.exists(CONFIG_FILE):
+def get_changes_i18n():
+    i18n_file = "openspec/changes_i18n.json"
+    if os.path.exists(i18n_file):
         try:
-            with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
-                config = json.load(f)
-                saved_dir = config.get("saved_log_dir")
-        except:
+            with open(i18n_file, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
             pass
+    return {}
 
-    if saved_dir and os.path.exists(saved_dir):
-        return saved_dir
-        
-    if os.path.exists(default_dir):
-        return default_dir
-        
-    user_dir = input(t["prompt_log_dir"]).strip()
-    if not user_dir or not os.path.exists(user_dir):
-        print(t["invalid_log_dir"])
-        return None
-        
-    try:
-        with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
-            json.dump({"saved_log_dir": user_dir}, f)
-        print(t["saved_msg"] + user_dir)
-    except:
-        pass
-        
-    return user_dir
+CHANGES_I18N_DICT = get_changes_i18n()
 
 def parse_change_dir(change_dir):
-    change_data = {}
+    change_data = {"files": {}}
+    title_zh = ""
+    title_zh_cn = ""
+    title_vi = ""
+    change_name = os.path.basename(change_dir)
+    clean_name = re.sub(r'^\d{4}-\d{2}-\d{2}-', '', change_name)
+    title_en = " ".join(word.capitalize() for word in clean_name.split('-'))
+    
+    # Dictionary lookup
+    if clean_name in CHANGES_I18N_DICT:
+        title_zh = CHANGES_I18N_DICT[clean_name].get("zh-tw", "")
+        title_en = CHANGES_I18N_DICT[clean_name].get("en", title_en)
+        title_zh_cn = CHANGES_I18N_DICT[clean_name].get("zh-cn", "")
+        title_vi = CHANGES_I18N_DICT[clean_name].get("vi", "")
+            
     for root, _, files in os.walk(change_dir):
         for f in files:
             if f.endswith('.md'):
                 abs_path = os.path.join(root, f)
                 rel_path = os.path.relpath(abs_path, change_dir).replace('\\', '/')
                 with open(abs_path, 'r', encoding='utf-8') as file:
-                    change_data[rel_path] = file.read()
+                    content = file.read()
+                    change_data["files"][rel_path] = content
+                    # Fallback to proposal if not in i18n
+                    if not title_zh and rel_path == "proposal.md":
+                        first_line = content.strip().split('\n')[0]
+                        if first_line.startswith("# "):
+                            title_zh = first_line[2:].strip()
+                            
+    change_data["title_zh"] = title_zh if title_zh else title_en
+    change_data["title_zh_cn"] = title_zh_cn if title_zh_cn else change_data["title_zh"]
+    change_data["title_vi"] = title_vi if title_vi else title_en
+    change_data["title_en"] = title_en
     return change_data
 
 def generate_viewer():
-    lang = choose_language()
+    lang = "en"
     t = I18N[lang]
     
     output_file = "chat_history_viewer.html"
-    log_dir = get_log_dir(t)
+    log_dir = "openspec/explorations"
     
-    if not log_dir:
+    if not os.path.exists(log_dir):
+        print(t.get("no_logs", "No logs"))
         return
 
     md_files = glob.glob(os.path.join(log_dir, "explore_log_*.md"))
@@ -171,8 +160,14 @@ def generate_viewer():
             filename = os.path.basename(f)
             date_str = filename.replace('explore_log_', '').replace('.md', '')
             with open(f, 'r', encoding='utf-8') as file:
+                content = file.read()
+                summary_match = re.search(r'> \[!NOTE\]\s*> \*\*.*?(?:Summary|摘要|總結).*?\*\*\s*(>.*?)(?=\n\n|\Z)', content, re.IGNORECASE | re.DOTALL)
+                summary = ""
+                if summary_match:
+                    summary = re.sub(r'^>\s?', '', summary_match.group(1), flags=re.MULTILINE).strip()
                 project_data["logs"][date_str] = {
-                    "content": file.read(),
+                    "content": content,
+                    "summary": summary,
                     "related_changes": []
                 }
 
@@ -314,6 +309,21 @@ def generate_viewer():
             transform: scale(1.15); /* Slightly enlarge to make it pop */
             transition: all 0.2s;
         }
+        
+        /* Sidebar Summary Preview */
+        .log-nav-wrapper { display: flex; flex-direction: column; }
+        .sidebar-summary { font-size: 12px; color: var(--text-secondary); background: #F8FAFC; margin: 0 16px 8px 16px; padding: 10px; border-radius: 6px; border: 1px solid #E2E8F0; overflow-y: auto; max-height: 300px; transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease, margin 0.3s ease; }
+        .sidebar-summary.collapsed { max-height: 0; opacity: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0; border: none; overflow: hidden; }
+        .sidebar-summary p { margin: 4px 0; }
+        
+        /* I18N Language Filtering */
+        body [lang="zh-tw"], body [lang="zh-cn"], body [lang="vi"], body [lang="en"] {
+            display: none !important;
+        }
+        body.lang-en [lang="en"] { display: block !important; }
+        body.lang-zh-tw [lang="zh-tw"] { display: block !important; }
+        body.lang-zh-cn [lang="zh-cn"] { display: block !important; }
+        body.lang-vi [lang="vi"] { display: block !important; }
     </style>
 </head>
 <body>
@@ -321,16 +331,16 @@ def generate_viewer():
         <div class="brand-header">
             <h1 data-i18n="title">__TITLE__</h1>
             <p data-i18n="subtitle">__SUBTITLE__</p>
+            <select id="lang-selector" onchange="applyTranslations(this.value)" style="margin-top: 16px; width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); font-family: var(--font-body); font-size: 13px; color: var(--text-secondary); cursor: pointer; outline: none;">
+                <option value="en">English</option>
+                <option value="zh-tw">繁體中文</option>
+                <option value="zh-cn">简体中文</option>
+                <option value="vi">Tiếng Việt</option>
+            </select>
         </div>
         <input type="text" class="search-box" id="search-input" placeholder="__SEARCH_PLACEHOLDER__" data-i18n-placeholder="search_placeholder">
         <div id="navigation"></div>
         <div style="flex-grow: 1;"></div>
-        <select id="lang-selector" onchange="applyTranslations(this.value)" style="margin-top: 24px; width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); font-family: var(--font-body); font-size: 13px; color: var(--text-secondary); cursor: pointer; outline: none;">
-            <option value="en">English</option>
-            <option value="zh-tw">繁體中文</option>
-            <option value="zh-cn">简体中文</option>
-            <option value="vi">Tiếng Việt</option>
-        </select>
     </div>
     
     <div class="main-content">
@@ -355,6 +365,7 @@ def generate_viewer():
         let TEXT_CAT_ARCHIVED = "__CAT_ARCHIVED__";
 
         window.applyTranslations = function(lang) {
+            document.body.className = 'lang-' + lang;
             const t = i18nDict[lang] || i18nDict['en'];
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
@@ -379,13 +390,7 @@ def generate_viewer():
         };
 
         // Initialize translation
-        let detectedLang = navigator.language.toLowerCase();
-        if (!i18nDict[detectedLang]) {
-            if (detectedLang.startsWith('zh-cn') || detectedLang.startsWith('zh-hans')) detectedLang = 'zh-cn';
-            else if (detectedLang.startsWith('zh')) detectedLang = 'zh-tw';
-            else if (detectedLang.startsWith('vi')) detectedLang = 'vi';
-            else detectedLang = 'en';
-        }
+        let detectedLang = "__DEFAULT_LANG__";
         applyTranslations(detectedLang);
 
         marked.setOptions({ breaks: true, gfm: true });
@@ -398,6 +403,16 @@ def generate_viewer():
         window.toggleCat = function(el) {
             el.classList.toggle('collapsed');
             el.nextElementSibling.classList.toggle('collapsed');
+        }
+
+        window.toggleSummary = function(date, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            const el = document.getElementById('summary-' + date);
+            if (el) {
+                el.classList.toggle('collapsed');
+            }
         }
 
         function highlightText(html, query) {
@@ -432,7 +447,15 @@ def generate_viewer():
             let logsHtml = "";
             logDates.forEach(date => {
                 if (matchesSearch(projectData.logs[date].content, currentSearch) || date.toLowerCase().includes(currentSearch)) {
-                    logsHtml += `<button class="nav-item log-nav" onclick="selectLog('${date}')">📄 ${date}</button>`;
+                    let summaryHtml = "";
+                    if (projectData.logs[date].summary) {
+                        summaryHtml = `<div class="sidebar-summary" id="summary-${date}">${marked.parse(projectData.logs[date].summary)}</div>`;
+                    }
+                    logsHtml += `
+                        <div class="log-nav-wrapper">
+                            <button class="nav-item log-nav" onclick="selectLog('${date}'); toggleSummary('${date}', event)">📄 ${date}</button>
+                            ${summaryHtml}
+                        </div>`;
                 }
             });
             if (logsHtml) navEl.innerHTML += `<div class="category-header" onclick="toggleCat(this)">${TEXT_CAT_LOGS}</div><div class="category-content">${logsHtml}</div>`;
@@ -442,15 +465,34 @@ def generate_viewer():
             let activeHtml = "";
             activeChanges.forEach(change => {
                 let filesHtml = "";
-                const files = Object.keys(projectData.active_changes[change]).sort();
-                let folderMatches = change.toLowerCase().includes(currentSearch);
+                const changeObj = projectData.active_changes[change];
+                let changeTitle = changeObj.title_en || change;
+                if (document.body.className.includes('lang-zh-tw')) {
+                    changeTitle = changeObj.title_zh || changeTitle;
+                } else if (document.body.className.includes('lang-zh-cn')) {
+                    changeTitle = changeObj.title_zh_cn || changeTitle;
+                } else if (document.body.className.includes('lang-vi')) {
+                    changeTitle = changeObj.title_vi || changeTitle;
+                }
+                
+                const customOrder = ['proposal.md', 'design.md', 'tasks.md', 'specs'];
+                const files = Object.keys(changeObj.files).sort((a, b) => {
+                    let idxA = customOrder.findIndex(o => a.startsWith(o));
+                    let idxB = customOrder.findIndex(o => b.startsWith(o));
+                    if (idxA === -1) idxA = 999;
+                    if (idxB === -1) idxB = 999;
+                    if (idxA !== idxB) return idxA - idxB;
+                    return a.localeCompare(b);
+                });
+                
+                let folderMatches = change.toLowerCase().includes(currentSearch) || changeTitle.toLowerCase().includes(currentSearch);
                 files.forEach(f => {
-                    if (folderMatches || matchesSearch(projectData.active_changes[change][f], currentSearch) || f.toLowerCase().includes(currentSearch)) {
+                    if (folderMatches || matchesSearch(changeObj.files[f], currentSearch) || f.toLowerCase().includes(currentSearch)) {
                         filesHtml += `<button class="nav-item file-nav" onclick="selectArtifact('active_changes', '${change}', '${f}')">📄 ${f}</button>`;
                     }
                 });
                 if (filesHtml) {
-                    activeHtml += `<div class="nav-folder-title">${change}</div><div class="nav-folder">${filesHtml}</div>`;
+                    activeHtml += `<div class="nav-folder-title" title="${change}">${changeTitle}</div><div class="nav-folder">${filesHtml}</div>`;
                 }
             });
             if (activeHtml) navEl.innerHTML += `<div class="category-header" onclick="toggleCat(this)">${TEXT_CAT_ACTIVE}</div><div class="category-content">${activeHtml}</div>`;
@@ -460,15 +502,34 @@ def generate_viewer():
             let archivedHtml = "";
             archivedChanges.forEach(change => {
                 let filesHtml = "";
-                const files = Object.keys(projectData.archived_changes[change]).sort();
-                let folderMatches = change.toLowerCase().includes(currentSearch);
+                const changeObj = projectData.archived_changes[change];
+                let changeTitle = changeObj.title_en || change;
+                if (document.body.className.includes('lang-zh-tw')) {
+                    changeTitle = changeObj.title_zh || changeTitle;
+                } else if (document.body.className.includes('lang-zh-cn')) {
+                    changeTitle = changeObj.title_zh_cn || changeTitle;
+                } else if (document.body.className.includes('lang-vi')) {
+                    changeTitle = changeObj.title_vi || changeTitle;
+                }
+                
+                const customOrder = ['proposal.md', 'design.md', 'tasks.md', 'specs'];
+                const files = Object.keys(changeObj.files).sort((a, b) => {
+                    let idxA = customOrder.findIndex(o => a.startsWith(o));
+                    let idxB = customOrder.findIndex(o => b.startsWith(o));
+                    if (idxA === -1) idxA = 999;
+                    if (idxB === -1) idxB = 999;
+                    if (idxA !== idxB) return idxA - idxB;
+                    return a.localeCompare(b);
+                });
+                
+                let folderMatches = change.toLowerCase().includes(currentSearch) || changeTitle.toLowerCase().includes(currentSearch);
                 files.forEach(f => {
-                    if (folderMatches || matchesSearch(projectData.archived_changes[change][f], currentSearch) || f.toLowerCase().includes(currentSearch)) {
+                    if (folderMatches || matchesSearch(changeObj.files[f], currentSearch) || f.toLowerCase().includes(currentSearch)) {
                         filesHtml += `<button class="nav-item file-nav" onclick="selectArtifact('archived_changes', '${change}', '${f}')">📄 ${f}</button>`;
                     }
                 });
                 if (filesHtml) {
-                    archivedHtml += `<div class="nav-folder-title">${change}</div><div class="nav-folder">${filesHtml}</div>`;
+                    archivedHtml += `<div class="nav-folder-title" title="${change}">${changeTitle}</div><div class="nav-folder">${filesHtml}</div>`;
                 }
             });
             if (archivedHtml) navEl.innerHTML += `<div class="category-header collapsed" onclick="toggleCat(this)">${TEXT_CAT_ARCHIVED}</div><div class="category-content collapsed">${archivedHtml}</div>`;
@@ -544,10 +605,10 @@ def generate_viewer():
         window.selectArtifact = function(category, change, file) {
             clearActiveNav();
             document.querySelectorAll('.file-nav').forEach(b => { 
-                if (b.textContent.includes(file) && b.parentElement.previousElementSibling.textContent.includes(change)) b.classList.add('active'); 
+                if (b.textContent.includes(file) && b.parentElement.previousElementSibling.getAttribute('title') === change) b.classList.add('active'); 
             });
             triggerAnimation();
-            const rawMd = projectData[category][change][file];
+            const rawMd = projectData[category][change].files[file];
             let html = marked.parse(rawMd);
             if (currentSearch) html = highlightText(html, currentSearch);
             viewerEl.innerHTML = html;
@@ -565,10 +626,10 @@ def generate_viewer():
             renderNav();
             
             if (projectData.active_changes[changeName]) {
-                const files = Object.keys(projectData.active_changes[changeName]).sort();
+                const files = Object.keys(projectData.active_changes[changeName].files).sort();
                 if (files.length > 0) selectArtifact('active_changes', changeName, files.includes('proposal.md') ? 'proposal.md' : files[0]);
             } else if (projectData.archived_changes[changeName]) {
-                const files = Object.keys(projectData.archived_changes[changeName]).sort();
+                const files = Object.keys(projectData.archived_changes[changeName].files).sort();
                 if (files.length > 0) selectArtifact('archived_changes', changeName, files.includes('proposal.md') ? 'proposal.md' : files[0]);
             }
         }
@@ -585,7 +646,7 @@ def generate_viewer():
         } else {
             const firstActive = Object.keys(projectData.active_changes).sort()[0];
             if (firstActive) {
-                const f = Object.keys(projectData.active_changes[firstActive]).sort()[0];
+                const f = Object.keys(projectData.active_changes[firstActive].files).sort()[0];
                 selectArtifact('active_changes', firstActive, f);
             } else {
                 viewerEl.innerHTML = "<h2 style='text-align:center; color:var(--text-secondary); margin-top: 100px;'>" + noLogsMsg + "</h2>";
@@ -606,6 +667,7 @@ def generate_viewer():
     html_content = html_content.replace("__CAT_LOGS__", t['cat_logs'])
     html_content = html_content.replace("__CAT_ACTIVE__", t['cat_active'])
     html_content = html_content.replace("__CAT_ARCHIVED__", t['cat_archived'])
+    html_content = html_content.replace("__DEFAULT_LANG__", lang)
 
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(html_content)

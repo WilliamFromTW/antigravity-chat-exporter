@@ -108,6 +108,7 @@ def clean_system_text(text):
     text = re.sub(r'[^\n]*CRITICAL INSTRUCTION[^\n]*', '', text)
     text = re.sub(r'[^\n]*file:///[^\n]*', '', text)
     text = re.sub(r'The user is currently editing the file.*?(?=\n|\Z)', '', text)
+    text = re.sub(r'(?i)[^\n]*All artifacts complete[^\n]*', '', text)
     
     text = re.sub(r'\n{3,}', '\n\n', text)
     return text.strip()
@@ -127,7 +128,7 @@ def extract_conversation_from_db(app_data_dir, conversation_id, output_dir):
         daily_logs = {}
         conn = sqlite3.connect(db_path)
         c = conn.cursor()
-        c.execute("SELECT idx, step_type, step_payload FROM steps WHERE step_type IN (14, 15) ORDER BY idx")
+        c.execute("SELECT idx, step_type, step_payload FROM steps WHERE step_type IN (14, 15) ORDER BY idx DESC")
         
         date_str = datetime.datetime.now().strftime("%Y-%m-%d")
         summary_db = os.path.join(app_data_dir, "conversation_summaries.db")
@@ -227,6 +228,8 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
                 except json.JSONDecodeError:
                     pass
 
+        for date_str in daily_logs:
+            daily_logs[date_str].reverse()
         write_markdown_logs(conversation_id, output_dir, daily_logs)
         return True
         
@@ -640,9 +643,25 @@ def main():
             backed_up_brain_count += 1
             
         print(f"Finished! Exported {exported_md_count} MD logs, backed up {backed_up_brain_count} Brain DBs.")
+        
+        # Trigger Viewer Generation
+        import subprocess
+        from pathlib import Path
+        viewer_script = Path(__file__).resolve().parent / "generate_viewer.py"
+        if viewer_script.exists():
+            subprocess.run([sys.executable, str(viewer_script)])
     
     elif args.conversation_id and args.output_dir:
         export_conversation(args.app_data_dir, args.conversation_id, args.output_dir)
+        
+        # Trigger Viewer Generation
+        import subprocess
+        import sys
+        from pathlib import Path
+        viewer_script = Path(__file__).resolve().parent / "generate_viewer.py"
+        if viewer_script.exists():
+            subprocess.run([sys.executable, str(viewer_script)])
+            
     else:
         print("Error: Must provide either --conversation-id, --all-for-project, or --import-for-project")
 

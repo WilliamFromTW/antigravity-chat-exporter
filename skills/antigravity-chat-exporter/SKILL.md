@@ -53,12 +53,22 @@ python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --list-back
    - Use the `read_file` or `view_file` tool to read the generated markdown file(s). (If multiple files were generated, process them sequentially).
    - Based on the read context (or your existing memory of the session), generate a concise Executive Summary of the conversation.
    - Use the `replace_file_content` or `multi_replace_file_content` tool to prepend your summary to the VERY TOP of the markdown file(s).
-   - Ensure you wrap your summary in a GitHub alert block formatted exactly like this:
+   - Ensure you wrap your summary in a GitHub alert block formatted exactly like this, including `<div lang="...">` tags for all 4 supported languages (English, Traditional Chinese, Simplified Chinese, and Vietnamese):
      ```markdown
      > [!NOTE]
      > **執行摘要 (Executive Summary)**
-     > (Your summary here)
-     
+     > <div lang="zh-tw">
+     > （在這裡輸入繁體中文摘要）
+     > </div>
+     > <div lang="en">
+     > (Enter English summary here)
+     > </div>
+     > <div lang="zh-cn">
+     > （在这里输入简体中文摘要）
+     > </div>
+     > <div lang="vi">
+     > (Nhập tóm tắt tiếng Việt ở đây)
+     > </div>
      ```
 5. Inform the user where the file(s) were saved, and confirm that the Executive Summary was successfully added. Do NOT automatically git commit the logs unless explicitly asked.
 
