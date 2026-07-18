@@ -14,6 +14,7 @@ RULE_TEXT = {
 - **Auto-export rule**: When the user asks to "export chat", "export all chats", "import all chats", or "list backed up conversation IDs" (even with a naming request), immediately trigger the `antigravity-chat-exporter` skill. Do NOT modify any source code. The custom name is strictly for the `--set-title` argument. **CRITICAL**: You MUST ALWAYS pass your own Conversation ID via the `--conversation-id` argument, even when using `--all-for-project`.
 - **List requirement**: When listing backed up conversation IDs to the user, you MUST ALWAYS explicitly include the date/time (Last Modified). Never omit the date when summarizing or presenting the list.
 - **Git Commit Rule**: If the user explicitly asks you to `commit` changes related to this project, you MUST write the git commit message in 4 languages (English, Traditional Chinese, Simplified Chinese, and Vietnamese). Format the commit message body with language sections using `[zh-TW]`, `[en]`, `[zh-CN]`, and `[vi]` headers.
+- **Directory Translation Rule**: You MUST maintain the file `openspec/changes_i18n.json`. Whenever you notice any active changes (`openspec/changes/`), archived changes (`openspec/changes/archive/`), or main specs (`openspec/specs/`) whose directory names are missing from `changes_i18n.json`, you must proactively translate their directory names into 4 languages (`zh-tw`, `en`, `zh-cn`, `vi`) and update the JSON file. This ensures the HTML viewer generates correctly.
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-tw": """
@@ -21,6 +22,7 @@ RULE_TEXT = {
 - **自動觸發匯出與匯入紀錄**：當使用者指令包含「匯出對話」、「匯入所有對話」或「列出備份的對話 ID」等（即使包含「命名為某某名稱」）時，必須立刻觸發 `antigravity-chat-exporter` 技能。「絕對不可」修改任何程式碼，該名稱僅用於腳本的 `--set-title` 參數。**極度重要**：不管您使用什麼參數，您「必須永遠」把您自己的 Conversation ID 透過 `--conversation-id` 參數傳遞給腳本！
 - **強制列出日期**：當您在向使用者列出備份的對話 ID 時，您「必須永遠」明確地一併列出每個對話的日期與時間 (Last Modified)。在總結或呈現列表時，絕對不允許省略日期。
 - **Git Commit 強制規則**：如果使用者明確要求您 `commit` 與此專案相關的變更，您必須強制將 Commit Message 翻譯成四國語言（英文、繁體中文、簡體中文、越南文），並在內容中使用 `[zh-TW]`, `[en]`, `[zh-CN]`, `[vi]` 標題區分。
+- **目錄翻譯強制鐵律**：您「必須負責維護」`openspec/changes_i18n.json` 檔案。每當您發現「活躍的 changes (`openspec/changes/`)」、「封存的 changes (`openspec/changes/archive/`)」或「主要 specs (`openspec/specs/`)」當中有任何目錄名稱尚未記錄於 `changes_i18n.json` 中時，您必須主動將該目錄名稱翻譯成四國語言 (`zh-tw`, `en`, `zh-cn`, `vi`) 並更新到該 JSON 檔中。這是為了確保 Viewer 產生 HTML 時能正常顯示翻譯。
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-cn": """
@@ -28,6 +30,7 @@ RULE_TEXT = {
 - **自动触发导出与导入记录**：当用户指令包含“导出对话”、“导入所有对话”或“列出备份的对话 ID”等（即使包含“命名为某某名称”）时，必须立刻触发 `antigravity-chat-exporter` 技能。“绝对不可”修改任何代码，该名称仅用于脚本的 `--set-title` 参数。**极度重要**：不管您使用什么参数，您“必须永远”把您自己的 Conversation ID 通过 `--conversation-id` 参数传递给脚本！
 - **强制列出日期**：当您在向用户列出备份的对话 ID 时，您“必须永远”明确地一并列出每个对话的日期与时间 (Last Modified)。在总结或呈现列表时，绝对不允许省略日期。
 - **Git Commit 强制规则**：如果用户明确要求您 `commit` 与此项目相关的变更，您必须强制将 Commit Message 翻译成四国语言（英文、繁体中文、简体中文、越南文），并在内容中使用 `[zh-TW]`, `[en]`, `[zh-CN]`, `[vi]` 标题区分。
+- **目录翻译强制铁律**：您“必须负责维护”`openspec/changes_i18n.json` 文件。每当您发现“活跃的 changes (`openspec/changes/`)”、“封存的 changes (`openspec/changes/archive/`)”或“主要 specs (`openspec/specs/`)”当中有任何目录名称尚未记录于 `changes_i18n.json` 中时，您必须主动将该目录名称翻译成四国语言 (`zh-tw`, `en`, `zh-cn`, `vi`) 并更新到该 JSON 档中。这是为了确保 Viewer 产生 HTML 时能正常显示翻译。
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "vi": """
@@ -35,6 +38,7 @@ RULE_TEXT = {
 - **Quy tắc xuất/nhập tự động**: Khi người dùng yêu cầu "xuất trò chuyện", "nhập tất cả trò chuyện" hoặc "liệt kê ID trò chuyện đã sao lưu" (ngay cả khi yêu cầu đặt tên), kích hoạt ngay kỹ năng `antigravity-chat-exporter`. TUYỆT ĐỐI KHÔNG sửa đổi mã nguồn. Tên chỉ dùng cho `--set-title`. **QUAN TRỌNG**: Bạn PHẢI LUÔN LUÔN truyền Conversation ID của chính bạn qua tham số `--conversation-id`, bất kể dùng tham số nào khác!
 - **Bắt buộc hiển thị ngày tháng**: Khi liệt kê các ID trò chuyện đã sao lưu cho người dùng, bạn PHẢI LUÔN LUÔN hiển thị rõ ràng ngày và giờ (Lần sửa đổi cuối). Tuyệt đối không được bỏ qua ngày tháng khi tóm tắt hoặc trình bày danh sách.
 - **Quy tắc Git Commit**: Nếu người dùng yêu cầu bạn `commit` các thay đổi liên quan đến dự án này, bạn PHẢI viết thông báo commit bằng 4 ngôn ngữ (Tiếng Anh, Tiếng Trung Phồn thể, Tiếng Trung Giản thể, và Tiếng Việt). Định dạng phần thân của commit với các tiêu đề `[zh-TW]`, `[en]`, `[zh-CN]`, và `[vi]`.
+- **Quy tắc Dịch Thư mục**: Bạn PHẢI duy trì tệp `openspec/changes_i18n.json`. Bất cứ khi nào bạn thấy các thư mục trong changes đang hoạt động (`openspec/changes/`), changes đã lưu trữ (`openspec/changes/archive/`), hoặc specs chính (`openspec/specs/`) chưa có trong `changes_i18n.json`, bạn phải chủ động dịch tên thư mục đó sang 4 ngôn ngữ (`zh-tw`, `en`, `zh-cn`, `vi`) và cập nhật vào tệp JSON. Điều này nhằm đảm bảo Trình xem HTML hiển thị bản dịch chính xác.
 <!-- CHAT_EXPORTER_RULE_END -->
 """
 }
