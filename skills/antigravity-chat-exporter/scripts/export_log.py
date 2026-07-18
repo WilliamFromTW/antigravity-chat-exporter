@@ -5,6 +5,7 @@ import datetime
 import re
 import sqlite3
 import sys
+from pathlib import Path
 
 def decode_varint(data, offset):
     result = 0
@@ -241,7 +242,6 @@ def export_conversation(app_data_dir, conversation_id, output_dir):
 import shutil
 import sqlite3
 import json
-from pathlib import Path
 
 def set_conversation_title(app_data_dir, conversation_id, title):
     try:
@@ -647,7 +647,6 @@ def main():
         
         # Trigger Viewer Generation
         import subprocess
-        from pathlib import Path
         viewer_script = Path(__file__).resolve().parent / "generate_viewer.py"
         if viewer_script.exists():
             subprocess.run([sys.executable, str(viewer_script)])
@@ -657,7 +656,6 @@ def main():
         
         # Trigger Viewer Generation
         import subprocess
-        from pathlib import Path
         viewer_script = Path(__file__).resolve().parent / "generate_viewer.py"
         if viewer_script.exists():
             subprocess.run([sys.executable, str(viewer_script)])
