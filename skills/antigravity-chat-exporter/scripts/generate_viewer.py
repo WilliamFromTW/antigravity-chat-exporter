@@ -14,9 +14,6 @@ if sys.stdout.encoding.lower() != 'utf-8':
     except AttributeError:
         pass
 
-# Force the working directory to the project root
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
-os.chdir(ROOT_DIR)
 
 I18N = {
     "en": {
