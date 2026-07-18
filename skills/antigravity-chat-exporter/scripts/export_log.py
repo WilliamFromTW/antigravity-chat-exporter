@@ -4,6 +4,7 @@ import os
 import datetime
 import re
 import sqlite3
+import sys
 
 def decode_varint(data, offset):
     result = 0
@@ -656,7 +657,6 @@ def main():
         
         # Trigger Viewer Generation
         import subprocess
-        import sys
         from pathlib import Path
         viewer_script = Path(__file__).resolve().parent / "generate_viewer.py"
         if viewer_script.exists():
