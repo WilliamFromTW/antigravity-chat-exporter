@@ -9,17 +9,14 @@
 ### Overview
 `antigravity-chat-exporter` is a powerful custom skill for the Google Antigravity CLI. It extracts the raw, unedited conversation logs from the AI's internal brain and saves them beautifully formatted in Markdown files, complete with local timestamps. It elegantly solves the issue of losing chat history or wanting to migrate context between different machines.
 
-### Features
-- **Export Current Chat**: Exports the ongoing chat session to a daily markdown file.
-- **Export All Chats & Brain State**: Scans the brain directory to export all historical chats. Furthermore, it completely backs up the raw AI memory (`brain/` & `.db`) into `.antigravity_sync/brains/` for perfect offline resumption! **(Features a Dual-Layer Scan: it queries the global DB for project relations first, guaranteeing that even if your text logs are missing or empty, your Brain DBs are strictly backed up!)**
-- **Import All Chats**: Restores the previously backed up AI memory (`brain/` & `.db`) from `.antigravity_sync/brains/` back into the system's core memory.
-- **Smart Formatting**: Automatically converts underlying UTC timestamps to your local time.
-- **Auto-Rule Injection**: Installs a rule that automatically triggers the export when you say "export chat".
-- **Genesis Chat Viewer**: Automatically generates a stunning HTML UI (`chat_history_viewer.html`) whenever you export logs. Features a brand new **3-Column Layout** integrating OpenSpec workflow! (Left: Chat Logs, Center: Active & Archived Changes, Right: Tabbed reading view for Proposals, Designs, Tasks, and concatenated Specs). Supports auto-translation of directories via `changes_i18n.json` and multi-language UI selection!
+### Core Features
+- **Export Chat & Brain Memory**: Exports the current chat session to markdown and perfectly backs up the raw Antigravity AI memory (`brain/` & `.db`) into `.antigravity_sync/brains/` for seamless offline resumption.
+- **Import Brain Memory**: Restores the previously backed up Antigravity AI memory back into the system's core to resume context perfectly across machines.
+- **Genesis HTML Viewer**: Automatically generates a stunning HTML UI (`chat_history_viewer.html`) during export. This makes it incredibly convenient to read OpenSpec SDD files alongside your actual chat content in a 3-column layout.
 
 ### Requirements
 - OpenSpec 1.6.0
-- Antigravity CLI 1.1.1
+- Antigravity CLI 1.1.4
 - Python 3.12+
 - **No external dependencies** (uses only standard libraries like `os`, `json`, `shutil`, `datetime`, `argparse`).
 
@@ -72,16 +69,13 @@ Select option `3` to uninstall from the local project, or option `4` to uninstal
 `antigravity-chat-exporter` 是專為 Google Antigravity CLI 開發的強大外掛技能。它能夠直接從系統底層讀取最原始、未經修飾的對話紀錄，並將它們完美排版成帶有本地時間戳記的 Markdown 檔案。這能幫助您永久保留發散思考的過程，並讓您在不同電腦間無縫轉移上下文。
 
 ### 核心功能
-- **匯出當前對話**：將目前的聊天紀錄獨立匯出為單日 Markdown 檔案。
-- **匯出專案所有對話與大腦記憶**：掃描系統找出所有專案對話並打包成 MD。此外，會同步將底層的大腦狀態與資料庫 (`brain/` 與 `.db`) 完整備份至 `.antigravity_sync/brains/`，完美支援無縫 Resume！ **(內建雙重掃描機制：優先查詢全域 DB 鎖定專案關聯，即使您的純文字日誌檔損毀或為空，也能強制且精準地備份大腦記憶庫！)**
-- **匯入所有對話**：可將備份於 `.antigravity_sync/brains/` 中的大腦狀態與資料庫，一鍵還原至本機系統核心，完美支援跨機器復原！
-- **智慧去重機制**：自動將底層的 UTC 時間轉換為本地時間，且多次匯出不會產生重複贅字。
-- **專案鐵律注入**：安裝時會自動寫入專案鐵律，讓 AI 聽懂您的匯出指令。
-- **Genesis 美型閱讀器**：匯出時全自動生成 `chat_history_viewer.html` 絕美閱讀介面。全面升級 **三欄式版面** 完美整合 OpenSpec 工作流！（左欄：對話紀錄；中欄：活躍與封存的 Changes；右欄：Proposal、Design、Tasks、Specs 分頁檢視）。支援全自動化維護 `changes_i18n.json` 翻譯字典，並內建四國語言 UI 切換！
+- **匯出對話與大腦記憶**：將目前的對話紀錄匯出為 Markdown，並完整備份 Antigravity 的底層大腦記憶庫 (`brain/` 與 `.db`) 至 `.antigravity_sync/brains/`，完美支援無縫 Resume。
+- **匯入大腦記憶**：一鍵將備份的 Antigravity 大腦記憶還原至本機系統核心，完美支援跨機器復原上下文。
+- **Genesis 美型閱讀器**：匯出時全自動生成 `chat_history_viewer.html`。透過三欄式版面，讓您能最方便地同時閱讀 OpenSpec 產出的 SDD 文件（Proposal、Design、Specs 等）與實際對話內容。
 
 ### 系統需求
 - OpenSpec 1.6.0
-- Antigravity CLI 1.1.1
+- Antigravity CLI 1.1.4
 - Python 3.12+
 - **完全不需要安裝外部套件**（純原生 Python，僅使用 `os`, `json`, `shutil` 等內建模組）。
 
@@ -134,16 +128,13 @@ python install.py
 `antigravity-chat-exporter` 是专为 Google Antigravity CLI 开发的强大插件技能。它能够直接从系统底层读取最原始、未经修饰的对话记录，并将它们完美排版成带有本地时间戳的 Markdown 文件。这能帮助您永久保留发散思考的过程，并让您在不同电脑间无缝转移上下文。
 
 ### 核心功能
-- **导出当前对话**：将目前的聊天记录独立导出为单日 Markdown 文件。
-- **导出项目所有对话与大脑记忆**：扫描系统找出所有项目对话并打包成 MD。此外，会同步将底层的大脑状态与数据库 (`brain/` 与 `.db`) 完整备份至 `.antigravity_sync/brains/`，完美支持无缝 Resume！ **(内置双重扫描机制：优先查询全局 DB 锁定项目关联，即使您的纯文本日志文件损坏或为空，也能强制且精准地备份大脑记忆库！)**
-- **导入所有对话**：可将备份于 `.antigravity_sync/brains/` 中的大脑状态与数据库，一键还原至本机系统核心，完美支持跨机器复原！
-- **智能去重机制**：自动将底层的 UTC 时间转换为本地时间，且多次导出不会产生重复内容。
-- **项目铁律自动注入**：安装时会自动写入项目铁律，让 AI 听懂您的指令。
-- **Genesis 美型阅读器**：导出时全自动生成 `chat_history_viewer.html` 绝美阅读界面。全面升级 **三栏式版面** 完美整合 OpenSpec 工作流！（左栏：对话记录；中栏：活跃与归档的 Changes；右栏：Proposal、Design、Tasks、Specs 分页检视）。支持全自动化维护 `changes_i18n.json` 翻译字典，并内置四国语言 UI 切换！
+- **导出对话与大脑记忆**：将目前的对话记录导出为 Markdown，并完整备份 Antigravity 的底层大脑记忆库 (`brain/` 与 `.db`) 至 `.antigravity_sync/brains/`，完美支持无缝 Resume。
+- **导入大脑记忆**：一键将备份的 Antigravity 大脑记忆还原至本机系统核心，完美支持跨机器复原上下文。
+- **Genesis 美型阅读器**：导出时全自动生成 `chat_history_viewer.html`。通过三栏式版面，让您能最方便地同时阅读 OpenSpec 产出的 SDD 文件（Proposal、Design、Specs 等）与实际对话内容。
 
 ### 系统要求
 - OpenSpec 1.6.0
-- Antigravity CLI 1.1.1
+- Antigravity CLI 1.1.4
 - Python 3.12+
 - **完全不需要安装外部依赖**（纯原生 Python，仅使用 `os`, `json`, `shutil` 等内置模块）。
 
@@ -195,17 +186,14 @@ python install.py
 ### Tổng quan
 `antigravity-chat-exporter` là một kỹ năng tùy chỉnh mạnh mẽ dành cho Google Antigravity CLI. Nó trích xuất các nhật ký trò chuyện nguyên bản từ bộ não bên trong của AI và lưu chúng dưới định dạng Markdown đẹp mắt, hoàn chỉnh với mốc thời gian địa phương. Nó giải quyết một cách hoàn hảo vấn đề mất lịch sử trò chuyện hoặc khi bạn muốn di chuyển ngữ cảnh (context) giữa các máy tính khác nhau.
 
-### Các tính năng
-- **Xuất trò chuyện hiện tại**: Xuất phiên trò chuyện đang diễn ra thành tệp markdown theo ngày.
-- **Xuất tất cả trò chuyện & Bộ nhớ Não bộ**: Quét thư mục não và xuất tất cả các cuộc trò chuyện lịch sử liên quan. Hơn nữa, nó sao lưu hoàn toàn bộ nhớ AI thô (`brain/` & `.db`) vào `.antigravity_sync/brains/` để phục hồi ngoại tuyến hoàn hảo! **(Tính năng quét kép: truy vấn cơ sở dữ liệu toàn cục để tìm liên kết dự án trước, đảm bảo rằng ngay cả khi nhật ký văn bản của bạn bị thiếu hoặc trống, cơ sở dữ liệu Não của bạn vẫn được sao lưu một cách chính xác!)**
-- **Nhập tất cả trò chuyện**: Khôi phục bộ nhớ AI đã sao lưu trước đó từ `.antigravity_sync/brains/` trở lại bộ nhớ lõi của hệ thống để hỗ trợ phục hồi xuyên máy!
-- **Định dạng thông minh**: Tự động chuyển đổi múi giờ UTC sang giờ địa phương và ngăn chặn nhật ký bị lặp lại một cách thông minh.
-- **Tự động thêm quy tắc**: Cài đặt một quy tắc (rule) tự động kích hoạt quá trình xuất khi bạn nói "xuất trò chuyện".
-- **Genesis Chat Viewer**: Tự động tạo giao diện HTML tuyệt đẹp (`chat_history_viewer.html`) mỗi khi bạn xuất nhật ký. Tích hợp **Bố cục 3 Cột** hoàn toàn mới với quy trình OpenSpec! (Trái: Nhật ký trò chuyện, Giữa: Các Changes Đang hoạt động & Đã lưu trữ, Phải: Chế độ xem theo tab cho Proposal, Design, Tasks, Specs). Hỗ trợ tự động dịch các thư mục thông qua `changes_i18n.json` và 4 ngôn ngữ giao diện!
+### Các tính năng cốt lõi
+- **Xuất Trò chuyện & Bộ nhớ Não bộ**: Xuất nhật ký trò chuyện hiện tại và sao lưu hoàn toàn bộ nhớ AI Antigravity thô (`brain/` & `.db`) vào `.antigravity_sync/brains/` để phục hồi ngoại tuyến liền mạch.
+- **Nhập Bộ nhớ Não bộ**: Khôi phục bộ nhớ AI Antigravity đã sao lưu trở lại lõi hệ thống để tiếp tục ngữ cảnh một cách hoàn hảo trên các máy khác nhau.
+- **Genesis HTML Viewer**: Tự động tạo giao diện HTML tuyệt đẹp (`chat_history_viewer.html`) trong quá trình xuất. Giúp việc đọc các tệp SDD của OpenSpec cùng với nội dung trò chuyện thực tế trong bố cục 3 cột trở nên vô cùng thuận tiện.
 
 ### Yêu cầu hệ thống
 - OpenSpec 1.6.0
-- Antigravity CLI 1.1.1
+- Antigravity CLI 1.1.4
 - Python 3.12+
 - **Không cần cài đặt thư viện bên ngoài** (chỉ sử dụng các thư viện tiêu chuẩn của Python như `os`, `json`, `shutil`, `datetime`, `argparse`).
 
