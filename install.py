@@ -15,6 +15,7 @@ RULE_TEXT = {
 - **List requirement**: When listing backed up conversation IDs to the user, you MUST ALWAYS explicitly include the date/time (Last Modified). Never omit the date when summarizing or presenting the list.
 - **Git Commit Rule**: If the user explicitly asks you to `commit` changes related to this project, you MUST write the git commit message in 4 languages (English, Traditional Chinese, Simplified Chinese, and Vietnamese). Format the commit message body with language sections using `[zh-TW]`, `[en]`, `[zh-CN]`, and `[vi]` headers.
 - **Directory Translation Rule**: You MUST maintain the file `openspec/changes_i18n.json`. Before exporting logs, or whenever you notice missing directory translations in active changes (`openspec/changes/`), archived changes (`openspec/changes/archive/`), or main specs (`openspec/specs/`), you must proactively translate their directory names into 4 languages (`zh-tw`, `en`, `zh-cn`, `vi`) and update the JSON file. This ensures the HTML viewer generates correctly.
+- **Executive Summary Rule**: Before exporting logs, you MUST output a summary of the current session directly in the chat using the exact markdown format: `> [!NOTE]\n> **Executive Summary**\n> <your summary>`. This is required for the HTML viewer to extract and display the summary.
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-tw": """
@@ -23,6 +24,7 @@ RULE_TEXT = {
 - **強制列出日期**：當您在向使用者列出備份的對話 ID 時，您「必須永遠」明確地一併列出每個對話的日期與時間 (Last Modified)。在總結或呈現列表時，絕對不允許省略日期。
 - **Git Commit 強制規則**：如果使用者明確要求您 `commit` 與此專案相關的變更，您必須強制將 Commit Message 翻譯成四國語言（英文、繁體中文、簡體中文、越南文），並在內容中使用 `[zh-TW]`, `[en]`, `[zh-CN]`, `[vi]` 標題區分。
 - **目錄翻譯強制鐵律**：您「必須負責維護」`openspec/changes_i18n.json` 檔案。在每次執行匯出對話前，或是當您發現「活躍的 changes」、「封存的 changes」或「主要 specs」當中有任何目錄名稱尚未記錄於 JSON 中時，您必須主動將其翻譯成四國語言 (`zh-tw`, `en`, `zh-cn`, `vi`) 並更新到該 JSON 檔中。這是為了確保 Viewer 產生 HTML 時能正常顯示翻譯。
+- **執行摘要強制鐵律**：在每次執行匯出對話前，您「必須」先在對話中直接輸出一份當前工作階段的總結。格式必須嚴格遵守：`> [!NOTE]\n> **執行摘要**\n> <摘要內容>`。這是為了讓 HTML 閱讀器能夠正確抓取並顯示左側選單的摘要預覽。
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "zh-cn": """
@@ -31,6 +33,7 @@ RULE_TEXT = {
 - **强制列出日期**：当您在向用户列出备份的对话 ID 时，您“必须永远”明确地一并列出每个对话的日期与时间 (Last Modified)。在总结或呈现列表时，绝对不允许省略日期。
 - **Git Commit 强制规则**：如果用户明确要求您 `commit` 与此项目相关的变更，您必须强制将 Commit Message 翻译成四国语言（英文、繁体中文、简体中文、越南文），并在内容中使用 `[zh-TW]`, `[en]`, `[zh-CN]`, `[vi]` 标题区分。
 - **目录翻译强制铁律**：您“必须负责维护”`openspec/changes_i18n.json` 文件。在每次执行导出对话前，或是当您发现“活跃的 changes”、“封存的 changes”或“主要 specs”当中有任何目录名称尚未记录于 JSON 中时，您必须主动将其翻译成四国语言 (`zh-tw`, `en`, `zh-cn`, `vi`) 并更新到该 JSON 档中。这是为了确保 Viewer 产生 HTML 时能正常显示翻译。
+- **执行摘要强制铁律**：在每次执行导出对话前，您“必须”先在对话中直接输出一份当前工作阶段的总结。格式必须严格遵守：`> [!NOTE]\n> **执行摘要**\n> <摘要内容>`。这是为了让 HTML 阅读器能够正确抓取并显示左侧菜单的摘要预览。
 <!-- CHAT_EXPORTER_RULE_END -->
 """,
     "vi": """
@@ -39,6 +42,7 @@ RULE_TEXT = {
 - **Bắt buộc hiển thị ngày tháng**: Khi liệt kê các ID trò chuyện đã sao lưu cho người dùng, bạn PHẢI LUÔN LUÔN hiển thị rõ ràng ngày và giờ (Lần sửa đổi cuối). Tuyệt đối không được bỏ qua ngày tháng khi tóm tắt hoặc trình bày danh sách.
 - **Quy tắc Git Commit**: Nếu người dùng yêu cầu bạn `commit` các thay đổi liên quan đến dự án này, bạn PHẢI viết thông báo commit bằng 4 ngôn ngữ (Tiếng Anh, Tiếng Trung Phồn thể, Tiếng Trung Giản thể, và Tiếng Việt). Định dạng phần thân của commit với các tiêu đề `[zh-TW]`, `[en]`, `[zh-CN]`, và `[vi]`.
 - **Quy tắc Dịch Thư mục**: Bạn PHẢI duy trì tệp `openspec/changes_i18n.json`. Trước khi xuất nhật ký, hoặc bất cứ khi nào bạn thấy các thư mục trong changes đang hoạt động, changes đã lưu trữ, hoặc specs chính chưa có trong tệp JSON, bạn phải chủ động dịch tên thư mục đó sang 4 ngôn ngữ (`zh-tw`, `en`, `zh-cn`, `vi`) và cập nhật vào tệp JSON. Điều này nhằm đảm bảo Trình xem HTML hiển thị bản dịch chính xác.
+- **Quy tắc Tóm tắt Thực thi**: Trước khi xuất nhật ký, bạn PHẢI đưa ra tóm tắt về phiên làm việc hiện tại trực tiếp trong cuộc trò chuyện theo đúng định dạng markdown: `> [!NOTE]\n> **Tóm tắt Thực thi**\n> <nội dung tóm tắt>`. Điều này là bắt buộc để trình xem HTML có thể trích xuất và hiển thị tóm tắt ở thanh bên trái.
 <!-- CHAT_EXPORTER_RULE_END -->
 """
 }
