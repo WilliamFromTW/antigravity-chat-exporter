@@ -34,7 +34,7 @@ python install.py
 ### Usage
 
 Simply tell the Antigravity AI:
-- *"Export conversation"* (To export the current chat)
+- *"Export conversation"* (To export the content of the current chat window)
 - *"Export all conversations"* (To export all project-related chats)
 - *"List backed up conversation IDs"* (To list all available backups)
 - *"Import all chats"* (To restore backups to your current workspace)
@@ -90,7 +90,7 @@ python install.py
 ### 使用方式
 
 您只需要像平常一樣對 Antigravity AI 說出：
-- *「匯出對話」*（僅匯出當前視窗）
+- *「匯出對話」*（匯出當前對話視窗內容）
 - *「匯出所有對話」*（匯出專案所有的歷史紀錄）
 - *「列出備份的對話 ID」*（列出 `.antigravity_sync/brains/` 下的所有備份紀錄）
 - *「匯入所有對話」*（將備份還原至當下環境）
@@ -146,7 +146,7 @@ python install.py
 ### 使用方式
 
 您只需要像平常一样对 Antigravity AI 说出：
-- *“导出对话”*（仅导出当前窗口）
+- *“导出对话”*（导出当前对话窗口内容）
 - *“导出所有对话”*（导出项目所有的历史记录）
 - *“列出备份的对话 ID”*（列出 `.antigravity_sync/brains/` 下的所有备份记录）
 - *“导入所有对话”*（将备份还原至当下环境）
@@ -202,7 +202,7 @@ python install.py
 ### Cách sử dụng
 
 Chỉ cần nói với Antigravity AI:
-- *"Xuất trò chuyện"* (Để xuất cuộc trò chuyện hiện tại)
+- *"Xuất trò chuyện"* (Để xuất nội dung của cửa sổ trò chuyện hiện tại)
 - *"Xuất tất cả trò chuyện"* (Để xuất tất cả cuộc trò chuyện liên quan đến dự án)
 - *"Liệt kê ID trò chuyện đã sao lưu"* (Để xem danh sách sao lưu)
 - *"Nhập tất cả trò chuyện"* (Để khôi phục sao lưu)
