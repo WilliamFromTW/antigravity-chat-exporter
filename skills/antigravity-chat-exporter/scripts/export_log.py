@@ -102,11 +102,11 @@ def clean_system_text(text):
     text = re.sub(r'<SYSTEM_MESSAGE>.*?</SYSTEM_MESSAGE>', '', text, flags=re.DOTALL)
     text = re.sub(r'The following is an <EPHEMERAL_MESSAGE>.*?act accordingly\.', '', text, flags=re.DOTALL)
     
-    text = re.sub(r'\*\*[^*]+\*\*\n+(?:I\'m|I\'ve|I am|I will) .*?(?=\n\n|\Z)', '', text, flags=re.DOTALL)
+    text = re.sub(r'\*\*[^*]+\*\*\n+(?:I\'m|I\'ve|I am|I will|I have figured out) .*?(?=\n\n|\Z)', '', text, flags=re.DOTALL)
     text = re.sub(r'(?mi)^[ \t]*bot[^\n]*', '', text)
     text = re.sub(r'(?m)^[ \t]*\*\*[^\n]*', '', text)
     text = re.sub(r'(?m)^[ \t]*\$[^\n]*', '', text)
-    text = re.sub(r'[^\n]*(?:I\'m|I\'ve|I am|I will) [^\n]*', '', text)
+    text = re.sub(r'[^\n]*(?:I\'m|I\'ve|I am|I will|I have figured out) [^\n]*', '', text)
     text = re.sub(r'[^\n]*explicitly invoked[^\n]*', '', text)
     text = re.sub(r'[^\n]*CRITICAL INSTRUCTION[^\n]*', '', text)
     text = re.sub(r'[^\n]*file:///[^\n]*', '', text)
