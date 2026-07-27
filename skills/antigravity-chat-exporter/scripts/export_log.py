@@ -108,6 +108,7 @@ def clean_system_text(text):
     text = re.sub(r'(?m)^[ \t]*\$[^\n]*', '', text)
     text = re.sub(r'[^\n]*(?:I\'m|I\'ve|I am|I will|I have figured out) [^\n]*', '', text)
     text = re.sub(r'[^\n]*explicitly invoked[^\n]*', '', text)
+    text = re.sub(r'(?m)^[ \t]*[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}[ \t]*$', '', text)
     text = re.sub(r'[^\n]*CRITICAL INSTRUCTION[^\n]*', '', text)
     text = re.sub(r'[^\n]*file:///[^\n]*', '', text)
     text = re.sub(r'The user is currently editing the file.*?(?=\n|\Z)', '', text)
