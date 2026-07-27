@@ -63,7 +63,8 @@ def is_garbage(text):
 
 def write_markdown_logs(conversation_id, output_dir, daily_logs):
     if output_dir is None:
-        output_dir = os.getcwd()
+        output_dir = os.path.join(os.getcwd(), 'openspec', 'explorations')
+    os.makedirs(output_dir, exist_ok=True)
     for date_str, messages in daily_logs.items():
         if not messages: continue
         
