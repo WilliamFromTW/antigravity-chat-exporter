@@ -17,6 +17,14 @@ RULE_TEXT = {
 - **Directory Translation Rule**: You MUST maintain the file `openspec/changes_i18n.json`. Before exporting logs, or whenever you notice missing directory translations in active changes (`openspec/changes/`), archived changes (`openspec/changes/archive/`), or main specs (`openspec/specs/`), you must proactively translate their directory names into 4 languages (`zh-tw`, `en`, `zh-cn`, `vi`) and update the JSON file. This ensures the HTML viewer generates correctly.
 - **Executive Summary Rule**: Before exporting logs, you MUST output a summary of the current session directly in the chat using the exact markdown format: `> [!NOTE]\n> **Executive Summary**\n> <your summary>`. This is required for the HTML viewer to extract and display the summary.
 <!-- CHAT_EXPORTER_RULE_END -->
+
+<RULE[openspec-context]>
+# OpenSpec Context Recovery Rule
+- When the user asks to "read openspec documents", "continue development", or understand a specific feature, you must execute this multidimensional reading strategy:
+  1. **Understand Present (What & How)**: Read `openspec/specs/<feature>/spec.md` (or ask the user for the target) to grasp the current strict requirements and scenarios.
+  2. **Trace Past (Why)**: Scan `openspec/changes/archive/` for historical changes that modified this feature, and read their `propose.md` or `design.md` to understand the original design rationale.
+  3. **Synthesize**: Combine the main specs and archive history to summarize the "Current State" and "Historical Context" for the user, then ask for the next goal. Never confuse historical proposals with current strict specs.
+</RULE[openspec-context]>
 """,
     "zh-tw": """
 <!-- CHAT_EXPORTER_RULE_START -->
@@ -26,6 +34,14 @@ RULE_TEXT = {
 - **目錄翻譯強制鐵律**：您「必須負責維護」`openspec/changes_i18n.json` 檔案。在每次執行匯出對話前，或是當您發現「活躍的 changes」、「封存的 changes」或「主要 specs」當中有任何目錄名稱尚未記錄於 JSON 中時，您必須主動將其翻譯成四國語言 (`zh-tw`, `en`, `zh-cn`, `vi`) 並更新到該 JSON 檔中。這是為了確保 Viewer 產生 HTML 時能正常顯示翻譯。
 - **執行摘要強制鐵律**：在每次執行匯出對話前，您「必須」先在對話中直接輸出一份當前工作階段的總結。格式必須嚴格遵守：`> [!NOTE]\n> **執行摘要**\n> <摘要內容>`。這是為了讓 HTML 閱讀器能夠正確抓取並顯示左側選單的摘要預覽。
 <!-- CHAT_EXPORTER_RULE_END -->
+
+<RULE[openspec-context]>
+# OpenSpec 快速接續與脈絡還原鐵律 (OpenSpec Context Recovery Rule)
+- 當使用者輸入「讀懂openspec文件」、「接續開發」或要求了解特定功能時，您必須執行以下「立體化」讀取策略：
+  1. **釐清現狀 (What & How)**：主動讀取 `openspec/specs/<特定功能>/spec.md` (或詢問使用者目標)，掌握當前系統的嚴格需求與情境 (Requirements & Scenarios)。
+  2. **追溯過去 (Why)**：接著主動掃描 `openspec/changes/archive/`，尋找曾經修改過該功能的歷史變更，讀取其 `propose.md` 或 `design.md` 以了解設計初衷。
+  3. **統整報告**：綜合主 Specs 的規格與 Archive 的歷史背景，向使用者總結「目前功能現況」與「歷史設計脈絡」，並詢問下一步開發目標。切勿將歷史提案與現有規格混淆。
+</RULE[openspec-context]>
 """,
     "zh-cn": """
 <!-- CHAT_EXPORTER_RULE_START -->
@@ -35,6 +51,14 @@ RULE_TEXT = {
 - **目录翻译强制铁律**：您“必须负责维护”`openspec/changes_i18n.json` 文件。在每次执行导出对话前，或是当您发现“活跃的 changes”、“封存的 changes”或“主要 specs”当中有任何目录名称尚未记录于 JSON 中时，您必须主动将其翻译成四国语言 (`zh-tw`, `en`, `zh-cn`, `vi`) 并更新到该 JSON 档中。这是为了确保 Viewer 产生 HTML 时能正常显示翻译。
 - **执行摘要强制铁律**：在每次执行导出对话前，您“必须”先在对话中直接输出一份当前工作阶段的总结。格式必须严格遵守：`> [!NOTE]\n> **执行摘要**\n> <摘要内容>`。这是为了让 HTML 阅读器能够正确抓取并显示左侧菜单的摘要预览。
 <!-- CHAT_EXPORTER_RULE_END -->
+
+<RULE[openspec-context]>
+# OpenSpec 快速接续与脉络还原铁律 (OpenSpec Context Recovery Rule)
+- 当用户输入“读懂openspec文件”、“接续开发”或要求了解特定功能时，您必须执行以下“立体化”读取策略：
+  1. **理清现状 (What & How)**：主动读取 `openspec/specs/<特定功能>/spec.md` (或询问用户目标)，掌握当前系统的严格需求与情境 (Requirements & Scenarios)。
+  2. **追溯过去 (Why)**：接着主动扫描 `openspec/changes/archive/`，寻找曾经修改过该功能的历史变更，读取其 `propose.md` 或 `design.md` 以了解设计初衷。
+  3. **统整报告**：综合主 Specs 的规格与 Archive 的历史背景，向用户总结“目前功能现状”与“历史设计脉络”，并询问下一步开发目标。切勿将历史提案与现有规格混淆。
+</RULE[openspec-context]>
 """,
     "vi": """
 <!-- CHAT_EXPORTER_RULE_START -->
@@ -44,6 +68,14 @@ RULE_TEXT = {
 - **Quy tắc Dịch Thư mục**: Bạn PHẢI duy trì tệp `openspec/changes_i18n.json`. Trước khi xuất nhật ký, hoặc bất cứ khi nào bạn thấy các thư mục trong changes đang hoạt động, changes đã lưu trữ, hoặc specs chính chưa có trong tệp JSON, bạn phải chủ động dịch tên thư mục đó sang 4 ngôn ngữ (`zh-tw`, `en`, `zh-cn`, `vi`) và cập nhật vào tệp JSON. Điều này nhằm đảm bảo Trình xem HTML hiển thị bản dịch chính xác.
 - **Quy tắc Tóm tắt Thực thi**: Trước khi xuất nhật ký, bạn PHẢI đưa ra tóm tắt về phiên làm việc hiện tại trực tiếp trong cuộc trò chuyện theo đúng định dạng markdown: `> [!NOTE]\n> **Tóm tắt Thực thi**\n> <nội dung tóm tắt>`. Điều này là bắt buộc để trình xem HTML có thể trích xuất và hiển thị tóm tắt ở thanh bên trái.
 <!-- CHAT_EXPORTER_RULE_END -->
+
+<RULE[openspec-context]>
+# Quy tắc phục hồi bối cảnh OpenSpec (OpenSpec Context Recovery Rule)
+- Khi người dùng yêu cầu "đọc tài liệu openspec", "tiếp tục phát triển" hoặc muốn hiểu một tính năng cụ thể, bạn phải thực hiện chiến lược đọc đa chiều sau:
+  1. **Hiểu Hiện tại (Cái gì & Như thế nào)**: Đọc `openspec/specs/<tính năng>/spec.md` (hoặc hỏi người dùng mục tiêu) để nắm bắt các yêu cầu và kịch bản nghiêm ngặt hiện tại.
+  2. **Truy xuất Quá khứ (Tại sao)**: Quét `openspec/changes/archive/` để tìm các thay đổi lịch sử đã sửa đổi tính năng này và đọc `propose.md` hoặc `design.md` của chúng để hiểu lý do thiết kế ban đầu.
+  3. **Tổng hợp**: Kết hợp các thông số kỹ thuật chính và lịch sử lưu trữ để tóm tắt "Trạng thái hiện tại" và "Bối cảnh lịch sử" cho người dùng, sau đó hỏi mục tiêu tiếp theo. Không bao giờ nhầm lẫn các đề xuất lịch sử với các thông số kỹ thuật hiện tại.
+</RULE[openspec-context]>
 """
 }
 

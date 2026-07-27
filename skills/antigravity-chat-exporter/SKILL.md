@@ -70,5 +70,10 @@ python .agent/skills/antigravity-chat-exporter/scripts/export_log.py --list-back
      > (Nhập tóm tắt tiếng Việt ở đây)
      > </div>
      ```
-5. Inform the user where the file(s) were saved, and confirm that the Executive Summary was successfully added. Do NOT automatically git commit the logs unless explicitly asked.
+5. **Regenerate HTML Viewer**
+   Because you modified the markdown file after the export script finished, the `chat_history_viewer.html` is now out of sync. You MUST run the `generate_viewer.py` script to regenerate the HTML viewer and embed your new summary:
+   ```shell
+   python .agent/skills/antigravity-chat-exporter/scripts/generate_viewer.py
+   ```
+6. Inform the user where the file(s) were saved, and confirm that the Executive Summary was successfully added. Do NOT automatically git commit the logs unless explicitly asked.
 
