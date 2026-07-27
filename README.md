@@ -32,10 +32,11 @@ python install.py
 4. **Global Uninstall**: Removes the system-wide Plugin.
 
 ### Usage
-After installation, the installer writes **Iron Rules** (`.agent/rules/chat_exporter.md`) into your project. These rules instruct the AI to:
+After installation, the installer writes **Iron Rules** (`.agent/rules/chat_exporter.md` and `.agent/AGENTS.md`) into your project. These rules instruct the AI to:
 1. Immediately trigger the `antigravity-chat-exporter` skill when you ask to export, import, or list backups.
 2. Ensure it always passes its own `conversation_id`.
 3. Never modify your source code when performing these operations.
+4. **Seamlessly restore context**: Follow the "OpenSpec Context Recovery Rule" to read specs and historical archives whenever you ask to continue development on a feature.
 
 Simply tell the Antigravity AI:
 - *"Export conversation"* (To export the current chat)
@@ -91,10 +92,11 @@ python install.py
 4. **全域系統移除**：移除全系統通用的 Plugin 安裝。
 
 ### 使用方式
-安裝完成後，安裝精靈會將 **專案鐵律 (Iron Rules)** (`.agent/rules/chat_exporter.md`) 寫入您的專案中。這些鐵律會嚴格限制並指示 AI：
+安裝完成後，安裝精靈會將 **專案鐵律 (Iron Rules)** (`.agent/rules/chat_exporter.md` 與 `.agent/AGENTS.md`) 寫入您的專案中。這些鐵律會嚴格限制並指示 AI：
 1. 當您要求匯出、匯入或列出備份時，必須立刻觸發 `antigravity-chat-exporter` 技能。
 2. 必須永遠主動傳遞它自己的 `conversation_id` 給腳本。
 3. 在執行這些操作時，絕對不可修改您的任何專案程式碼。
+4. **無縫接續脈絡**：遵循「OpenSpec 快速接續與脈絡還原鐵律」，在您要求接續開發時，自動透過立體化的方式讀取規格與歷史變更檔案。
 
 您只需要像平常一樣對 Antigravity AI 說出：
 - *「匯出對話」*（僅匯出當前視窗）
@@ -150,10 +152,11 @@ python install.py
 4. **全局系统卸载**：移除全系统通用的 Plugin 安装。
 
 ### 使用方式
-安装完成后，安装向导会将 **项目铁律 (Iron Rules)** (`.agent/rules/chat_exporter.md`) 写入您的项目中。这些铁律会严格限制并指示 AI：
+安装完成后，安装向导会将 **项目铁律 (Iron Rules)** (`.agent/rules/chat_exporter.md` 与 `.agent/AGENTS.md`) 写入您的项目中。这些铁律会严格限制并指示 AI：
 1. 当您要求导出、导入或列出备份时，必须立刻触发 `antigravity-chat-exporter` 技能。
 2. 必须永远主动传递它自己的 `conversation_id` 给脚本。
 3. 在执行这些操作时，绝对不可修改您的任何项目代码。
+4. **无缝接续脉络**：遵循“OpenSpec 快速接续与脉络还原铁律”，在您要求接续开发时，自动透过立体化的方式读取规格与历史变更文件。
 
 您只需要像平常一样对 Antigravity AI 说出：
 - *“导出对话”*（仅导出当前窗口）
@@ -209,10 +212,11 @@ python install.py
 4. **Gỡ cài đặt toàn cục**: Xóa Plugin toàn hệ thống.
 
 ### Cách sử dụng
-Sau khi cài đặt, trình cài đặt sẽ ghi các **Quy tắc sắt (Iron Rules)** (`.agent/rules/chat_exporter.md`) vào dự án của bạn. Các quy tắc này hướng dẫn AI:
+Sau khi cài đặt, trình cài đặt sẽ ghi các **Quy tắc sắt (Iron Rules)** (`.agent/rules/chat_exporter.md` và `.agent/AGENTS.md`) vào dự án của bạn. Các quy tắc này hướng dẫn AI:
 1. Kích hoạt ngay kỹ năng `antigravity-chat-exporter` khi bạn yêu cầu xuất, nhập hoặc liệt kê các bản sao lưu.
 2. Đảm bảo nó luôn truyền `conversation_id` của chính nó.
 3. Không bao giờ sửa đổi mã nguồn của bạn khi thực hiện các thao tác này.
+4. **Phục hồi bối cảnh liền mạch**: Tuân theo "Quy tắc phục hồi bối cảnh OpenSpec" để tự động đọc các thông số kỹ thuật và kho lưu trữ lịch sử bằng phương pháp đa chiều bất cứ khi nào bạn muốn tiếp tục phát triển.
 
 Chỉ cần nói với Antigravity AI:
 - *"Xuất trò chuyện"* (Để xuất cuộc trò chuyện hiện tại)
