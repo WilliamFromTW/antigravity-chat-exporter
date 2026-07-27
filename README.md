@@ -38,7 +38,7 @@ Simply tell the Antigravity AI:
 - *"Export all conversations"* (To export all project-related chats)
 - *"List backed up conversation IDs"* (To list all available backups)
 - *"Import all chats"* (To restore backups to your current workspace)
-- *"Continue development"* (To seamlessly restore context from OpenSpec)
+- *"Continue development"* (To let the AI automatically read specs and history to seamlessly resume development)
 
 The AI will automatically trigger the skill and save the logs into `openspec/explorations/explore_log_YYYY-MM-DD.md`.
 
@@ -94,7 +94,7 @@ python install.py
 - *「匯出所有對話」*（匯出專案所有的歷史紀錄）
 - *「列出備份的對話 ID」*（列出 `.antigravity_sync/brains/` 下的所有備份紀錄）
 - *「匯入所有對話」*（將備份還原至當下環境）
-- *「接續開發」*（自動立體化還原 OpenSpec 脈絡）
+- *「接續開發」*（讓 AI 自動讀取規格與歷史記憶，無縫恢復開發狀態）
 
 AI 就會自動觸發技能，將日誌儲存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`。
 
@@ -150,7 +150,7 @@ python install.py
 - *“导出所有对话”*（导出项目所有的历史记录）
 - *“列出备份的对话 ID”*（列出 `.antigravity_sync/brains/` 下的所有备份记录）
 - *“导入所有对话”*（将备份还原至当下环境）
-- *“接续开发”*（自动立体化还原 OpenSpec 脉络）
+- *“接续开发”*（让 AI 自动读取规格与历史记忆，无缝恢复开发状态）
 
 AI 就会自动触发技能，将日志储存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`。
 
@@ -206,7 +206,7 @@ Chỉ cần nói với Antigravity AI:
 - *"Xuất tất cả trò chuyện"* (Để xuất tất cả cuộc trò chuyện liên quan đến dự án)
 - *"Liệt kê ID trò chuyện đã sao lưu"* (Để xem danh sách sao lưu)
 - *"Nhập tất cả trò chuyện"* (Để khôi phục sao lưu)
-- *"Tiếp tục phát triển"* (Để tự động khôi phục bối cảnh từ OpenSpec)
+- *"Tiếp tục phát triển"* (Để AI tự động đọc thông số kỹ thuật và lịch sử, giúp khôi phục trạng thái phát triển liền mạch)
 
 AI sẽ tự động kích hoạt kỹ năng và lưu nhật ký vào `openspec/explorations/explore_log_YYYY-MM-DD.md`.
 
