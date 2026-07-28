@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenSpec Grill 使用指南</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #34495e; margin-top: 30px; }
+        h3 { color: #16a085; }
+        code {
+            background-color: #f1f2f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            color: #e74c3c;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        pre code { background-color: transparent; color: inherit; padding: 0; }
+        blockquote {
+            border-left: 4px solid #f39c12;
+            background-color: #fdfbf7;
+            margin: 20px 0;
+            padding: 15px 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
+        hr { border: 0; border-top: 1px solid #eee; margin: 40px 0; }
+        .footer { text-align: center; color: #95a5a6; font-size: 0.9em; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 OpenSpec Grill (架構審查員) 使用指南</h1>
+
+        <h2>什麼是 <code>/openspec-grill</code>？</h2>
+        <p>在規格驅動開發 (SDD) 工作流中，<code>/openspec-grill</code> 是負責把關品質的「架構審查員」。<br>
+        它的作用是在您利用 <code>/openspec-explore</code> 探索完初步點子後，<strong>自動接續對話上下文</strong>，拿現有的專案規格 (Baseline Specs) 對您的新點子進行「無情拷問」，抓出邏輯破綻與邊界漏洞。</p>
+
+        <h2>🎯 如何使用</h2>
+        <p>在對話中直接輸入指令即可呼叫：</p>
+        <pre><code>/openspec-grill [--mode=預設|security|db] [--level=1|3|5]</code></pre>
+        
+        <blockquote>
+            <strong>注意</strong>：您不需要輸入任何需求文字，AI 會自動讀取前一步驟的上下文來進行審查！
+        </blockquote>
+
+        <h3>參數詳解</h3>
+
+        <h4>1. 領域模式 <code>--mode</code> (你要 AI 扮演誰？)</h4>
+        <ul>
+            <li><strong><code>default</code> (預設)</strong>：業務邏輯 SA。專注於邊界條件、防呆、狀態機與極端行為。</li>
+            <li><strong><code>security</code></strong>：零信任資安專家。專注於越權存取、注入攻擊、Token 挾持與防刷機制。</li>
+            <li><strong><code>db</code></strong>：千萬級 DBA。專注於競態條件 (Race Condition)、資料庫鎖與效能瓶頸。</li>
+        </ul>
+
+        <h4>2. 壓力等級 <code>--level</code> (你要 AI 多嚴格？)</h4>
+        <ul>
+            <li><strong><code>1</code> (溫和引導)</strong>：AI 像導師，會主動給你 2~3 種解法選擇。</li>
+            <li><strong><code>3</code> (嚴格審查 - 預設)</strong>：公事公辦，指出漏洞要求你解決，解法有瑕疵會直接駁回。</li>
+            <li><strong><code>5</code> (魔鬼拷問)</strong>：極度嚴苛，專攻 0.01% 機率的連鎖崩潰情境，且<strong>絕對不主動提供解答</strong>，逼迫你想得滴水不漏。</li>
+        </ul>
+
+        <h2>🔄 SDD 標準操作範例</h2>
+        <ul>
+            <li><strong>1. 先探勘</strong>：與 AI 討論點子<br>
+            <code>> /openspec-explore 幫我看看購物車 10 分鐘未結帳自動釋放庫存怎麼做</code></li>
+            <li><strong>2. 無情拷問</strong>：用預設模式找出業務漏洞<br>
+            <code>> /openspec-grill</code></li>
+            <li><strong>3. 換位拷問</strong>：用 DBA 模式檢查高併發問題<br>
+            <code>> /openspec-grill --mode=db --level=5</code></li>
+            <li><strong>4. 收斂提案</strong>：確認無懈可擊後，產出標準化規格<br>
+            <code>> /openspec-propose</code></li>
+            <li><strong>5. 開始寫 Code</strong>：<br>
+            <code>> /goal /openspec-apply</code></li>
+        </ul>
+
+        <hr>
+        <div class="footer">
+            此模組由 Antigravity 團隊提供，致力於將防呆與架構審查左移至開發最早期。
+        </div>
+    </div>
+</body>
+</html>
