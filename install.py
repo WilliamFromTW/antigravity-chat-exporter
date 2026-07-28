@@ -243,6 +243,14 @@ def install_local(t, lang):
         if os.path.exists(dest_skill):
             shutil.rmtree(dest_skill)
         shutil.copytree(src_skill, dest_skill)
+
+    src_wf = os.path.join(PKG_DIR, "workflows")
+    if os.path.exists(src_wf):
+        dest_wf = os.path.join(agent_dir, "workflows")
+        os.makedirs(dest_wf, exist_ok=True)
+        for f in os.listdir(src_wf):
+            if os.path.isfile(os.path.join(src_wf, f)):
+                shutil.copy2(os.path.join(src_wf, f), os.path.join(dest_wf, f))
     
     add_local_rule(agent_dir, lang)
     
@@ -262,6 +270,10 @@ def uninstall_local(t):
         if os.path.exists(dest_skill):
             shutil.rmtree(dest_skill)
     print(t['skill_removed'])
+
+    wf_file = os.path.join(agent_dir, "workflows", "sdd.md")
+    if os.path.exists(wf_file):
+        os.remove(wf_file)
         
     for file_name in ["generate_viewer.py", "generate_viewer.bat", "generate_viewer.sh", "chat_history_viewer.html"]:
         f_path = os.path.join(target_dir, file_name)
@@ -285,6 +297,14 @@ def install_global(t, lang):
         dest_skill = os.path.join(plugin_dir, "skills", skill_name)
         src_skill = os.path.join(PKG_DIR, "skills", skill_name)
         shutil.copytree(src_skill, dest_skill)
+
+    src_wf = os.path.join(PKG_DIR, "workflows")
+    if os.path.exists(src_wf):
+        dest_wf = os.path.join(plugin_dir, "workflows")
+        os.makedirs(dest_wf, exist_ok=True)
+        for f in os.listdir(src_wf):
+            if os.path.isfile(os.path.join(src_wf, f)):
+                shutil.copy2(os.path.join(src_wf, f), os.path.join(dest_wf, f))
     
     plugin_json = {
         "id": "antigravity-chat-exporter",
