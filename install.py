@@ -233,13 +233,16 @@ def install_local(t, lang):
     target_dir = os.path.dirname(agent_dir)
 
     print(f"\n{t['inst_local_prep']}")
-    dest_skill = os.path.join(agent_dir, "skills", "antigravity-chat-exporter")
-    src_skill = os.path.join(PKG_DIR, "skills", "antigravity-chat-exporter")
-    
-    if os.path.exists(dest_skill):
+    if os.path.exists(os.path.join(agent_dir, "skills", "antigravity-chat-exporter")):
         print(t['overwrite'])
-        shutil.rmtree(dest_skill)
-    shutil.copytree(src_skill, dest_skill)
+        
+    for skill_name in ["antigravity-chat-exporter", "grill-docs"]:
+        dest_skill = os.path.join(agent_dir, "skills", skill_name)
+        src_skill = os.path.join(PKG_DIR, "skills", skill_name)
+        
+        if os.path.exists(dest_skill):
+            shutil.rmtree(dest_skill)
+        shutil.copytree(src_skill, dest_skill)
     
     add_local_rule(agent_dir, lang)
     
@@ -254,10 +257,11 @@ def uninstall_local(t):
     target_dir = os.path.dirname(agent_dir)
 
     print(f"\n{t['uninst_local_prep']}")
-    dest_skill = os.path.join(agent_dir, "skills", "antigravity-chat-exporter")
-    if os.path.exists(dest_skill):
-        shutil.rmtree(dest_skill)
-        print(t['skill_removed'])
+    for skill_name in ["antigravity-chat-exporter", "grill-docs"]:
+        dest_skill = os.path.join(agent_dir, "skills", skill_name)
+        if os.path.exists(dest_skill):
+            shutil.rmtree(dest_skill)
+    print(t['skill_removed'])
         
     for file_name in ["generate_viewer.py", "generate_viewer.bat", "generate_viewer.sh", "chat_history_viewer.html"]:
         f_path = os.path.join(target_dir, file_name)
@@ -277,9 +281,10 @@ def install_global(t, lang):
         
     os.makedirs(plugin_dir)
     
-    dest_skill = os.path.join(plugin_dir, "skills", "antigravity-chat-exporter")
-    src_skill = os.path.join(PKG_DIR, "skills", "antigravity-chat-exporter")
-    shutil.copytree(src_skill, dest_skill)
+    for skill_name in ["antigravity-chat-exporter", "grill-docs"]:
+        dest_skill = os.path.join(plugin_dir, "skills", skill_name)
+        src_skill = os.path.join(PKG_DIR, "skills", skill_name)
+        shutil.copytree(src_skill, dest_skill)
     
     plugin_json = {
         "id": "antigravity-chat-exporter",
