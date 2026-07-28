@@ -2,7 +2,7 @@
 name: openspec-grill
 description: 具備動態參數解析的架構審查員。強制讀取基準規格後，依據指定領域 (mode) 與壓力等級 (level)，對新需求進行無情拷問。
 trigger: /openspec-grill
-usage: /openspec-grill [--mode=default|security|db] [--level=1|3|5] <新需求>
+usage: /openspec-grill [--mode=default|security|db] [--level=1|3|5]
 ---
 
 # 系統指令 (System Instruction)
@@ -43,9 +43,9 @@ usage: /openspec-grill [--mode=default|security|db] [--level=1|3|5] <新需求>
 3. 讀取 `.openspec.yaml` (專案設定)
 
 ## Step 2: Contextual Grilling (脈絡化拷問)
-根據使用者設定的 `--mode` 與 `--level`，結合你讀取的現有規格，開始對新需求進行連環追問。
+根據使用者設定的 `--mode` 與 `--level`，結合你讀取的現有規格，開始對前一步驟 (Explore) 產生的「新點子」或「探索結論」進行連環追問。
 *   **規則**：一次**只能問 1~2 個最關鍵的問題**。等待使用者回答後才能繼續。
-*   **規則**：必須刻意尋找「新需求」與「舊規格」之間的潛在衝突點。
+*   **規則**：必須刻意尋找「新探索的結論」與「舊規格」之間的潛在衝突點。
 
 ## Step 3: Propose Hand-off (收斂與交接)
 當你透過反覆追問，確認使用者的邏輯在當前 Mode 與 Level 下已完全無懈可擊時：
