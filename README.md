@@ -48,6 +48,14 @@ The AI will automatically trigger the skill and save the logs into `openspec/exp
 
 To view the logs beautifully, simply double click the generated `chat_history_viewer.html` in your project root!
 
+### 🚀 Advanced: Specification-Driven Development (SDD) Workflow
+This project now includes the powerful `/grill-docs` skill. You can use it as part of an advanced OpenSpec workflow:
+1. **Explore**: Run `/opsx-explore <idea>` to analyze architecture.
+2. **Grill-docs**: Run `/grill-docs <direction>` to rigorously interrogate the idea against existing specs.
+3. **Propose**: Run `/opsx-propose` to convert the interrogated logic into an OpenSpec proposal.
+4. **Apply**: Run `/goal /opsx-apply` to auto-implement the code.
+*(See [SDD Workflow](.agent/workflows/sdd.md) for the complete guide and flowchart).*
+
 ### Uninstallation
 To cleanly remove the skill and its auto-trigger rules, simply run the installer again:
 ```bash
@@ -102,7 +110,15 @@ AI 就會自動觸發技能，將日誌儲存在 `openspec/explorations/explore_
 > - **檔名規則**：以該對話紀錄中「最後一則訊息」的日期進行命名（如：`explore_log_2024-05-20.md`）。
 > - **內容範圍**：系統是以對話 ID (Conversation ID) 為單位進行完整匯出，因此若同一個對話延續了數天，該檔案內將會一併包含前幾天的歷史對話內容，不會依照日期拆檔。
 
-若想以最美的介面回顧對話，只要在專案根目錄點選自動生成的 `chat_history_viewer.html` 即可！
+若想以最美的介面回顧對話，只需在專案根目錄雙擊自動產生的 `chat_history_viewer.html` 即可！
+
+### 🚀 進階功能：規格驅動開發 (SDD) 工作流
+本專案現已內建超強的 `/grill-docs` 拷問技能，您可以搭配 OpenSpec 進行進階開發：
+1. **探勘 (Explore)**：使用 `/opsx-explore <新需求>` 分析技術架構。
+2. **無情拷問 (Grill-docs)**：使用 `/grill-docs <方向>` 讓 AI 拿現有規格嚴格檢視您的點子。
+3. **提案 (Propose)**：確認無誤後，輸入 `/opsx-propose` 將共識轉化為標準提案。
+4. **執行 (Apply)**：透過 `/goal /opsx-apply` 讓 AI 全自動開發與測試。
+*(詳細流程圖與操作秘訣請見 [SDD 終極工作流](.agent/workflows/sdd.md))*。
 
 ### 移除安裝
 若要乾淨移除這項技能與自動寫入的專案鐵律，請再次執行安裝精靈：
@@ -160,6 +176,14 @@ AI 就会自动触发技能，将日志储存在 `openspec/explorations/explore_
 
 若想以最美的界面回顾对话，只需在项目根目录双击自动生成的 `chat_history_viewer.html` 即可！
 
+### 🚀 进阶功能：规格驱动开发 (SDD) 工作流
+本项目现已内置超强的 `/grill-docs` 拷问技能，您可以搭配 OpenSpec 进行进阶开发：
+1. **探勘 (Explore)**：使用 `/opsx-explore <新需求>` 分析技术架构。
+2. **无情拷问 (Grill-docs)**：使用 `/grill-docs <方向>` 让 AI 拿现有规格严格检视您的点子。
+3. **提案 (Propose)**：确认无误后，输入 `/opsx-propose` 将共识转化为标准提案。
+4. **执行 (Apply)**：透过 `/goal /opsx-apply` 让 AI 全自动开发与测试。
+*(详细流程图与操作秘诀请见 [SDD 终极工作流](.agent/workflows/sdd.md))*。
+
 ### 卸载说明
 若要干净卸载这项技能与自动写入的项目铁律，请再次运行安装向导：
 ```bash
@@ -214,7 +238,15 @@ AI sẽ tự động kích hoạt kỹ năng và lưu nhật ký vào `openspec/
 > - **Quy tắc đặt tên**: Tệp được đặt tên dựa trên ngày của "tin nhắn cuối cùng" trong cuộc trò chuyện (ví dụ: `explore_log_2024-05-20.md`).
 > - **Phạm vi nội dung**: Hệ thống xuất toàn bộ lịch sử dựa trên ID cuộc trò chuyện (Conversation ID). Do đó, nếu một cuộc trò chuyện kéo dài nhiều ngày, tệp sẽ bao gồm cả lịch sử trò chuyện của những ngày trước đó mà không chia tách theo ngày.
 
-Để xem chúng với giao diện đẹp nhất, chỉ cần nhấp đúp vào tệp `chat_history_viewer.html` được tạo tự động trong thư mục dự án của bạn!
+Để xem nhật ký một cách đẹp mắt, chỉ cần nhấp đúp vào tệp `chat_history_viewer.html` được tạo tự động trong thư mục gốc của dự án!
+
+### 🚀 Nâng cao: Quy trình Phát triển Theo Thông số Kỹ thuật (SDD)
+Dự án này hiện đã tích hợp kỹ năng `/grill-docs` mạnh mẽ. Bạn có thể sử dụng nó như một phần của quy trình OpenSpec nâng cao:
+1. **Khám phá (Explore)**: Chạy `/opsx-explore <ý tưởng>` để phân tích kiến trúc.
+2. **Thẩm vấn (Grill-docs)**: Chạy `/grill-docs <hướng đi>` để chất vấn nghiêm ngặt ý tưởng so với thông số kỹ thuật hiện tại.
+3. **Đề xuất (Propose)**: Chạy `/opsx-propose` để chuyển đổi logic đã thống nhất thành đề xuất OpenSpec.
+4. **Áp dụng (Apply)**: Chạy `/goal /opsx-apply` để tự động triển khai mã.
+*(Xem [Quy trình SDD](.agent/workflows/sdd.md) để biết hướng dẫn chi tiết và sơ đồ).*
 
 ### Gỡ cài đặt (Uninstall)
 Để xóa sạch kỹ năng và các quy tắc tự động kích hoạt của nó, hãy chạy lại trình cài đặt:
