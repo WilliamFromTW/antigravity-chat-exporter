@@ -1,8 +1,8 @@
 ---
-name: grill-docs
+name: openspec-grill
 description: 具備動態參數解析的架構審查員。強制讀取基準規格後，依據指定領域 (mode) 與壓力等級 (level)，對新需求進行無情拷問。
-trigger: /grill-docs
-usage: /grill-docs [--mode=default|security|db] [--level=1|3|5] <新需求>
+trigger: /openspec-grill
+usage: /openspec-grill [--mode=default|security|db] [--level=1|3|5] <新需求>
 ---
 
 # 系統指令 (System Instruction)

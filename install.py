@@ -236,7 +236,7 @@ def install_local(t, lang):
     if os.path.exists(os.path.join(agent_dir, "skills", "antigravity-chat-exporter")):
         print(t['overwrite'])
         
-    for skill_name in ["antigravity-chat-exporter", "grill-docs"]:
+    for skill_name in ["antigravity-chat-exporter", "openspec-grill"]:
         dest_skill = os.path.join(agent_dir, "skills", skill_name)
         src_skill = os.path.join(PKG_DIR, "skills", skill_name)
         
@@ -265,7 +265,7 @@ def uninstall_local(t):
     target_dir = os.path.dirname(agent_dir)
 
     print(f"\n{t['uninst_local_prep']}")
-    for skill_name in ["antigravity-chat-exporter", "grill-docs"]:
+    for skill_name in ["antigravity-chat-exporter", "openspec-grill"]:
         dest_skill = os.path.join(agent_dir, "skills", skill_name)
         if os.path.exists(dest_skill):
             shutil.rmtree(dest_skill)
@@ -293,7 +293,7 @@ def install_global(t, lang):
         
     os.makedirs(plugin_dir)
     
-    for skill_name in ["antigravity-chat-exporter", "grill-docs"]:
+    for skill_name in ["antigravity-chat-exporter", "openspec-grill"]:
         dest_skill = os.path.join(plugin_dir, "skills", skill_name)
         src_skill = os.path.join(PKG_DIR, "skills", skill_name)
         shutil.copytree(src_skill, dest_skill)

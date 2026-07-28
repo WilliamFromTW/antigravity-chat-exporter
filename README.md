@@ -1,6 +1,6 @@
 # Antigravity Chat Exporter
 
-[English](#english) | [繁體中文](#繁體中文-zh-tw) | [简体中文](#简体中文-zh-cn) | [Tiếng Việt](#tiếng-việt-vi)
+[English](#english) | [繁�?中�?](#繁�?中�?-zh-tw) | [简体中?�](#简体中??zh-cn) | [Tiếng Việt](#tiếng-việt-vi)
 
 ---
 
@@ -42,18 +42,18 @@ Simply tell the Antigravity AI:
 
 The AI will automatically trigger the skill and save the logs into `openspec/explorations/explore_log_YYYY-MM-DD.md`.
 
-> 💡 **About Export Naming & Content Scope**
+> ?�� **About Export Naming & Content Scope**
 > - **Naming Rule**: Files are named based on the date of the "last message" in the conversation (e.g., `explore_log_2024-05-20.md`).
 > - **Content Scope**: The system exports the complete history based on the Conversation ID. Therefore, if a single conversation spans multiple days, the file will include the previous days' chat history as well, without splitting them by date.
 
 To view the logs beautifully, simply double click the generated `chat_history_viewer.html` in your project root!
 
-### 🚀 Advanced: Specification-Driven Development (SDD) Workflow
-This project now includes the powerful `/grill-docs` skill. You can use it as part of an advanced OpenSpec workflow:
-1. **Explore**: Run `/opsx-explore <idea>` to analyze architecture.
-2. **Grill-docs**: Run `/grill-docs <direction>` to rigorously interrogate the idea against existing specs.
-3. **Propose**: Run `/opsx-propose` to convert the interrogated logic into an OpenSpec proposal.
-4. **Apply**: Run `/goal /opsx-apply` to auto-implement the code.
+### ?? Advanced: Specification-Driven Development (SDD) Workflow
+This project now includes the powerful `/openspec-grill` skill. You can use it as part of an advanced OpenSpec workflow:
+1. **Explore**: Run `/openspec-explore <idea>` to analyze architecture.
+2. **openspec-grill**: Run `/openspec-grill <direction>` to rigorously interrogate the idea against existing specs.
+3. **Propose**: Run `/openspec-propose` to convert the interrogated logic into an OpenSpec proposal.
+4. **Apply**: Run `/goal /openspec-apply` to auto-implement the code.
 *(See [SDD Workflow](.agent/workflows/sdd.md) for the complete guide and flowchart).*
 
 ### Uninstallation
@@ -68,192 +68,192 @@ Select option `3` to uninstall from the local project, or option `4` to uninstal
 
 ---
 
-## 繁體中文 (zh-TW)
+## 繁�?中�? (zh-TW)
 
-### 簡介
-`antigravity-chat-exporter` 是專為 Google Antigravity CLI 開發的強大外掛技能。它能夠直接從系統底層讀取最原始、未經修飾的對話紀錄，並將它們完美排版成帶有本地時間戳記的 Markdown 檔案。這能幫助您永久保留發散思考的過程，並讓您在不同電腦間無縫轉移上下文。
+### 簡�?
+`antigravity-chat-exporter` ?��???Google Antigravity CLI ?�發?�強大�??��??�。�??��??�接從系統�?層�??��??��??�未經修飾�?對話紀?��?並�?它們�?美�??��?帶�??�地?��??��???Markdown 檔�??�這能幫助?�永久�??�發??��考�??��?，並讓您?��??�電?��??�縫轉移上�??��?
 
-### 核心功能
-- **匯出對話與大腦記憶**：將目前的對話紀錄匯出為 Markdown，並完整備份 Antigravity 的底層大腦記憶庫 (`brain/` 與 `.db`) 至 `.antigravity_sync/brains/`，完美支援無縫 Resume。
-- **匯入大腦記憶**：一鍵將備份的 Antigravity 大腦記憶還原至本機系統核心，完美支援跨機器復原上下文。
-- **Genesis 美型閱讀器**：匯出時全自動生成 `chat_history_viewer.html`。透過三欄式版面，讓您能最方便地同時閱讀 OpenSpec 產出的 SDD 文件（Proposal、Design、Specs 等）與實際對話內容。
+### ?��??�能
+- **?�出對話?�大?��???*：�??��??��?話�??�匯?�為 Markdown，並完整?�份 Antigravity ?��?層大?��??�庫 (`brain/` ??`.db`) ??`.antigravity_sync/brains/`，�?美支?�無�?Resume??
+- **?�入大腦記憶**：�??��??�份??Antigravity 大腦記憶?��??�本機系統核心�?完�??�援跨�??�復?��?下�???
+- **Genesis 美�??��???*：匯?��??�自?��???`chat_history_viewer.html`?�透�?三�?式�??��?讓您?��??�便?��??�閱讀 OpenSpec ?�出??SDD ?�件（Proposal?�Design?�Specs 等�??�實?��?話內容�?
 
-### 系統需求
+### 系統?��?
 - OpenSpec 1.6.0
 - Antigravity CLI 1.1.7
 - Python 3.12+
-- **完全不需要安裝外部套件**（純原生 Python，僅使用 `os`, `json`, `shutil` 等內建模組）。
+- **完全不�?要�?裝�??��?�?*（�??��? Python，�?使用 `os`, `json`, `shutil` 等內建模組�???
 
-### 安裝與移除
-我們提供了一鍵式的互動安裝精靈，請在終端機執行：
+### 安�??�移??
+?�們�?供�?一?��??��??��?裝精?��?請在終端機執行�?
 ```bash
 python install.py
 ```
-**選單說明：**
-1. **單一專案安裝 (Local)**：安裝至指定的專案。*(註：安裝精靈會主動詢問您要安裝的目標資料夾路徑，您可以直接輸入路徑，或按 Enter 預設安裝在當下目錄。)*
-2. **全域系統安裝 (Global)**：安裝為全系統通用的 Plugin，日後任何專案皆可使用。
-3. **單一專案移除**：移除目前目錄下的安裝與鐵律。
-4. **全域系統移除**：移除全系統通用的 Plugin 安裝。
+**?�單說�?�?*
+1. **?��?專�?安�? (Local)**：�?裝至?��??��?案�?(註�?安�?精�??�主?�詢?�您要�?裝�??��?資�?夾路徑�??�可以直?�輸?�路徑�??��? Enter ?�設安�??�當下目?��?*
+2. **?��?系統安�? (Global)**：�?裝為?�系統通用??Plugin，日後任何�?案�??�使?��?
+3. **?��?專�?移除**：移?�目?�目?��??��?裝�??��???
+4. **?��?系統移除**：移?�全系統?�用??Plugin 安�???
 
-### 使用方式
+### 使用?��?
 
-您只需要像平常一樣對 Antigravity AI 說出：
-- *「匯出對話」*（匯出當前對話視窗內容）
-- *「匯出所有對話」*（匯出專案所有的歷史紀錄）
-- *「列出備份的對話 ID」*（列出 `.antigravity_sync/brains/` 下的所有備份紀錄）
-- *「匯入所有對話」*（將備份還原至當下環境）
-- *「接續開發」*（讓 AI 自動讀取規格與歷史記憶，無縫恢復開發狀態）
+?�只?�要�?平常一�?? Antigravity AI 說出�?
+- *?�匯?��?話�?（匯?�當?��?話�?窗內容�?
+- *?�匯?��??��?話�?（匯?��?案�??��?歷史紀?��?
+- *?��??��?份�?對話 ID??（�???`.antigravity_sync/brains/` 下�??�?��?份�??��?
+- *?�匯?��??��?話�?（�??�份?��??�當下環境�?
+- *?�接續�??��?（�? AI ?��?讀?��??��?歷史記憶，無縫恢復�??��??��?
 
-AI 就會自動觸發技能，將日誌儲存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`。
+AI 就�??��?觸發?�?��?將日誌儲存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`??
 
-> 💡 **關於對話匯出的命名與內容範圍**
-> - **檔名規則**：以該對話紀錄中「最後一則訊息」的日期進行命名（如：`explore_log_2024-05-20.md`）。
-> - **內容範圍**：系統是以對話 ID (Conversation ID) 為單位進行完整匯出，因此若同一個對話延續了數天，該檔案內將會一併包含前幾天的歷史對話內容，不會依照日期拆檔。
+> ?�� **?�於對話?�出?�命?��??�容範�?**
+> - **檔�?規�?**：以該�?話�??�中?��?後�??��??�」�??��??��??��?（�?：`explore_log_2024-05-20.md`）�?
+> - **?�容範�?**：系統是以�?�?ID (Conversation ID) ?�單位進�?完整?�出，�?此若?��??��?話延續�??�天，該檔�??��??��?併�??��?幾天?�歷?��?話內容�?不�?依照?��??��???
 
-若想以最美的介面回顧對話，只需在專案根目錄雙擊自動產生的 `chat_history_viewer.html` 即可！
+?�想以�?美�?介面?�顧對話，只?�?��?案根?��??��??��??��???`chat_history_viewer.html` ?�可�?
 
-### 🚀 進階功能：規格驅動開發 (SDD) 工作流
-本專案現已內建超強的 `/grill-docs` 拷問技能，您可以搭配 OpenSpec 進行進階開發：
-1. **探勘 (Explore)**：使用 `/opsx-explore <新需求>` 分析技術架構。
-2. **無情拷問 (Grill-docs)**：使用 `/grill-docs <方向>` 讓 AI 拿現有規格嚴格檢視您的點子。
-3. **提案 (Propose)**：確認無誤後，輸入 `/opsx-propose` 將共識轉化為標準提案。
-4. **執行 (Apply)**：透過 `/goal /opsx-apply` 讓 AI 全自動開發與測試。
-*(詳細流程圖與操作秘訣請見 [SDD 終極工作流](.agent/workflows/sdd.md))*。
+### ?? ?��??�能：�??��??��???(SDD) 工�?�?
+?��?案現已內建�?強�? `/openspec-grill` ?��??�?��??�可以搭??OpenSpec ?��??��??�發�?
+1. **?��? (Explore)**：使??`/openspec-explore <?��?�?` ?��??�術架構�?
+2. **?��??��? (openspec-grill)**：使??`/openspec-grill <?��?>` �?AI ?�現?��??�嚴?�檢視您?��?子�?
+3. **?��? (Propose)**：確認無誤�?，輸??`/openspec-propose` 將共識�??�為標�??��???
+4. **?��? (Apply)**：透�? `/goal /openspec-apply` �?AI ?�自?��??��?測試??
+*(詳細流�??��??��?秘訣請�? [SDD 終極工�?流](.agent/workflows/sdd.md))*??
 
-### 移除安裝
-若要乾淨移除這項技能與自動寫入的專案鐵律，請再次執行安裝精靈：
+### 移除安�?
+?��?乾淨移除?��??�?��??��?寫入?��?案鐵律�?請�?次執行�?裝精?��?
 ```bash
 python install.py
 ```
-並在選單中選擇 `3`（移除單一專案安裝）或 `4`（移除全域系統安裝）即可。
+並在?�單中選??`3`（移?�單一專�?安�?）�? `4`（移?�全?�系統�?裝�??�可??
 
-### 已知問題
-- **`/resume` 介面無法顯示專案名稱**：Antigravity CLI 的 `/resume` 選單目前無法得知是對應哪個專案，您只能從備份的 `.antigravity_sync/brains/` 目錄中的 `conversation_id` 來得知該對話屬於哪個專案了。
+### 已知?��?
+- **`/resume` 介面?��?顯示專�??�稱**：Antigravity CLI ??`/resume` ?�單?��??��?得知?��??�哪?��?案�??�只?��??�份??`.antigravity_sync/brains/` ?��?中�? `conversation_id` 來�??�該對話屬於?�個�?案�???
 
 ---
 
-## 简体中文 (zh-CN)
+## 简体中??(zh-CN)
 
-### 简介
-`antigravity-chat-exporter` 是专为 Google Antigravity CLI 开发的强大插件技能。它能够直接从系统底层读取最原始、未经修饰的对话记录，并将它们完美排版成带有本地时间戳的 Markdown 文件。这能帮助您永久保留发散思考的过程，并让您在不同电脑间无缝转移上下文。
+### 简�?
+`antigravity-chat-exporter` ?��?�?Google Antigravity CLI 开?��?强大?�件?�?�。�??��??�接从系统�?层读?��??��??�未经修饰�?对�?记�?，并将�?们�?美�??��?带�??�地?�间?��? Markdown ?�件?��??�帮?�您永�?保�??�散?�考�?过�?，并让您?��??�电?�间?��?转移上�??��?
 
-### 核心功能
-- **导出对话与大脑记忆**：将目前的对话记录导出为 Markdown，并完整备份 Antigravity 的底层大脑记忆库 (`brain/` 与 `.db`) 至 `.antigravity_sync/brains/`，完美支持无缝 Resume。
-- **导入大脑记忆**：一键将备份的 Antigravity 大脑记忆还原至本机系统核心，完美支持跨机器复原上下文。
-- **Genesis 美型阅读器**：导出时全自动生成 `chat_history_viewer.html`。通过三栏式版面，让您能最方便地同时阅读 OpenSpec 产出的 SDD 文件（Proposal、Design、Specs 等）与实际对话内容。
+### ?��??�能
+- **导出对�?与大?�记�?*：�??��??�对话记录导?�为 Markdown，并完整备份 Antigravity ?��?层大?�记忆�? (`brain/` �?`.db`) ??`.antigravity_sync/brains/`，�?美支?��?�?Resume??
+- **导入大�?记�?**：�??��?备份??Antigravity 大�?记�?还�??�本?�系统核心�?完�??��?跨机?��??��?下�???
+- **Genesis 美�??�读??*：导?�时?�自?��???`chat_history_viewer.html`?�通�?三�?式�??��?让您?��??�便?��??��?�?OpenSpec 产出??SDD ?�件（Proposal?�Design?�Specs 等�?与�??�对话�?容�?
 
-### 系统要求
+### 系�?要�?
 - OpenSpec 1.6.0
 - Antigravity CLI 1.1.7
 - Python 3.12+
-- **完全不需要安装外部依赖**（纯原生 Python，仅使用 `os`, `json`, `shutil` 等内置模块）。
+- **完全不�?要�?装�??��?�?*（纯?��? Python，�?使用 `os`, `json`, `shutil` 等�?置模?��???
 
-### 安装与卸载
-我们提供了一键式的交互安装向导，请在终端执行：
+### 安�?与卸�?
+?�们?��?了�??��??�交互�?装�?导�?请在终端?��?�?
 ```bash
 python install.py
 ```
-**菜单说明：**
-1. **单项目安装 (Local)**：安装至指定的项目。*(注：安装向导会主动询问您要安装的目标文件夹路径，您可以直接输入路径，或按 Enter 默认安装在当前目录。)*
-2. **全局系统安装 (Global)**：安装为全系统通用的 Plugin，日后任何项目皆可使用。
-3. **单项目卸载**：移除当前目录下的安装与铁律。
-4. **全局系统卸载**：移除全系统通用的 Plugin 安装。
+**?��?说�?�?*
+1. **?�项?��?�?(Local)**：�?装至?��??�项?��?(注�?安�??�导会主?�询?�您要�?装�??��??�件夹路径�??�可以直?��??�路径�??��? Enter 默认安�??��??�目录�?*
+2. **?��?系�?安�? (Global)**：�?装为?�系统通用??Plugin，日?�任何项?��??�使?��?
+3. **?�项?�卸�?*：移?��??�目录�??��?装�??��???
+4. **?��?系�??�载**：移?�全系�??�用??Plugin 安�???
 
-### 使用方式
+### 使用?��?
 
-您只需要像平常一样对 Antigravity AI 说出：
-- *“导出对话”*（导出当前对话窗口内容）
-- *“导出所有对话”*（导出项目所有的历史记录）
-- *“列出备份的对话 ID”*（列出 `.antigravity_sync/brains/` 下的所有备份记录）
-- *“导入所有对话”*（将备份还原至当下环境）
-- *“接续开发”*（让 AI 自动读取规格与历史记忆，无缝恢复开发状态）
+?�只?�要�?平常一?�对 Antigravity AI 说出�?
+- *?�导?�对话�?（导?��??�对话�????容�?
+- *?�导?��??�对话�?（导?�项?��??��??�史记�?�?
+- *?��??��?份�?对�? ID??（�???`.antigravity_sync/brains/` 下�??�?��?份记录�?
+- *?�导?��??�对话�?（�?备份还�??��?下环境�?
+- *?�接续�??��?（让 AI ?�动读�?规格与�??�记忆�??��??��?开?�状?��?
 
-AI 就会自动触发技能，将日志储存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`。
+AI 就�??�动触�??�?��?将日志储存在 `openspec/explorations/explore_log_YYYY-MM-DD.md`??
 
-> 💡 **关于对话导出的命名与内容范围**
-> - **文件名规则**：以该对话记录中“最后一则消息”的日期进行命名（如：`explore_log_2024-05-20.md`）。
-> - **内容范围**：系统是以对话 ID (Conversation ID) 为单位进行完整导出，因此若同一个对话延续了数天，该文件内将会一并包含前几天的历史对话内容，不会依照日期拆分。
+> ?�� **?��?对�?导出?�命?��??�容?�围**
+> - **?�件?��???*：以该对话记录中?��??��??��??�”�??��?进�??��?（�?：`explore_log_2024-05-20.md`）�?
+> - **?�容?�围**：系统是以对�?ID (Conversation ID) 为�?位�?行�??�导?��??�此?��?一个对话延续�??�天，该?�件?��?会�?并�??��??�天?��??�对话�?容�?不�?依照?��??��???
 
-若想以最美的界面回顾对话，只需在项目根目录双击自动生成的 `chat_history_viewer.html` 即可！
+?�想以�?美�??�面?�顾对�?，只?�?�项?�根?��??�击?�动?��???`chat_history_viewer.html` ?�可�?
 
-### 🚀 进阶功能：规格驱动开发 (SDD) 工作流
-本项目现已内置超强的 `/grill-docs` 拷问技能，您可以搭配 OpenSpec 进行进阶开发：
-1. **探勘 (Explore)**：使用 `/opsx-explore <新需求>` 分析技术架构。
-2. **无情拷问 (Grill-docs)**：使用 `/grill-docs <方向>` 让 AI 拿现有规格严格检视您的点子。
-3. **提案 (Propose)**：确认无误后，输入 `/opsx-propose` 将共识转化为标准提案。
-4. **执行 (Apply)**：透过 `/goal /opsx-apply` 让 AI 全自动开发与测试。
-*(详细流程图与操作秘诀请见 [SDD 终极工作流](.agent/workflows/sdd.md))*。
+### ?? 进阶?�能：�??�驱?��???(SDD) 工�?�?
+?�项?�现已�?置�?强�? `/openspec-grill` ?�问?�?��??�可以搭??OpenSpec 进�?进阶开?��?
+1. **?��? (Explore)**：使??`/openspec-explore <?��?�?` ?��??�?�架?��?
+2. **?��??�问 (openspec-grill)**：使??`/openspec-grill <?��?>` �?AI ?�现?��??�严?��?视您?�点子�?
+3. **?��? (Propose)**：确认�?误�?，�???`/openspec-propose` 将共识转?�为?��??��???
+4. **?��? (Apply)**：透�? `/goal /openspec-apply` �?AI ?�自?��??��?测�???
+*(详�?流�??��??��?秘�?请�? [SDD 终�?工�?流](.agent/workflows/sdd.md))*??
 
-### 卸载说明
-若要干净卸载这项技能与自动写入的项目铁律，请再次运行安装向导：
+### ?�载说�?
+?��?干�??�载这项?�?��??�动?�入?�项?��?律�?请�?次�?行�?装�?导�?
 ```bash
 python install.py
 ```
-并在菜单中选择 `3`（卸载单项目安装）或 `4`（卸载全局系统安装）即可。
+并在?��?中选择 `3`（卸载�?项目安�?）�? `4`（卸载全局系�?安�?）即?��?
 
-### 已知问题
-- **`/resume` 界面无法显示项目名称**：Antigravity CLI 的 `/resume` 菜单目前无法得知是对应哪个项目，您只能从备份的 `.antigravity_sync/brains/` 目录中的 `conversation_id` 来得知该对话属于哪个项目了。
+### 已知?��?
+- **`/resume` ?�面?��??�示项目?�称**：Antigravity CLI ??`/resume` ?��??��??��?得知?�对应哪个项?��??�只?��?备份??`.antigravity_sync/brains/` ?��?中�? `conversation_id` ?��??�该对�?属�??�个项目了�?
 
 ---
 
 ## Tiếng Việt (VI)
 
 ### Tổng quan
-`antigravity-chat-exporter` là một kỹ năng tùy chỉnh mạnh mẽ dành cho Google Antigravity CLI. Nó trích xuất các nhật ký trò chuyện nguyên bản từ bộ não bên trong của AI và lưu chúng dưới định dạng Markdown đẹp mắt, hoàn chỉnh với mốc thời gian địa phương. Nó giải quyết một cách hoàn hảo vấn đề mất lịch sử trò chuyện hoặc khi bạn muốn di chuyển ngữ cảnh (context) giữa các máy tính khác nhau.
+`antigravity-chat-exporter` l? một k�?n?ng tùy chỉnh mạnh m�?d?nh cho Google Antigravity CLI. Nó trích xuất các nhật ký trò chuyện nguyên bản t�?b�?não bên trong của AI v? lưu chúng dưới ?ịnh dạng Markdown ?ẹp mắt, ho?n chỉnh với mốc thời gian ?ịa phương. Nó giải quyết một cách ho?n hảo vấn ?�?mất lịch s�?trò chuyện hoặc khi bạn muốn di chuyển ng�?cảnh (context) giữa các máy tính khác nhau.
 
-### Các tính năng cốt lõi
-- **Xuất Trò chuyện & Bộ nhớ Não bộ**: Xuất nhật ký trò chuyện hiện tại và sao lưu hoàn toàn bộ nhớ AI Antigravity thô (`brain/` & `.db`) vào `.antigravity_sync/brains/` để phục hồi ngoại tuyến liền mạch.
-- **Nhập Bộ nhớ Não bộ**: Khôi phục bộ nhớ AI Antigravity đã sao lưu trở lại lõi hệ thống để tiếp tục ngữ cảnh một cách hoàn hảo trên các máy khác nhau.
-- **Genesis HTML Viewer**: Tự động tạo giao diện HTML tuyệt đẹp (`chat_history_viewer.html`) trong quá trình xuất. Giúp việc đọc các tệp SDD của OpenSpec cùng với nội dung trò chuyện thực tế trong bố cục 3 cột trở nên vô cùng thuận tiện.
+### Các tính n?ng cốt lõi
+- **Xuất Trò chuyện & B�?nh�?Não b�?*: Xuất nhật ký trò chuyện hiện tại v? sao lưu ho?n to?n b�?nh�?AI Antigravity thô (`brain/` & `.db`) v?o `.antigravity_sync/brains/` ?�?phục hồi ngoại tuyến liền mạch.
+- **Nhập B�?nh�?Não b�?*: Khôi phục b�?nh�?AI Antigravity ?ã sao lưu tr�?lại lõi h�?thống ?�?tiếp tục ng�?cảnh một cách ho?n hảo trên các máy khác nhau.
+- **Genesis HTML Viewer**: T�??ộng tạo giao diện HTML tuyệt ?ẹp (`chat_history_viewer.html`) trong quá trình xuất. Giúp việc ?ọc các tệp SDD của OpenSpec cùng với nội dung trò chuyện thực t�?trong b�?cục 3 cột tr�?nên vô cùng thuận tiện.
 
-### Yêu cầu hệ thống
+### Yêu cầu h�?thống
 - OpenSpec 1.6.0
 - Antigravity CLI 1.1.7
 - Python 3.12+
-- **Không cần cài đặt thư viện bên ngoài** (chỉ sử dụng các thư viện tiêu chuẩn của Python như `os`, `json`, `shutil`, `datetime`, `argparse`).
+- **Không cần c?i ?ặt thư viện bên ngo?i** (ch�?s�?dụng các thư viện tiêu chuẩn của Python như `os`, `json`, `shutil`, `datetime`, `argparse`).
 
-### Cài đặt
-Chúng tôi cung cấp một trình cài đặt tương tác. Chỉ cần chạy:
+### C?i ?ặt
+Chúng tôi cung cấp một trình c?i ?ặt tương tác. Ch�?cần chạy:
 ```bash
 python install.py
 ```
 **Tùy chọn menu:**
-1. **Cài đặt cục bộ (Local)**: Cài đặt kỹ năng vào một dự án cụ thể. *(Lưu ý: Trình cài đặt sẽ nhắc bạn nhập đường dẫn thư mục dự án mục tiêu, mặc định là thư mục hiện tại của bạn.)*
-2. **Cài đặt toàn cục (Global)**: Cài đặt kỹ năng như một Plugin toàn hệ thống.
-3. **Gỡ cài đặt cục bộ**: Xóa kỹ năng khỏi dự án hiện tại.
-4. **Gỡ cài đặt toàn cục**: Xóa Plugin toàn hệ thống.
+1. **C?i ?ặt cục b�?(Local)**: C?i ?ặt k�?n?ng v?o một d�?án c�?th�? *(Lưu ý: Trình c?i ?ặt s�?nhắc bạn nhập ?ường dẫn thư mục d�?án mục tiêu, mặc ?ịnh l? thư mục hiện tại của bạn.)*
+2. **C?i ?ặt to?n cục (Global)**: C?i ?ặt k�?n?ng như một Plugin to?n h�?thống.
+3. **G�?c?i ?ặt cục b�?*: Xóa k�?n?ng khỏi d�?án hiện tại.
+4. **G�?c?i ?ặt to?n cục**: Xóa Plugin to?n h�?thống.
 
-### Cách sử dụng
+### Cách s�?dụng
 
-Chỉ cần nói với Antigravity AI:
-- *"Xuất trò chuyện"* (Để xuất nội dung của cửa sổ trò chuyện hiện tại)
-- *"Xuất tất cả trò chuyện"* (Để xuất tất cả cuộc trò chuyện liên quan đến dự án)
-- *"Liệt kê ID trò chuyện đã sao lưu"* (Để xem danh sách sao lưu)
-- *"Nhập tất cả trò chuyện"* (Để khôi phục sao lưu)
-- *"Tiếp tục phát triển"* (Để AI tự động đọc thông số kỹ thuật và lịch sử, giúp khôi phục trạng thái phát triển liền mạch)
+Ch�?cần nói với Antigravity AI:
+- *"Xuất trò chuyện"* (?�?xuất nội dung của cửa s�?trò chuyện hiện tại)
+- *"Xuất tất c�?trò chuyện"* (?�?xuất tất c�?cuộc trò chuyện liên quan ?ến d�?án)
+- *"Liệt kê ID trò chuyện ?ã sao lưu"* (?�?xem danh sách sao lưu)
+- *"Nhập tất c�?trò chuyện"* (?�?khôi phục sao lưu)
+- *"Tiếp tục phát triển"* (?�?AI t�??ộng ?ọc thông s�?k�?thuật v? lịch s�? giúp khôi phục trạng thái phát triển liền mạch)
 
-AI sẽ tự động kích hoạt kỹ năng và lưu nhật ký vào `openspec/explorations/explore_log_YYYY-MM-DD.md`.
+AI s�?t�??ộng kích hoạt k�?n?ng v? lưu nhật ký v?o `openspec/explorations/explore_log_YYYY-MM-DD.md`.
 
-> 💡 **Về Quy tắc Đặt tên & Phạm vi Nội dung Xuất**
-> - **Quy tắc đặt tên**: Tệp được đặt tên dựa trên ngày của "tin nhắn cuối cùng" trong cuộc trò chuyện (ví dụ: `explore_log_2024-05-20.md`).
-> - **Phạm vi nội dung**: Hệ thống xuất toàn bộ lịch sử dựa trên ID cuộc trò chuyện (Conversation ID). Do đó, nếu một cuộc trò chuyện kéo dài nhiều ngày, tệp sẽ bao gồm cả lịch sử trò chuyện của những ngày trước đó mà không chia tách theo ngày.
+> ?�� **V�?Quy tắc ?ặt tên & Phạm vi Nội dung Xuất**
+> - **Quy tắc ?ặt tên**: Tệp ?ược ?ặt tên dựa trên ng?y của "tin nhắn cuối cùng" trong cuộc trò chuyện (ví d�? `explore_log_2024-05-20.md`).
+> - **Phạm vi nội dung**: H�?thống xuất to?n b�?lịch s�?dựa trên ID cuộc trò chuyện (Conversation ID). Do ?ó, nếu một cuộc trò chuyện kéo d?i nhiều ng?y, tệp s�?bao gồm c�?lịch s�?trò chuyện của những ng?y trước ?ó m? không chia tách theo ng?y.
 
-Để xem nhật ký một cách đẹp mắt, chỉ cần nhấp đúp vào tệp `chat_history_viewer.html` được tạo tự động trong thư mục gốc của dự án!
+?�?xem nhật ký một cách ?ẹp mắt, ch�?cần nhấp ?úp v?o tệp `chat_history_viewer.html` ?ược tạo t�??ộng trong thư mục gốc của d�?án!
 
-### 🚀 Nâng cao: Quy trình Phát triển Theo Thông số Kỹ thuật (SDD)
-Dự án này hiện đã tích hợp kỹ năng `/grill-docs` mạnh mẽ. Bạn có thể sử dụng nó như một phần của quy trình OpenSpec nâng cao:
-1. **Khám phá (Explore)**: Chạy `/opsx-explore <ý tưởng>` để phân tích kiến trúc.
-2. **Thẩm vấn (Grill-docs)**: Chạy `/grill-docs <hướng đi>` để chất vấn nghiêm ngặt ý tưởng so với thông số kỹ thuật hiện tại.
-3. **Đề xuất (Propose)**: Chạy `/opsx-propose` để chuyển đổi logic đã thống nhất thành đề xuất OpenSpec.
-4. **Áp dụng (Apply)**: Chạy `/goal /opsx-apply` để tự động triển khai mã.
-*(Xem [Quy trình SDD](.agent/workflows/sdd.md) để biết hướng dẫn chi tiết và sơ đồ).*
+### ?? Nâng cao: Quy trình Phát triển Theo Thông s�?K�?thuật (SDD)
+D�?án n?y hiện ?ã tích hợp k�?n?ng `/openspec-grill` mạnh m�? Bạn có th�?s�?dụng nó như một phần của quy trình OpenSpec nâng cao:
+1. **Khám phá (Explore)**: Chạy `/openspec-explore <ý tưởng>` ?�?phân tích kiến trúc.
+2. **Thẩm vấn (openspec-grill)**: Chạy `/openspec-grill <hướng ?i>` ?�?chất vấn nghiêm ngặt ý tưởng so với thông s�?k�?thuật hiện tại.
+3. **?�?xuất (Propose)**: Chạy `/openspec-propose` ?�?chuyển ?ổi logic ?ã thống nhất th?nh ?�?xuất OpenSpec.
+4. **?p dụng (Apply)**: Chạy `/goal /openspec-apply` ?�?t�??ộng triển khai mã.
+*(Xem [Quy trình SDD](.agent/workflows/sdd.md) ?�?biết hướng dẫn chi tiết v? sơ ?�?.*
 
-### Gỡ cài đặt (Uninstall)
-Để xóa sạch kỹ năng và các quy tắc tự động kích hoạt của nó, hãy chạy lại trình cài đặt:
+### G�?c?i ?ặt (Uninstall)
+?�?xóa sạch k�?n?ng v? các quy tắc t�??ộng kích hoạt của nó, hãy chạy lại trình c?i ?ặt:
 ```bash
 python install.py
 ```
-Chọn tùy chọn `3` để gỡ cài đặt khỏi dự án cục bộ, hoặc tùy chọn `4` để gỡ cài đặt trên toàn hệ thống.
+Chọn tùy chọn `3` ?�?g�?c?i ?ặt khỏi d�?án cục b�? hoặc tùy chọn `4` ?�?g�?c?i ?ặt trên to?n h�?thống.
 
-### Vấn đề đã biết
-- **Giao diện `/resume` không hiển thị tên dự án**: Menu `/resume` của Antigravity CLI hiện không thể hiển thị tên dự án cho các phiên trò chuyện được tạo qua CLI. Bạn chỉ có thể xác định cuộc trò chuyện thuộc về dự án nào bằng cách kiểm tra `conversation_id` của nó trong thư mục sao lưu `.antigravity_sync/brains/`.
+### Vấn ?�??ã biết
+- **Giao diện `/resume` không hiển th�?tên d�?án**: Menu `/resume` của Antigravity CLI hiện không th�?hiển th�?tên d�?án cho các phiên trò chuyện ?ược tạo qua CLI. Bạn ch�?có th�?xác ?ịnh cuộc trò chuyện thuộc v�?d�?án n?o bằng cách kiểm tra `conversation_id` của nó trong thư mục sao lưu `.antigravity_sync/brains/`.
