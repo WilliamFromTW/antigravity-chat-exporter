@@ -271,7 +271,7 @@ def uninstall_local(t):
             shutil.rmtree(dest_skill)
     print(t['skill_removed'])
 
-    wf_file = os.path.join(agent_dir, "workflows", "sdd.md")
+    wf_file = os.path.join(agent_dir, "workflows", "openspec-grill.md")
     if os.path.exists(wf_file):
         os.remove(wf_file)
         
