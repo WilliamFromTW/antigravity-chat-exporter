@@ -1,4 +1,5 @@
-# Antigravity Chat Exporter
+# 此功能停用，實用性不足 - 2026/08/13
+# This feature is disabled and its usability is insufficient - 2026/08/13
 
 [English](#english) | [繁體中文](#繁體中文-zh-tw) | [简体中文](#简体中文-zh-cn) | [Tiếng Việt](#tiếng-việt-vi)
 
